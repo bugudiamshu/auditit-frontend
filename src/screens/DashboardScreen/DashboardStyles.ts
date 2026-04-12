@@ -6,27 +6,18 @@ export const DashboardStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: theme.colors.background,
     },
-    header: {
-        padding: theme.spacing.l,
-        backgroundColor: theme.colors.surface,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.border,
-        elevation: 2,
-        shadowColor: theme.colors.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
+    pageTitleContainer: { // Container for the page title
+        paddingHorizontal: theme.spacing.l,
+        paddingTop: theme.spacing.m,
+        // backgroundColor: theme.colors.surface, // Match header background
+        // borderBottomWidth: 1,
+        // borderBottomColor: theme.colors.border,
+        // elevation: 1, // Subtle shadow for separation
     },
-    welcomeText: {
-        ...theme.typography.label,
-        color: theme.colors.textSecondary,
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-    },
-    orgName: {
-        ...theme.typography.h2,
+    pageTitleText: { // Style for the page title text
+        fontSize: 24, // Larger font size for the page title
+        fontWeight: 'bold',
         color: theme.colors.textPrimary,
-        marginTop: theme.spacing.xs,
     },
     summaryContainer: {
         flexDirection: 'row',

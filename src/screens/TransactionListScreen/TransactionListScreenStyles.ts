@@ -7,94 +7,111 @@ export const TransactionListScreenStyles = StyleSheet.create({
         backgroundColor: theme.colors.background,
     },
 
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: theme.spacing.m,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.border,
-    },
-
-    backButton: {
-        marginRight: theme.spacing.m,
-    },
-
-    backButtonText: {
-        fontSize: 16,
-        color: theme.colors.primary,
+    titleContainer: {
+        paddingHorizontal: theme.spacing.l,
+        paddingVertical: theme.spacing.m,
     },
 
     title: {
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 22,
+        fontWeight: '700',
         color: theme.colors.textPrimary,
     },
 
-    listContent: {
-        padding: theme.spacing.m,
+    list: {
+        paddingHorizontal: theme.spacing.l,
+        paddingBottom: theme.spacing.xl,
     },
 
     card: {
         backgroundColor: theme.colors.surface,
-        borderRadius: 12,
+        borderRadius: 16,
         padding: theme.spacing.m,
         marginBottom: theme.spacing.m,
         shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 6,
+        shadowOpacity: 0.04,
+        shadowRadius: 8,
         elevation: 2,
     },
 
-    cardHeader: {
+    topRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: theme.spacing.s,
     },
 
-    personName: {
+    name: {
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight: '700',
         color: theme.colors.textPrimary,
     },
 
     badge: {
-        paddingHorizontal: 10,
-        paddingVertical: 4,
+        paddingHorizontal: 12,
+        paddingVertical: 5,
         borderRadius: 20,
     },
 
     badgeText: {
-        fontSize: 12,
+        fontSize: 11,
         color: '#fff',
-        fontWeight: '600',
+        fontWeight: '700',
     },
 
-    cardBody: {
+    bottomRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-end',
     },
 
     date: {
-        fontSize: 14,
-        color: theme.colors.textSecondary,
-    },
-
-    amount: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-
-    remarks: {
-        marginTop: theme.spacing.s,
         fontSize: 13,
         color: theme.colors.textSecondary,
     },
 
-    loadingContainer: {
+    remarks: {
+        fontSize: 12,
+        color: theme.colors.textSecondary,
+        marginTop: 2,
+    },
+
+    amount: {
+        fontSize: 18,
+        fontWeight: '800',
+    },
+
+    loader: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+
+    fab: {
+        position: 'absolute',
+        bottom: 24,
+        right: 20,
+        backgroundColor: theme.colors.primary,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        // Shadow (iOS)
+        shadowColor: theme.colors.primary,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+
+        // Elevation (Android)
+        elevation: 8,
+    },
+
+    fabIcon: {
+        color: '#fff',
+        fontSize: 28,
+        lineHeight: 30,
+        fontWeight: 'bold',
     },
 });

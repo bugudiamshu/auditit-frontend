@@ -1,20 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-    KeyboardAvoidingView,
-    Platform,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LoginScreenStyles } from "./LoginScreenStyles";
-import { useSendOtpMutation, useVerifyOtpMutation } from "../../store/authApi";
-import { setAuth } from '../../store/authSlice'; // Import setAuth action
-import { useAppDispatch } from '../../store/store'; // Import useAppDispatch
-import { useSnackbar } from '../../context/SnackbarContext'; // Import useSnackbar
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useRoute} from '@react-navigation/native';
+import {LoginScreenStyles} from "./LoginScreenStyles";
+import {useSendOtpMutation, useVerifyOtpMutation} from "../../store/authApi";
+import {setAuth} from '../../store/authSlice'; // Import setAuth action
+import {useAppDispatch} from '../../store/store'; // Import useAppDispatch
+import {useSnackbar} from '../../context/SnackbarContext'; // Import useSnackbar
 
 const RESEND_TIMER_SECONDS = 30;
 
@@ -95,19 +87,14 @@ const LoginScreen = ({ navigation }: any) => {
                 dispatch(setAuth({
                     token: result.token,
                     user: result.user,
+                    tenant: result.tenant,
                     organizationCode: organizationCode // Pass organizationCode to Redux
                 }));
 
-                // Clear old AsyncStorage data if necessary, though Redux Persist handles auth slice persistence.
-                await AsyncStorage.removeItem('auth_token'); // Example: Ensure old manual token is gone
-                await AsyncStorage.removeItem('X-Organization-Code'); // Example: Ensure old manual orgCode is gone
-
                 if (isFounder || result.user.role === 'founder') {
-                    navigation.navigate('PortfolioSelection');
+                    navigation.replace('PortfolioSelection');
                 } else {
-                    navigation.navigate('Dashboard', {
-                        society: { name: organizationCode || 'Branch' } // Using orgCode or a default name
-                    });
+                    navigation.replace('MainApp'); // ✅ NEW
                 }
             }
         } catch (error: any) {
@@ -118,7 +105,7 @@ const LoginScreen = ({ navigation }: any) => {
 
     const handleResendOtp = useCallback(() => {
         if (timer === 0) {
-            handleSendOtp();
+            (async () => await handleSendOtp())();
         }
     }, [timer, handleSendOtp]);
 

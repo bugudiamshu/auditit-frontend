@@ -9,9 +9,16 @@ interface User {
     // Add other user properties as needed
 }
 
+interface Tenant {
+    id: number;
+    name: string;
+    org_code: string;
+}
+
 interface AuthState {
     token: string | null;
     user: User | null;
+    tenant: Tenant | null;
     isAuthenticated: boolean;
     organizationCode: string | null; // Add organizationCode here
 }
@@ -19,6 +26,7 @@ interface AuthState {
 const initialState: AuthState = {
     token: null,
     user: null,
+    tenant: null,
     isAuthenticated: false,
     organizationCode: null,
 };
@@ -27,9 +35,10 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setAuth(state, action: PayloadAction<{ token: string; user: User; organizationCode?: string }>) {
+        setAuth(state, action: PayloadAction<{ token: string; user: User; organizationCode?: string, tenant: Tenant }>) {
             state.token = action.payload.token;
             state.user = action.payload.user;
+            state.tenant = action.payload.tenant;
             state.isAuthenticated = true;
             state.organizationCode = action.payload.organizationCode ?? null;
         },
