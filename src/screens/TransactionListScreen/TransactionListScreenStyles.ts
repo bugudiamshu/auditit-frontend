@@ -314,7 +314,7 @@ export const TransactionListScreenStyles = StyleSheet.create({
 
     filtersRow: {
         marginTop: 16,
-        flex: 1,
+        // flex: 1,
         // justifyContent: 'center',
         marginHorizontal: theme.spacing.l,
         // alignItems: 'center',
