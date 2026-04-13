@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import { theme } from '../config/theme';
 
 interface SnackbarContextType {

@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }: any) => {
     const [otp, setOtp] = useState('');
     const [isOtpStep, setIsOtpStep] = useState(false);
     const [timer, setTimer] = useState(0);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const dispatch = useAppDispatch();
     const { show: showSnackbar } = useSnackbar(); // Get show Snackbar function
@@ -61,9 +61,7 @@ const LoginScreen = ({ navigation }: any) => {
         }
 
         try {
-            // Pass organizationCode and isFounder if the API needs it, otherwise it might be handled by headers.
-            // Assuming API handles tenant context via headers for now.
-            const result = await sendOtp({ mobile, organizationCode: organizationCode || (isFounder ? 'FOUNDER' : null) }).unwrap();
+            const result = await sendOtp({ mobile }).unwrap();
             if (result.success) {
                 setIsOtpStep(true);
                 startTimer();
@@ -73,7 +71,7 @@ const LoginScreen = ({ navigation }: any) => {
             console.error("Send OTP error:", error);
             showSnackbar(error?.data?.message || 'Failed to send OTP. Please check the mobile number.', 'error');
         }
-    }, [mobile, organizationCode, isFounder, sendOtp, startTimer, showSnackbar]);
+    }, [mobile, sendOtp, startTimer, showSnackbar]);
 
     const handleVerifyOtp = useCallback(async () => {
         if (!otp || otp.length !== 4) {
@@ -87,21 +85,17 @@ const LoginScreen = ({ navigation }: any) => {
                 dispatch(setAuth({
                     token: result.token,
                     user: result.user,
-                    tenant: result.tenant,
+                    tenant: result.tenant ?? null,
                     organizationCode: organizationCode // Pass organizationCode to Redux
                 }));
 
-                if (isFounder || result.user.role === 'founder') {
-                    navigation.replace('PortfolioSelection');
-                } else {
-                    navigation.replace('MainApp'); // ✅ NEW
-                }
+                navigation.replace('MainApp');
             }
         } catch (error: any) {
             console.error("Verify OTP error:", error);
             showSnackbar(error?.data?.message || 'Invalid OTP', 'error');
         }
-    }, [mobile, otp, organizationCode, isFounder, verifyOtp, dispatch, showSnackbar, navigation]);
+    }, [mobile, otp, organizationCode, verifyOtp, dispatch, showSnackbar, navigation]);
 
     const handleResendOtp = useCallback(() => {
         if (timer === 0) {
@@ -217,4 +211,3 @@ const LoginScreen = ({ navigation }: any) => {
 };
 
 export default LoginScreen;
-

@@ -43,6 +43,10 @@ export const TransactionStyles = StyleSheet.create({
         fontSize: 16,
         color: theme.colors.textPrimary,
     },
+    multilineInput: {
+        height: 100,
+        textAlignVertical: 'top',
+    },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -85,5 +89,12 @@ export const TransactionStyles = StyleSheet.create({
         color: theme.colors.white,
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    backText: {
+        color: theme.colors.primary,
+        marginRight: theme.spacing.xs,
+    },
+    activePaymentButton: {
+        backgroundColor: theme.colors.overlay,
     },
 });

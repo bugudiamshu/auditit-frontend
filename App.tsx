@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import {persistor, store} from './src/store/store'; // Import store and persistor
 import {PersistGate} from 'redux-persist/integration/react'; // Import PersistGate
 import {SnackbarProvider} from './src/context/SnackbarContext'; // Import SnackbarProvider
+import {useAppSelector} from './src/store/store';
 // Screens
 import VerifyOrgScreen from "./src/screens/VerifyOrgScreen/VerifyOrgScreen";
 import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
@@ -15,6 +16,25 @@ import TransactionEntryScreen from "./src/screens/TransactionEntryScreen/Transac
 import BottomTabs from "./src/navigation/BottomTabs/BottomTabs.tsx";
 
 const Stack = createNativeStackNavigator();
+
+const AppNavigator = () => {
+    const {isAuthenticated} = useAppSelector(state => state.auth);
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator
+                initialRouteName={isAuthenticated ? 'MainApp' : 'VerifyOrg'}
+                screenOptions={{headerShown: false}}
+            >
+                <Stack.Screen name="VerifyOrg" component={VerifyOrgScreen}/>
+                <Stack.Screen name="Login" component={LoginScreen}/>
+                <Stack.Screen name="PortfolioSelection" component={PortfolioSelectionScreen}/>
+                <Stack.Screen name="MainApp" component={BottomTabs}/>
+                <Stack.Screen name="TransactionEntry" component={TransactionEntryScreen}/>
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+};
 
 function App(): React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -25,19 +45,7 @@ function App(): React.JSX.Element {
                 <SafeAreaProvider>
                     <SnackbarProvider> {/* Wrap with SnackbarProvider */}
                         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-                        <NavigationContainer>
-                            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                                <Stack.Screen name="VerifyOrg" component={VerifyOrgScreen}/>
-                                <Stack.Screen name="Login" component={LoginScreen}/>
-                                <Stack.Screen name="PortfolioSelection" component={PortfolioSelectionScreen}/>
-
-                                {/* Main App */}
-                                <Stack.Screen name="MainApp" component={BottomTabs}/>
-
-                                {/* Transaction Screens */}
-                                <Stack.Screen name="TransactionEntry" component={TransactionEntryScreen}/>
-                            </Stack.Navigator>
-                        </NavigationContainer>
+                        <AppNavigator />
                     </SnackbarProvider> {/* Close SnackbarProvider */}
                 </SafeAreaProvider>
             </PersistGate>

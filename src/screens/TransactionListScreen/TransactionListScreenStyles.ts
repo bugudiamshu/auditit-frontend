@@ -17,10 +17,41 @@ export const TransactionListScreenStyles = StyleSheet.create({
         fontWeight: '700',
         color: theme.colors.textPrimary,
     },
+    subtitle: {
+        fontSize: 13,
+        color: theme.colors.textSecondary,
+        marginTop: theme.spacing.xs,
+    },
+    filtersRow: {
+        flexDirection: 'row',
+        paddingHorizontal: theme.spacing.l,
+        paddingBottom: theme.spacing.m,
+        gap: theme.spacing.s,
+    },
+    filterChip: {
+        backgroundColor: theme.colors.surface,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 999,
+    },
+    filterChipActive: {
+        backgroundColor: theme.colors.primary,
+        borderColor: theme.colors.primary,
+    },
+    filterChipText: {
+        color: theme.colors.textSecondary,
+        fontSize: 12,
+        fontWeight: '700',
+    },
+    filterChipTextActive: {
+        color: theme.colors.white,
+    },
 
     list: {
         paddingHorizontal: theme.spacing.l,
-        paddingBottom: theme.spacing.xl,
+        paddingBottom: 120,
     },
 
     card: {
@@ -37,8 +68,12 @@ export const TransactionListScreenStyles = StyleSheet.create({
     topRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginBottom: theme.spacing.s,
+    },
+    titleBlock: {
+        flex: 1,
+        paddingRight: theme.spacing.s,
     },
 
     name: {
@@ -75,10 +110,64 @@ export const TransactionListScreenStyles = StyleSheet.create({
         color: theme.colors.textSecondary,
         marginTop: 2,
     },
+    metaText: {
+        fontSize: 12,
+        color: theme.colors.textSecondary,
+        marginTop: 4,
+    },
 
     amount: {
         fontSize: 18,
         fontWeight: '800',
+    },
+    actionRow: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        gap: theme.spacing.s,
+        marginTop: theme.spacing.m,
+    },
+    actionButton: {
+        borderRadius: 12,
+        paddingHorizontal: 14,
+        paddingVertical: 10,
+    },
+    approveButton: {
+        backgroundColor: theme.colors.success,
+    },
+    rejectButton: {
+        backgroundColor: 'rgba(255, 86, 48, 0.12)',
+    },
+    approveButtonText: {
+        color: theme.colors.white,
+        fontWeight: '700',
+        fontSize: 13,
+    },
+    rejectButtonText: {
+        color: theme.colors.danger,
+        fontWeight: '700',
+        fontSize: 13,
+    },
+    emptyState: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: theme.spacing.xl,
+    },
+    emptyTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: theme.colors.textPrimary,
+        textAlign: 'center',
+    },
+    emptySubtitle: {
+        fontSize: 13,
+        color: theme.colors.textSecondary,
+        textAlign: 'center',
+        marginTop: theme.spacing.s,
+    },
+    retryText: {
+        color: theme.colors.primary,
+        fontWeight: '700',
+        marginTop: theme.spacing.s,
     },
 
     loader: {

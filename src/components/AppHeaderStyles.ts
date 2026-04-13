@@ -20,11 +20,12 @@ export const AppHeaderStyles = StyleSheet.create({
     appTitleContainer: { // Container for the main app title ("AuditIt") and subtitle ("by NituLabs")
         flexDirection: 'column', // Stack title and subtitle vertically
         alignItems: 'flex-start', // Align text to the left
+        flex: 1,
     },
     mainAppTitle: { // Style for the main app title "AuditIt"
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: 'bold',
-        color: theme.colors.primary,
+        color: theme.colors.textPrimary,
     },
     appSubtitle: { // Style for the subtitle "by NituLabs"
         fontSize: 14,
@@ -35,19 +36,20 @@ export const AppHeaderStyles = StyleSheet.create({
     rightSection: { // Container for page title and menu buttons
         flexDirection: 'column', // Stack page title and buttons vertically
         alignItems: 'flex-end', // Align items to the right
-        // flex: 1, // Take up remaining space
-        // flexWrap: 'wrap',
-        width: '40%',
+        width: '38%',
         marginLeft: theme.spacing.m,
     },
-    // Added style for the tenant name
     tenantNameStyle: {
-        fontSize: 16, // Slightly smaller than pageTitle
-        fontWeight: '500', // Medium font weight
-        color: theme.colors.textSecondary, // Use secondary text color
-        marginBottom: theme.spacing.xs, // Add some space below the tenant name
+        fontSize: 15,
+        fontWeight: '700',
+        color: theme.colors.textPrimary,
     },
-    // Removed pageTitle style as it's no longer used in AppHeader
+    userRole: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: theme.colors.textSecondary,
+        marginTop: theme.spacing.xs,
+    },
     menuButtonsContainer: {
         flexDirection: 'row',
         alignItems: 'center',

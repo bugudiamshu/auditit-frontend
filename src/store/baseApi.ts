@@ -9,5 +9,5 @@ export const baseApi = createApi({
     reducerPath: 'baseApi',
     baseQuery: apiBaseQuery,
     endpoints: () => ({}), // Endpoints will be injected by other slices
-    tagTypes: ['Dashboard', 'Transactions']
+    tagTypes: ['Dashboard', 'Transactions', 'Portfolio']
 });

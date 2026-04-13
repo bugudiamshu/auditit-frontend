@@ -6,6 +6,9 @@ export const PortfolioStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: theme.colors.background,
     },
+    loadingContainer: {
+        justifyContent: 'center',
+    },
     header: {
         padding: theme.spacing.l,
         backgroundColor: theme.colors.surface,

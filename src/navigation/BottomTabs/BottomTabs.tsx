@@ -6,6 +6,11 @@ import DashboardScreen from "../../screens/DashboardScreen/DashboardScreen.tsx";
 import TransactionListScreen from "../../screens/TransactionListScreen/TransactionListScreen.tsx";
 
 const Tab = createBottomTabNavigator();
+const TabIcon = ({ color, label }: { color: string; label: string }) => (
+    <Text style={{ color }}>{label}</Text>
+);
+const DashboardIcon = ({ color }: { color: string }) => <TabIcon color={color} label="🏠" />;
+const TransactionsIcon = ({ color }: { color: string }) => <TabIcon color={color} label="💰" />;
 
 const BottomTabs = () => {
     return (
@@ -30,9 +35,7 @@ const BottomTabs = () => {
                 component={DashboardScreen}
                 options={{
                     tabBarLabel: 'Dashboard',
-                    tabBarIcon: ({ color }) => (
-                        <Text style={{ color }}>🏠</Text>
-                    ),
+                    tabBarIcon: DashboardIcon,
                 }}
             />
 
@@ -41,9 +44,7 @@ const BottomTabs = () => {
                 component={TransactionListScreen}
                 options={{
                     tabBarLabel: 'Transactions',
-                    tabBarIcon: ({ color }) => (
-                        <Text style={{ color }}>💰</Text>
-                    ),
+                    tabBarIcon: TransactionsIcon,
                 }}
             />
         </Tab.Navigator>

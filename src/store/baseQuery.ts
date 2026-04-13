@@ -1,4 +1,9 @@
-import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+    BaseQueryFn,
+    FetchArgs,
+    FetchBaseQueryError,
+    fetchBaseQuery,
+} from '@reduxjs/toolkit/query/react';
 import { clearAuth } from '../store/authSlice';
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import clearAuth action
 
@@ -31,7 +36,11 @@ export const baseQuery = fetchBaseQuery({
 });
 
 // Custom error handler to dispatch logout on 401
-export const apiBaseQuery = async (args, api, extraOptions) => {
+export const apiBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+    args,
+    api,
+    extraOptions,
+) => {
     const result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
         // Handle unauthorized access - e.g., clear auth state and redirect to login

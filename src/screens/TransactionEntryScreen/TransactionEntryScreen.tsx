@@ -1,17 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TransactionStyles } from "./TransactionStyles";
 import { useCreateTransactionMutation } from "../../store/transactionApi";
-import { useRoute } from '@react-navigation/native';
 import { theme } from "../../config/theme.ts";
 import { useSnackbar } from '../../context/SnackbarContext'; // Import useSnackbar
 
 const TransactionEntryScreen = ({ navigation }: any) => {
-    const route = useRoute<any>();
-    const society = route.params?.society;
-
     const [type, setType] = useState<'income' | 'expense'>('income');
     const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -75,7 +71,7 @@ const TransactionEntryScreen = ({ navigation }: any) => {
         <SafeAreaView style={TransactionStyles.container}>
             <View style={TransactionStyles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Text style={{ color: theme.colors.primary, marginRight: theme.spacing.xs }}>← Back</Text>
+                    <Text style={TransactionStyles.backText}>← Back</Text>
                 </TouchableOpacity>
                 <Text style={TransactionStyles.title}>New Transaction</Text>
             </View>
@@ -131,7 +127,7 @@ const TransactionEntryScreen = ({ navigation }: any) => {
                         style={[
                             TransactionStyles.halfInput,
                             TransactionStyles.typeButton,
-                            paymentMode === 'cash' && { backgroundColor: theme.colors.overlay } // Using theme color for active state
+                            paymentMode === 'cash' && TransactionStyles.activePaymentButton
                         ]}
                         onPress={() => setPaymentMode('cash')}
                     >
@@ -141,7 +137,7 @@ const TransactionEntryScreen = ({ navigation }: any) => {
                         style={[
                             TransactionStyles.halfInput,
                             TransactionStyles.typeButton,
-                            paymentMode === 'online' && { backgroundColor: theme.colors.overlay } // Using theme color for active state
+                            paymentMode === 'online' && TransactionStyles.activePaymentButton
                         ]}
                         onPress={() => setPaymentMode('online')}
                     >
@@ -179,7 +175,7 @@ const TransactionEntryScreen = ({ navigation }: any) => {
 
                 <Text style={TransactionStyles.label}>Remarks (Optional)</Text>
                 <TextInput
-                    style={[TransactionStyles.input, { height: 100, textAlignVertical: 'top' }]}
+                    style={[TransactionStyles.input, TransactionStyles.multilineInput]}
                     placeholder="Add any additional details"
                     multiline
                     value={remarks}

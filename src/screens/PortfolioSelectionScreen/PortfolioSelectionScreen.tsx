@@ -1,33 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PortfolioStyles } from "./PortfolioStyles";
-import { ApiService } from "../../services/ApiService";
+import { useGetPortfolioQuery } from "../../store/portfolioApi";
 
 const PortfolioSelectionScreen = ({ navigation }: any) => {
-    const [societies, setSocieties] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data, isLoading, isFetching, refetch } = useGetPortfolioQuery();
+    const societies = data?.portfolio ?? [];
 
-    useEffect(() => {
-        loadPortfolio();
-    }, []);
-
-    const loadPortfolio = async () => {
-        setLoading(true);
-        try {
-            // In a real app, we might pass a user ID here
-            const result: any = await ApiService.getPortfolio();
-            setSocieties(result.portfolio);
-        } catch (error) {
-            console.error("Failed to load portfolio", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) {
+    if (isLoading) {
         return (
-            <SafeAreaView style={[PortfolioStyles.container, { justifyContent: 'center' }]}>
+            <SafeAreaView style={[PortfolioStyles.container, PortfolioStyles.loadingContainer]}>
                 <ActivityIndicator size="large" color="#0052CC" />
             </SafeAreaView>
         );
@@ -37,21 +20,25 @@ const PortfolioSelectionScreen = ({ navigation }: any) => {
         <SafeAreaView style={PortfolioStyles.container}>
             <View style={PortfolioStyles.header}>
                 <Text style={PortfolioStyles.title}>Select Organization</Text>
-                <Text style={PortfolioStyles.subtitle}>Welcome back, Founder</Text>
+                <Text style={PortfolioStyles.subtitle}>Portfolio overview is now available from your dashboard.</Text>
             </View>
 
             <FlatList
                 data={societies}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={PortfolioStyles.list}
+                onRefresh={refetch}
+                refreshing={isFetching}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={PortfolioStyles.card}
-                        onPress={() => navigation.navigate('Dashboard', { society: item })}
+                        onPress={() => navigation.replace('MainApp')}
                     >
                         <View>
                             <Text style={PortfolioStyles.cardTitle}>{item.name}</Text>
-                            <Text style={PortfolioStyles.cardSub}>{item.branches} Institutions</Text>
+                            <Text style={PortfolioStyles.cardSub}>
+                                {item.total_transactions} transactions • {item.pending_transactions} pending
+                            </Text>
                         </View>
                         <Text style={PortfolioStyles.arrow}>→</Text>
                     </TouchableOpacity>
@@ -60,9 +47,9 @@ const PortfolioSelectionScreen = ({ navigation }: any) => {
 
             <TouchableOpacity
                 style={PortfolioStyles.globalButton}
-                onPress={() => navigation.navigate('Dashboard', { isConsolidated: true })}
+                onPress={() => navigation.replace('MainApp')}
             >
-                <Text style={PortfolioStyles.globalButtonText}>View Consolidated Dashboard</Text>
+                <Text style={PortfolioStyles.globalButtonText}>Open Consolidated Dashboard</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
