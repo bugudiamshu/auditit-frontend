@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Platform} from 'react-native';
-import {useCreateTransactionMutation} from '../store/transactionApi';
+import {useCreateTransactionMutation, useUpdateTransactionMutation} from '../store/transactionApi';
 import {useSnackbar} from '../context/SnackbarContext';
 
 type TransactionType = 'income' | 'expense';
@@ -13,21 +13,25 @@ export type FormErrors = {
     general?: string;
 };
 
-export const useTransactionEntryForm = (navigation: any) => {
-    const [type, setType] = useState<TransactionType>('income');
-    const [date, setDate] = useState(new Date());
+export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode?: string) => {
+    const [type, setType] = useState<TransactionType>(editItem?.type || 'income');
+    const [date, setDate] = useState(editItem?.transaction_date ? new Date(editItem.transaction_date) : new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const [referenceNo, setReferenceNo] = useState('');
-    const [paymentMode, setPaymentMode] = useState<PaymentMode>('cash');
-    const [transactionId, setTransactionId] = useState('');
-    const [personName, setPersonName] = useState('');
-    const [amount, setAmount] = useState('');
-    const [remarks, setRemarks] = useState('');
+    const [referenceNo, setReferenceNo] = useState(editItem?.reference_no || '');
+    const [paymentMode, setPaymentMode] = useState<PaymentMode>(editItem?.payment_mode || 'cash');
+    const [transactionId, setTransactionId] = useState(editItem?.transaction_id || '');
+    const [personName, setPersonName] = useState(editItem?.person_name || '');
+    const [amount, setAmount] = useState(editItem?.amount ? editItem.amount.toString() : '');
+    const [remarks, setRemarks] = useState(editItem?.remarks || '');
     const [errors, setErrors] = useState<FormErrors>({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
-    const [createTransaction, {isLoading}] = useCreateTransactionMutation();
+    const [createTransaction, {isLoading: isCreating}] = useCreateTransactionMutation();
+    const [updateTransaction, {isLoading: isUpdating}] = useUpdateTransactionMutation();
     const {show: showSnackbar} = useSnackbar();
+
+    const isEdit = !!editItem;
+    const isLoading = isCreating || isUpdating;
 
     const personLabel = type === 'income' ? 'Collected From' : 'Paid To';
     const personPlaceholder = type === 'income' ? 'Enter payer name' : 'Enter recipient name';
@@ -138,7 +142,7 @@ export const useTransactionEntryForm = (navigation: any) => {
         }
 
         try {
-            const response = await createTransaction({
+            const data = {
                 type,
                 transaction_date: date.toISOString().split('T')[0],
                 amount: amountValue,
@@ -147,19 +151,24 @@ export const useTransactionEntryForm = (navigation: any) => {
                 transaction_id: paymentMode === 'online' ? transactionId.trim() : null,
                 person_name: personName.trim(),
                 remarks: remarks.trim() || null,
-            }).unwrap();
+            };
 
-            showSnackbar(response.message || 'Transaction submitted successfully.', 'success');
+            const response = isEdit
+                ? await updateTransaction({id: editItem.id, data, orgCode}).unwrap()
+                : await createTransaction(data).unwrap();
+
+            showSnackbar(response.message || `Transaction ${isEdit ? 'updated' : 'submitted'} successfully.`, 'success');
             navigation.goBack();
         } catch (error: any) {
             const apiMessage =
-                error?.data?.message || 'Unable to submit the transaction right now.';
+                error?.data?.message || `Unable to ${isEdit ? 'update' : 'submit'} the transaction right now.`;
             setErrors(prev => ({...prev, general: apiMessage}));
             showSnackbar(apiMessage, 'error');
         }
     };
 
     return {
+        isEdit,
         type,
         date,
         showDatePicker,

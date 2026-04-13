@@ -54,6 +54,29 @@ export const transactionApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['Transactions', 'Dashboard'],
         }),
+        updateTransaction: builder.mutation<
+            TransactionMutationResponse,
+            { id: number; data: Record<string, unknown>; orgCode?: string }
+        >({
+            query: ({ id, data, orgCode }) => ({
+                url: `/transactions/${id}`,
+                method: 'PATCH',
+                body: data,
+                headers: orgCode ? {'X-Organization-Code': orgCode} : undefined,
+            }),
+            invalidatesTags: ['Transactions', 'Dashboard'],
+        }),
+        deleteTransaction: builder.mutation<
+            { success: boolean; message: string },
+            { id: number; orgCode?: string }
+        >({
+            query: ({ id, orgCode }) => ({
+                url: `/transactions/${id}`,
+                method: 'DELETE',
+                headers: orgCode ? {'X-Organization-Code': orgCode} : undefined,
+            }),
+            invalidatesTags: ['Transactions', 'Dashboard'],
+        }),
         approveTransaction: builder.mutation<
             TransactionMutationResponse,
             { id: number; status: 'approved' | 'rejected'; orgCode?: string }
@@ -72,5 +95,7 @@ export const transactionApi = baseApi.injectEndpoints({
 export const { 
     useGetTransactionsQuery, 
     useCreateTransactionMutation, 
+    useUpdateTransactionMutation,
+    useDeleteTransactionMutation,
     useApproveTransactionMutation 
 } = transactionApi;

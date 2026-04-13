@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader.tsx';
 import FeedbackState from '../../components/common/FeedbackState';
@@ -16,9 +16,11 @@ const TransactionListScreen = ({navigation}: any) => {
         isFetching,
         error,
         refetch,
+        user,
         statusFilter,
         setStatusFilter,
         handleDecision,
+        handleDelete,
         isUpdating,
         isFounder,
         societies,
@@ -27,6 +29,24 @@ const TransactionListScreen = ({navigation}: any) => {
         setSelectedOrgCode,
         isPortfolioLoading,
     } = useTransactionList();
+
+    const confirmDelete = (id: number) => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to permanently delete this transaction?',
+            [
+                {text: 'Cancel', style: 'cancel'},
+                {text: 'Delete', style: 'destructive', onPress: () => handleDelete(id)},
+            ],
+        );
+    };
+
+    const handleEdit = (item: any) => {
+        navigation.navigate('TransactionEntry', {
+            editItem: item,
+            orgCode: activeOrgCode,
+        });
+    };
 
     if (isLoading || isPortfolioLoading) {
         return (
@@ -83,8 +103,12 @@ const TransactionListScreen = ({navigation}: any) => {
                     <TransactionCard
                         item={item}
                         isFounder={isFounder}
+                        currentUserId={user?.id}
                         isUpdating={isUpdating}
-                        onDecision={handleDecision}
+                        onApprove={id => handleDecision(id, 'approved')}
+                        onReject={id => handleDecision(id, 'rejected')}
+                        onEdit={handleEdit}
+                        onDelete={confirmDelete}
                     />
                 )}
                 keyExtractor={item => item.id.toString()}

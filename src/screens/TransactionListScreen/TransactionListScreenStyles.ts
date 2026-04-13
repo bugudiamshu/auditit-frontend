@@ -155,6 +155,22 @@ export const TransactionListScreenStyles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 13,
     },
+    editButton: {
+        backgroundColor: '#e3f2fd',
+    },
+    editButtonText: {
+        color: '#2196f3',
+        fontWeight: '700',
+        fontSize: 13,
+    },
+    deleteButton: {
+        backgroundColor: '#ffebee',
+    },
+    deleteButtonText: {
+        color: '#f44336',
+        fontWeight: '700',
+        fontSize: 13,
+    },
     emptyState: {
         alignItems: 'center',
         justifyContent: 'center',

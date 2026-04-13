@@ -3,6 +3,7 @@ import {useSnackbar} from '../context/SnackbarContext';
 import {useGetPortfolioQuery} from '../store/portfolioApi';
 import {
     useApproveTransactionMutation,
+    useDeleteTransactionMutation,
     useGetTransactionsQuery,
 } from '../store/transactionApi';
 import {useAppSelector} from '../store/store';
@@ -37,6 +38,7 @@ export const useTransactionList = () => {
         },
     );
     const [approveTransaction, approvalState] = useApproveTransactionMutation();
+    const [deleteTransaction, deletionState] = useDeleteTransactionMutation();
     const {show: showSnackbar} = useSnackbar();
 
     const handleDecision = async (id: number, status: 'approved' | 'rejected') => {
@@ -52,8 +54,21 @@ export const useTransactionList = () => {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        try {
+            const response = await deleteTransaction({
+                id,
+                ...(activeOrgCode ? {orgCode: activeOrgCode} : {}),
+            }).unwrap();
+            showSnackbar(response.message, 'success');
+        } catch (error: any) {
+            showSnackbar(error?.data?.message || 'Unable to delete transaction.', 'error');
+        }
+    };
+
     return {
         ...query,
+        user,
         statusFilter,
         setStatusFilter,
         societies,
@@ -61,7 +76,8 @@ export const useTransactionList = () => {
         activeOrgCode,
         setSelectedOrgCode,
         handleDecision,
-        isUpdating: approvalState.isLoading,
+        handleDelete,
+        isUpdating: approvalState.isLoading || deletionState.isLoading,
         isFounder,
         isPortfolioLoading,
     };

@@ -8,8 +8,10 @@ import {useTransactionEntryForm} from '../../hooks/useTransactionEntryForm';
 import {formatDisplayDate} from '../../utils/formatters';
 import {TransactionStyles} from './TransactionStyles';
 
-const TransactionEntryScreen = ({navigation}: any) => {
-    const form = useTransactionEntryForm(navigation);
+const TransactionEntryScreen = ({navigation, route}: any) => {
+    const editItem = route.params?.editItem;
+    const orgCode = route.params?.orgCode;
+    const form = useTransactionEntryForm(navigation, editItem, orgCode);
 
     return (
         <SafeAreaView style={TransactionStyles.container}>
@@ -17,7 +19,9 @@ const TransactionEntryScreen = ({navigation}: any) => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Text style={TransactionStyles.backText}>← Back</Text>
                 </TouchableOpacity>
-                <Text style={TransactionStyles.title}>New Transaction</Text>
+                <Text style={TransactionStyles.title}>
+                    {form.isEdit ? 'Edit Transaction' : 'New Transaction'}
+                </Text>
             </View>
 
             <ScrollView
@@ -26,12 +30,16 @@ const TransactionEntryScreen = ({navigation}: any) => {
                 showsVerticalScrollIndicator={false}
             >
                 <View style={TransactionStyles.heroCard}>
-                    <Text style={TransactionStyles.heroEyebrow}>Ledger Entry</Text>
+                    <Text style={TransactionStyles.heroEyebrow}>
+                        {form.isEdit ? 'Update Entry' : 'Ledger Entry'}
+                    </Text>
                     <Text style={TransactionStyles.heroTitle}>
-                        Record a {form.type === 'income' ? 'collection' : 'payment'} with confidence.
+                        {form.isEdit ? 'Refine this record' : `Record a ${form.type === 'income' ? 'collection' : 'payment'}`} with confidence.
                     </Text>
                     <Text style={TransactionStyles.heroSubtitle}>
-                        Choose the flow, confirm the amount, and submit it for review in one pass.
+                        {form.isEdit
+                            ? 'Update details as needed and resubmit for approval.'
+                            : 'Choose the flow, confirm the amount, and submit it for review in one pass.'}
                     </Text>
                 </View>
 
@@ -244,7 +252,13 @@ const TransactionEntryScreen = ({navigation}: any) => {
                     disabled={form.isLoading}
                 >
                     <Text style={TransactionStyles.submitText}>
-                        {form.isLoading ? 'Submitting...' : 'Submit Transaction'}
+                        {form.isLoading
+                            ? form.isEdit
+                                ? 'Updating...'
+                                : 'Submitting...'
+                            : form.isEdit
+                            ? 'Update Transaction'
+                            : 'Submit Transaction'}
                     </Text>
                 </TouchableOpacity>
             </ScrollView>
