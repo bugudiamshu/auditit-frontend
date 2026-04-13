@@ -1,16 +1,25 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
+import {Text, View} from 'react-native';
 import {theme} from "../../config/theme.ts";
 import DashboardScreen from "../../screens/DashboardScreen/DashboardScreen.tsx";
 import TransactionListScreen from "../../screens/TransactionListScreen/TransactionListScreen.tsx";
 
 const Tab = createBottomTabNavigator();
-const TabIcon = ({ color, label }: { color: string; label: string }) => (
-    <Text style={{ color }}>{label}</Text>
+const DashboardIcon = ({ focused }: { focused: boolean }) => (
+    <Text style={{ 
+        fontSize: 22, 
+        opacity: focused ? 1 : 0.5,
+        marginBottom: -4 
+    }}>📊</Text>
 );
-const DashboardIcon = ({ color }: { color: string }) => <TabIcon color={color} label="🏠" />;
-const TransactionsIcon = ({ color }: { color: string }) => <TabIcon color={color} label="💰" />;
+const TransactionsIcon = ({ focused }: { focused: boolean }) => (
+    <Text style={{ 
+        fontSize: 22, 
+        opacity: focused ? 1 : 0.5,
+        marginBottom: -4 
+    }}>📜</Text>
+);
 
 const BottomTabs = () => {
     return (
@@ -18,15 +27,26 @@ const BottomTabs = () => {
             screenOptions={{
                 headerShown: false,
                 tabBarStyle: {
-                    height: 60,
+                    height: 70,
                     backgroundColor: theme.colors.surface,
+                    borderTopWidth: 1,
                     borderTopColor: theme.colors.border,
+                    paddingBottom: 12,
+                    paddingTop: 12,
+                    elevation: 10,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -4 },
+                    shadowOpacity: 0.05,
+                    shadowRadius: 10,
                 },
                 tabBarActiveTintColor: theme.colors.primary,
                 tabBarInactiveTintColor: theme.colors.textSecondary,
                 tabBarLabelStyle: {
-                    fontSize: 12,
-                    fontWeight: '600',
+                    fontSize: 11,
+                    fontWeight: '800',
+                    marginTop: 4,
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.5,
                 },
             }}
         >

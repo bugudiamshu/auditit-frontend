@@ -59,18 +59,24 @@ const VerifyOrgScreen = ({ navigation }: any) => {
             >
                 <View style={VerifyOrgScreenStyles.logoContainer}>
                     <Text style={VerifyOrgScreenStyles.logoText}>AuditIt</Text>
-                    <Text style={VerifyOrgScreenStyles.tagline}>by NituLabs</Text>
+                    <Text style={VerifyOrgScreenStyles.tagline}>Financial Trust Layer</Text>
                 </View>
 
                 <View style={VerifyOrgScreenStyles.form}>
-                    <Text style={VerifyOrgScreenStyles.label}>Enter Organization Code</Text>
+                    <Text style={VerifyOrgScreenStyles.headerText}>Let's get started</Text>
+                    <Text style={VerifyOrgScreenStyles.subHeaderText}>
+                        Enter your unique organization code provided by your society admin.
+                    </Text>
+
+                    <Text style={VerifyOrgScreenStyles.label}>Organization Code</Text>
                     <TextInput
                         style={VerifyOrgScreenStyles.input}
-                        placeholder="e.g. BRIL or BSBC"
-                        placeholderTextColor="#999"
+                        placeholder="BRIL"
+                        placeholderTextColor="#B0B0B0"
                         autoCapitalize="characters"
                         value={orgCode}
                         onChangeText={setOrgCode}
+                        maxLength={8}
                     />
 
                     <TouchableOpacity
@@ -87,7 +93,7 @@ const VerifyOrgScreen = ({ navigation }: any) => {
                         style={VerifyOrgScreenStyles.founderLink}
                         onPress={handleFounderLogin}
                     >
-                        <Text style={VerifyOrgScreenStyles.founderText}>Founder/Partner Login</Text>
+                        <Text style={VerifyOrgScreenStyles.founderText}>Login as Founder/Partner Instead →</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>

@@ -1,5 +1,5 @@
-import React from 'react';
-import {ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
+import {ActivityIndicator, Alert, FlatList, Modal, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader.tsx';
 import FeedbackState from '../../components/common/FeedbackState';
@@ -29,6 +29,8 @@ const TransactionListScreen = ({navigation}: any) => {
         setSelectedOrgCode,
         isPortfolioLoading,
     } = useTransactionList();
+
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
     const confirmDelete = (id: number) => {
         Alert.alert(
@@ -63,21 +65,62 @@ const TransactionListScreen = ({navigation}: any) => {
             <AppHeader pageTitle={'Transactions'} />
 
             {isFounder && societies.length ? (
-                <View style={TransactionListScreenStyles.scopeCard}>
-                    <Text style={TransactionListScreenStyles.scopeTitle}>Society Approvals</Text>
-                    <Text style={TransactionListScreenStyles.scopeSubtitle}>
-                        {activeSociety
-                            ? `Reviewing ${activeSociety.name}`
-                            : 'Choose a society to review pending entries.'}
-                    </Text>
-                    <FilterChips
-                        options={societies.map(item => ({
-                            label: item.org_code,
-                            value: item.org_code,
-                        }))}
-                        value={activeOrgCode}
-                        onChange={setSelectedOrgCode}
-                    />
+                <View style={TransactionListScreenStyles.dropdownContainer}>
+                    <Text style={TransactionListScreenStyles.dropdownLabel}>Active Society</Text>
+                    <TouchableOpacity
+                        style={TransactionListScreenStyles.dropdownSelector}
+                        onPress={() => setIsDropdownVisible(true)}
+                    >
+                        <Text style={TransactionListScreenStyles.dropdownValue}>
+                            {activeSociety?.name ?? 'Select Society'}
+                        </Text>
+                        <Text style={TransactionListScreenStyles.dropdownChevron}>▼</Text>
+                    </TouchableOpacity>
+
+                    <Modal
+                        visible={isDropdownVisible}
+                        transparent
+                        animationType="slide"
+                        onRequestClose={() => setIsDropdownVisible(false)}
+                    >
+                        <TouchableOpacity
+                            style={TransactionListScreenStyles.modalOverlay}
+                            activeOpacity={1}
+                            onPress={() => setIsDropdownVisible(false)}
+                        >
+                            <View style={TransactionListScreenStyles.modalContent}>
+                                <View style={TransactionListScreenStyles.modalHeader}>
+                                    <Text style={TransactionListScreenStyles.modalTitle}>Choose Society</Text>
+                                    <TouchableOpacity
+                                        onPress={() => setIsDropdownVisible(false)}
+                                        style={TransactionListScreenStyles.closeButton}
+                                    >
+                                        <Text style={TransactionListScreenStyles.closeText}>Close</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <FlatList
+                                    data={societies}
+                                    keyExtractor={item => item.org_code}
+                                    renderItem={({item}) => (
+                                        <TouchableOpacity
+                                            style={[
+                                                TransactionListScreenStyles.societyOption,
+                                                item.org_code === activeOrgCode && TransactionListScreenStyles.societyOptionActive
+                                            ]}
+                                            onPress={() => {
+                                                setSelectedOrgCode(item.org_code);
+                                                setIsDropdownVisible(false);
+                                            }}
+                                        >
+                                            <Text style={TransactionListScreenStyles.societyOptionText}>{item.name}</Text>
+                                            <Text style={TransactionListScreenStyles.societyOptionCode}>{item.org_code}</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
                 </View>
             ) : null}
 

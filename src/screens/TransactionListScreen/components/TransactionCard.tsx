@@ -43,88 +43,99 @@ const TransactionCard = ({
 
     return (
         <View style={TransactionListScreenStyles.card}>
+            {/* Header: Name & Icons */}
             <View style={TransactionListScreenStyles.topRow}>
                 <View style={TransactionListScreenStyles.titleBlock}>
                     <Text style={TransactionListScreenStyles.name}>{item.person_name}</Text>
-                    <Text style={TransactionListScreenStyles.metaText}>
-                        {item.payment_mode === 'online' ? 'Online Transfer' : 'Cash Payment'}
-                    </Text>
+                    <View
+                        style={[
+                            TransactionListScreenStyles.badge,
+                            {backgroundColor: statusColor(item.status), alignSelf: 'flex-start', marginTop: 6},
+                        ]}
+                    >
+                        <Text style={TransactionListScreenStyles.badgeText}>{item.status.toUpperCase()}</Text>
+                    </View>
                 </View>
-                <View
-                    style={[
-                        TransactionListScreenStyles.badge,
-                        {backgroundColor: statusColor(item.status)},
-                    ]}
-                >
-                    <Text style={TransactionListScreenStyles.badgeText}>{item.status.toUpperCase()}</Text>
-                </View>
+
+                {/* Edit/Delete Icons positioned top right */}
+                {(canEdit || canDelete) && (
+                    <View style={TransactionListScreenStyles.secondaryActions}>
+                        {canEdit && (
+                            <TouchableOpacity
+                                style={[TransactionListScreenStyles.iconButton, TransactionListScreenStyles.editIconButton]}
+                                onPress={() => onEdit(item)}
+                                disabled={isUpdating}
+                            >
+                                <Text style={TransactionListScreenStyles.iconLabel}>✏️</Text>
+                            </TouchableOpacity>
+                        )}
+                        {canDelete && (
+                            <TouchableOpacity
+                                style={[TransactionListScreenStyles.iconButton, TransactionListScreenStyles.deleteIconButton]}
+                                onPress={() => onDelete(item.id)}
+                                disabled={isUpdating}
+                            >
+                                <Text style={TransactionListScreenStyles.iconLabel}>🗑️</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                )}
             </View>
 
-            <View style={TransactionListScreenStyles.bottomRow}>
-                <View style={{flex: 1, marginRight: 10}}>
-                    <Text style={TransactionListScreenStyles.date}>{item.transaction_date}</Text>
-                    {item.remarks ? (
-                        <Text style={TransactionListScreenStyles.remarks} numberOfLines={2}>
-                            {item.remarks}
-                        </Text>
-                    ) : null}
-                    <Text style={TransactionListScreenStyles.metaText}>
-                        By {item.creator?.name || 'System'}
-                        {item.approver?.name ? ` • Approved by ${item.approver.name}` : ''}
-                    </Text>
-                </View>
-
+            {/* Amount & Mode */}
+            <View style={TransactionListScreenStyles.amountRow}>
                 <Text
                     style={[
                         TransactionListScreenStyles.amount,
                         {color: item.type === 'income' ? theme.colors.success : theme.colors.danger},
                     ]}
                 >
-                    {item.type === 'income' ? '+' : '-'} ₹{parseFloat(item.amount).toLocaleString()}
+                    {item.type === 'income' ? '+' : '-'} ₹{parseFloat(item.amount).toLocaleString('en-IN')}
+                </Text>
+                <Text style={TransactionListScreenStyles.paymentMode}>
+                    {item.payment_mode === 'online' ? 'Online' : 'Cash'}
                 </Text>
             </View>
 
-            {(canApproveReject || canEdit || canDelete) ? (
-                <View style={TransactionListScreenStyles.actionRow}>
-                    {canEdit && (
-                        <TouchableOpacity
-                            style={[TransactionListScreenStyles.actionButton, TransactionListScreenStyles.editButton]}
-                            onPress={() => onEdit(item)}
-                            disabled={isUpdating}
-                        >
-                            <Text style={TransactionListScreenStyles.editButtonText}>Edit</Text>
-                        </TouchableOpacity>
-                    )}
-                    {canDelete && (
-                        <TouchableOpacity
-                            style={[TransactionListScreenStyles.actionButton, TransactionListScreenStyles.deleteButton]}
-                            onPress={() => onDelete(item.id)}
-                            disabled={isUpdating}
-                        >
-                            <Text style={TransactionListScreenStyles.deleteButtonText}>Delete</Text>
-                        </TouchableOpacity>
-                    )}
-                    <View style={{flex: 1}} />
-                    {canApproveReject && (
-                        <>
-                            <TouchableOpacity
-                                style={[TransactionListScreenStyles.actionButton, TransactionListScreenStyles.rejectButton]}
-                                onPress={() => onReject(item.id)}
-                                disabled={isUpdating}
-                            >
-                                <Text style={TransactionListScreenStyles.rejectButtonText}>Reject</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[TransactionListScreenStyles.actionButton, TransactionListScreenStyles.approveButton]}
-                                onPress={() => onApprove(item.id)}
-                                disabled={isUpdating}
-                            >
-                                <Text style={TransactionListScreenStyles.approveButtonText}>Approve</Text>
-                            </TouchableOpacity>
-                        </>
-                    )}
+            {/* Remarks */}
+            {item.remarks ? (
+                <View style={TransactionListScreenStyles.remarksBox}>
+                    <Text style={TransactionListScreenStyles.remarks} numberOfLines={2}>
+                        "{item.remarks}"
+                    </Text>
                 </View>
             ) : null}
+
+            {/* Metadata */}
+            <View style={TransactionListScreenStyles.metaRow}>
+                <Text style={TransactionListScreenStyles.date}>{item.transaction_date}</Text>
+                <Text style={TransactionListScreenStyles.metaText}>
+                    By {item.creator?.name?.split(' ')[0] || 'System'}
+                </Text>
+            </View>
+
+            {/* Primary Actions (Founder Only) */}
+            {canApproveReject && (
+                <>
+                    <View style={TransactionListScreenStyles.actionDivider} />
+                    <View style={TransactionListScreenStyles.primaryActions}>
+                        <TouchableOpacity
+                            style={[TransactionListScreenStyles.actionButton, TransactionListScreenStyles.rejectButton]}
+                            onPress={() => onReject(item.id)}
+                            disabled={isUpdating}
+                        >
+                            <Text style={TransactionListScreenStyles.rejectButtonText}>Reject</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[TransactionListScreenStyles.actionButton, TransactionListScreenStyles.approveButton]}
+                            onPress={() => onApprove(item.id)}
+                            disabled={isUpdating}
+                        >
+                            <Text style={TransactionListScreenStyles.approveButtonText}>Approve</Text>
+                        </TouchableOpacity>
+                    </View>
+                </>
+            )}
         </View>
     );
 };

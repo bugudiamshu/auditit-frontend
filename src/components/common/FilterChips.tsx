@@ -26,8 +26,8 @@ function FilterChips<T>({options, value, onChange, style}: FilterChipsProps<T>) 
                         style={[
                             styles.chip,
                             {
-                                backgroundColor: isActive ? theme.colors.primary : theme.colors.surface,
-                                borderColor: isActive ? theme.colors.primary : theme.colors.border,
+                                backgroundColor: isActive ? theme.colors.primary : '#F4F7FF',
+                                borderColor: isActive ? theme.colors.primary : 'transparent',
                             },
                         ]}
                         onPress={() => onChange(option.value)}

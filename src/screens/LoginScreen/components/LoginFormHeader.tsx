@@ -17,14 +17,14 @@ const LoginFormHeader = ({
 }: LoginFormHeaderProps) => (
     <View style={LoginScreenStyles.header}>
         <Text style={LoginScreenStyles.title}>
-            {isOtpStep ? 'Verify OTP' : isFounder ? 'Founder Login' : `${organizationCode || 'Branch'} Login`}
+            {isOtpStep ? 'Verify Identity' : isFounder ? 'Founder Access' : 'Branch Portal'}
         </Text>
         <Text style={LoginScreenStyles.subtitle}>
             {isOtpStep
-                ? `Enter the 4-digit code sent to ${mobile}`
+                ? `Please enter the 4-digit security code sent to +91 ${mobile}`
                 : isFounder
-                  ? 'Access your global portfolio'
-                  : 'Access your branch dashboard'}
+                  ? 'Access your global society portfolio and manage high-level approvals.'
+                  : `Securely access the ${organizationCode || 'Branch'} dashboard and manage daily ledgers.`}
         </Text>
     </View>
 );

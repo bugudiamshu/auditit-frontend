@@ -9,32 +9,39 @@ interface AppHeaderProps {
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({
-    pageTitle, // Destructure pageTitle
+    pageTitle,
 }) => {
-
     const {tenant, user} = useAppSelector(state => state.auth);
     const {confirmLogout, isLoggingOut} = useLogout();
+    const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
 
     return (
         <View style={AppHeaderStyles.header}>
-            <View style={AppHeaderStyles.appTitleContainer}>
-                <Text style={AppHeaderStyles.mainAppTitle}>{pageTitle}</Text>
-                <Text style={AppHeaderStyles.appSubtitle}>
-                    {tenant ? tenant.name : 'AuditIt by NituLabs'}
+            <View style={AppHeaderStyles.leftContent}>
+                <Text style={AppHeaderStyles.pageTitle}>{pageTitle}</Text>
+                <Text style={AppHeaderStyles.tenantName} numberOfLines={1}>
+                    {tenant ? tenant.name : 'AuditIt Central'}
                 </Text>
             </View>
 
-            <View style={AppHeaderStyles.rightSection}>
-                <Text style={AppHeaderStyles.tenantNameStyle}>
-                    {user?.name ?? 'User'}
-                </Text>
-                <Text style={AppHeaderStyles.userRole}>
-                    {user?.role === 'founder' ? 'Founder' : 'Incharge'}
-                </Text>
-                <TouchableOpacity style={AppHeaderStyles.logoutButton} onPress={confirmLogout} disabled={isLoggingOut}>
-                    <Text style={AppHeaderStyles.logoutText}>
-                        {isLoggingOut ? 'Signing out...' : 'Logout'}
-                    </Text>
+            <View style={AppHeaderStyles.rightContent}>
+                <View style={AppHeaderStyles.userInfo}>
+                    <Text style={AppHeaderStyles.userName}>{user?.name?.split(' ')[0] ?? 'User'}</Text>
+                    <View style={AppHeaderStyles.roleBadge}>
+                        <Text style={AppHeaderStyles.roleText}>
+                            {user?.role === 'founder' ? 'Founder' : 'Incharge'}
+                        </Text>
+                    </View>
+                </View>
+                <TouchableOpacity 
+                    style={AppHeaderStyles.avatarContainer} 
+                    onPress={confirmLogout}
+                    disabled={isLoggingOut}
+                >
+                    <View style={AppHeaderStyles.avatar}>
+                        <Text style={AppHeaderStyles.avatarText}>{userInitial}</Text>
+                    </View>
+                    <View style={AppHeaderStyles.logoutIndicator} />
                 </TouchableOpacity>
             </View>
         </View>
