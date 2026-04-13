@@ -50,6 +50,18 @@ export const AppHeaderStyles = StyleSheet.create({
         color: theme.colors.textSecondary,
         marginTop: theme.spacing.xs,
     },
+    logoutButton: {
+        marginTop: theme.spacing.s,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 999,
+        backgroundColor: '#EEF4FF',
+    },
+    logoutText: {
+        color: theme.colors.primary,
+        fontSize: 12,
+        fontWeight: '700',
+    },
     menuButtonsContainer: {
         flexDirection: 'row',
         alignItems: 'center',

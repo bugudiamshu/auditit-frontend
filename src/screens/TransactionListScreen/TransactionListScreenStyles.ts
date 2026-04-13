@@ -6,25 +6,33 @@ export const TransactionListScreenStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: theme.colors.background,
     },
-
-    titleContainer: {
-        paddingHorizontal: theme.spacing.l,
-        paddingVertical: theme.spacing.m,
+    scopeCard: {
+        backgroundColor: theme.colors.surface,
+        marginHorizontal: theme.spacing.l,
+        marginTop: theme.spacing.m,
+        padding: theme.spacing.m,
+        borderRadius: 18,
+        shadowColor: '#000',
+        shadowOpacity: 0.04,
+        shadowRadius: 8,
+        elevation: 2,
     },
-
-    title: {
-        fontSize: 22,
-        fontWeight: '700',
+    scopeTitle: {
+        fontSize: 17,
+        fontWeight: '800',
         color: theme.colors.textPrimary,
     },
-    subtitle: {
+    scopeSubtitle: {
         fontSize: 13,
         color: theme.colors.textSecondary,
         marginTop: theme.spacing.xs,
+        marginBottom: theme.spacing.m,
     },
+
     filtersRow: {
         flexDirection: 'row',
         paddingHorizontal: theme.spacing.l,
+        paddingTop: theme.spacing.m,
         paddingBottom: theme.spacing.m,
         gap: theme.spacing.s,
     },

@@ -1,107 +1,28 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import React from 'react';
+import {KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRoute} from '@react-navigation/native';
-import {LoginScreenStyles} from "./LoginScreenStyles";
-import {useSendOtpMutation, useVerifyOtpMutation} from "../../store/authApi";
-import {setAuth} from '../../store/authSlice'; // Import setAuth action
-import {useAppDispatch} from '../../store/store'; // Import useAppDispatch
-import {useSnackbar} from '../../context/SnackbarContext'; // Import useSnackbar
+import {useLoginFlow} from '../../hooks/useLoginFlow';
+import LoginFormHeader from './components/LoginFormHeader';
+import {LoginScreenStyles} from './LoginScreenStyles';
 
-const RESEND_TIMER_SECONDS = 30;
-
-const LoginScreen = ({ navigation }: any) => {
+const LoginScreen = ({navigation}: any) => {
     const route = useRoute<any>();
-    const { organizationCode, isFounder } = route.params || {};
-
-    const [mobile, setMobile] = useState('');
-    const [otp, setOtp] = useState('');
-    const [isOtpStep, setIsOtpStep] = useState(false);
-    const [timer, setTimer] = useState(0);
-    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-    const dispatch = useAppDispatch();
-    const { show: showSnackbar } = useSnackbar(); // Get show Snackbar function
-
-    const [sendOtp, { isLoading: isSendingOtp }] = useSendOtpMutation();
-    const [verifyOtp, { isLoading: isVerifyingOtp }] = useVerifyOtpMutation();
-
-    // Cleanup timer on unmount
-    const cleanupTimer = useCallback(() => {
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-        }
-    }, []);
-
-    useEffect(() => {
-        return cleanupTimer;
-    }, [cleanupTimer]);
-
-    // Timer logic
-    useEffect(() => {
-        if (timer > 0) {
-            timerRef.current = setInterval(() => {
-                setTimer((prev) => prev - 1);
-            }, 1000);
-        } else {
-            cleanupTimer();
-        }
-        return cleanupTimer;
-    }, [timer, cleanupTimer]);
-
-    const startTimer = useCallback(() => {
-        setTimer(RESEND_TIMER_SECONDS);
-    }, []);
-
-    const handleSendOtp = useCallback(async () => {
-        if (!mobile || mobile.length < 10) {
-            showSnackbar('Please enter a valid mobile number', 'error');
-            return;
-        }
-
-        try {
-            const result = await sendOtp({ mobile }).unwrap();
-            if (result.success) {
-                setIsOtpStep(true);
-                startTimer();
-                console.log('OTP Sent successfully');
-            }
-        } catch (error: any) {
-            console.error("Send OTP error:", error);
-            showSnackbar(error?.data?.message || 'Failed to send OTP. Please check the mobile number.', 'error');
-        }
-    }, [mobile, sendOtp, startTimer, showSnackbar]);
-
-    const handleVerifyOtp = useCallback(async () => {
-        if (!otp || otp.length !== 4) {
-            showSnackbar('Please enter the 4-digit OTP', 'error');
-            return;
-        }
-
-        try {
-            const result = await verifyOtp({ mobile, otp }).unwrap();
-            if (result.success) {
-                dispatch(setAuth({
-                    token: result.token,
-                    user: result.user,
-                    tenant: result.tenant ?? null,
-                    organizationCode: organizationCode // Pass organizationCode to Redux
-                }));
-
-                navigation.replace('MainApp');
-            }
-        } catch (error: any) {
-            console.error("Verify OTP error:", error);
-            showSnackbar(error?.data?.message || 'Invalid OTP', 'error');
-        }
-    }, [mobile, otp, organizationCode, verifyOtp, dispatch, showSnackbar, navigation]);
-
-    const handleResendOtp = useCallback(() => {
-        if (timer === 0) {
-            (async () => await handleSendOtp())();
-        }
-    }, [timer, handleSendOtp]);
+    const {organizationCode, isFounder} = route.params || {};
+    const {
+        mobile,
+        setMobile,
+        otp,
+        setOtp,
+        isOtpStep,
+        timer,
+        isSendingOtp,
+        isVerifyingOtp,
+        handleSendOtp,
+        handleVerifyOtp,
+        handleResendOtp,
+        resetOtpStep,
+    } = useLoginFlow({navigation, organizationCode});
 
     return (
         <SafeAreaView style={LoginScreenStyles.container}>
@@ -109,16 +30,12 @@ const LoginScreen = ({ navigation }: any) => {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={LoginScreenStyles.inner}
             >
-                <View style={LoginScreenStyles.header}>
-                    <Text style={LoginScreenStyles.title}>
-                        {isOtpStep ? "Verify OTP" : (isFounder ? "Founder Login" : `${organizationCode || 'Branch'} Login`)}
-                    </Text>
-                    <Text style={LoginScreenStyles.subtitle}>
-                        {isOtpStep
-                            ? `Enter the 4-digit code sent to ${mobile}`
-                            : (isFounder ? "Access your global portfolio" : `Access your branch dashboard`)}
-                    </Text>
-                </View>
+                <LoginFormHeader
+                    isOtpStep={isOtpStep}
+                    isFounder={isFounder}
+                    organizationCode={organizationCode}
+                    mobile={mobile}
+                />
 
                 <View style={LoginScreenStyles.form}>
                     {!isOtpStep ? (
@@ -131,13 +48,13 @@ const LoginScreen = ({ navigation }: any) => {
                                 maxLength={10}
                                 value={mobile}
                                 onChangeText={setMobile}
-                                autoComplete="tel" // Added autoComplete for better UX
+                                autoComplete="tel"
                             />
 
                             <TouchableOpacity
                                 style={LoginScreenStyles.button}
                                 onPress={handleSendOtp}
-                                disabled={isSendingOtp || mobile.length < 10} // Disable if input invalid
+                                disabled={isSendingOtp || mobile.length < 10}
                             >
                                 <Text style={LoginScreenStyles.buttonText}>
                                     {isSendingOtp ? 'Sending...' : 'Get OTP'}
@@ -166,7 +83,7 @@ const LoginScreen = ({ navigation }: any) => {
                             <TouchableOpacity
                                 style={LoginScreenStyles.button}
                                 onPress={handleVerifyOtp}
-                                disabled={isVerifyingOtp || otp.length !== 4} // Disable if input invalid
+                                disabled={isVerifyingOtp || otp.length !== 4}
                             >
                                 <Text style={LoginScreenStyles.buttonText}>
                                     {isVerifyingOtp ? 'Verifying...' : 'Verify & Login'}
@@ -178,32 +95,31 @@ const LoginScreen = ({ navigation }: any) => {
                                 onPress={handleResendOtp}
                                 disabled={timer > 0}
                             >
-                                <Text style={timer > 0 ? LoginScreenStyles.disabledResendText : LoginScreenStyles.resendText}>
-                                    {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
+                                <Text
+                                    style={
+                                        timer > 0
+                                            ? LoginScreenStyles.disabledResendText
+                                            : LoginScreenStyles.resendText
+                                    }
+                                >
+                                    {timer > 0 ? `Resend OTP in ${timer}s` : 'Resend OTP'}
                                 </Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity
-                                style={LoginScreenStyles.backLink}
-                                onPress={() => {
-                                    cleanupTimer(); // Clear timer when going back
-                                    setIsOtpStep(false);
-                                    setOtp('');
-                                }}
-                            >
+                            <TouchableOpacity style={LoginScreenStyles.backLink} onPress={resetOtpStep}>
                                 <Text style={LoginScreenStyles.backText}>← Change Mobile Number</Text>
                             </TouchableOpacity>
                         </>
                     )}
 
-                    {!isOtpStep && (
+                    {!isOtpStep ? (
                         <TouchableOpacity
                             style={LoginScreenStyles.backLink}
                             onPress={() => navigation.goBack()}
                         >
                             <Text style={LoginScreenStyles.backText}>← Back</Text>
                         </TouchableOpacity>
-                    )}
+                    ) : null}
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>

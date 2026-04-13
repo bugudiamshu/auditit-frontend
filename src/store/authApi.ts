@@ -22,7 +22,13 @@ export const authApi = baseApi.injectEndpoints({
             // Force a refetch of the dashboard after any successful login/switch
             invalidatesTags: ['Dashboard'],
         }),
+        logout: builder.mutation<{ success: boolean; message: string }, void>({
+            query: () => ({
+                url: '/logout',
+                method: 'POST',
+            }),
+        }),
     }),
 });
 
-export const { useSendOtpMutation, useVerifyOtpMutation } = authApi;
+export const { useSendOtpMutation, useVerifyOtpMutation, useLogoutMutation } = authApi;

@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import {TouchableOpacity, View, Text } from 'react-native';
 import { AppHeaderStyles } from "./AppHeaderStyles.ts";
+import {useLogout} from "../hooks/useLogout.ts";
 import {useAppSelector} from "../store/store.ts"; // Import styles for the header
 
 interface AppHeaderProps {
@@ -12,6 +13,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 }) => {
 
     const {tenant, user} = useAppSelector(state => state.auth);
+    const {confirmLogout, isLoggingOut} = useLogout();
 
     return (
         <View style={AppHeaderStyles.header}>
@@ -29,6 +31,11 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                 <Text style={AppHeaderStyles.userRole}>
                     {user?.role === 'founder' ? 'Founder' : 'Incharge'}
                 </Text>
+                <TouchableOpacity style={AppHeaderStyles.logoutButton} onPress={confirmLogout} disabled={isLoggingOut}>
+                    <Text style={AppHeaderStyles.logoutText}>
+                        {isLoggingOut ? 'Signing out...' : 'Logout'}
+                    </Text>
+                </TouchableOpacity>
             </View>
         </View>
     );

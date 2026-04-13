@@ -31,12 +31,18 @@ interface TransactionMutationResponse {
     transaction: TransactionRecord;
 }
 
+type TransactionQueryParams = {
+    status?: string;
+    orgCode?: string;
+};
+
 export const transactionApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getTransactions: builder.query<TransactionListResponse, { status?: string }>({
-            query: (params) => ({
+        getTransactions: builder.query<TransactionListResponse, TransactionQueryParams>({
+            query: ({orgCode, ...params}) => ({
                 url: '/transactions',
                 params,
+                headers: orgCode ? {'X-Organization-Code': orgCode} : undefined,
             }),
             providesTags: ['Transactions'],
         }),
@@ -48,11 +54,15 @@ export const transactionApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ['Transactions', 'Dashboard'],
         }),
-        approveTransaction: builder.mutation<TransactionMutationResponse, { id: number; status: 'approved' | 'rejected' }>({
-            query: ({ id, status }) => ({
+        approveTransaction: builder.mutation<
+            TransactionMutationResponse,
+            { id: number; status: 'approved' | 'rejected'; orgCode?: string }
+        >({
+            query: ({ id, status, orgCode }) => ({
                 url: `/transactions/${id}/approve`,
                 method: 'PATCH',
                 body: { status },
+                headers: orgCode ? {'X-Organization-Code': orgCode} : undefined,
             }),
             invalidatesTags: ['Transactions', 'Dashboard'],
         }),
