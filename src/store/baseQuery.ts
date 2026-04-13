@@ -18,11 +18,15 @@ export const baseQuery = fetchBaseQuery({
         // Retrieve token and org code from Redux store state
         const state = getState() as any;
         const token = state.auth.token;
-        const orgCode = await AsyncStorage.getItem('X-Organization-Code');
-        if (orgCode) {
-            headers.set('X-Organization-Code', orgCode);
+
+        // Only set X-Organization-Code from AsyncStorage if not already provided by the endpoint query
+        if (!headers.has('X-Organization-Code')) {
+            const orgCode = await AsyncStorage.getItem('X-Organization-Code');
+            if (orgCode) {
+                headers.set('X-Organization-Code', orgCode);
+            }
         }
-        console.log('token', token);
+
         if (token) {
             headers.set('Authorization', `Bearer ${token}`);
         } else {
