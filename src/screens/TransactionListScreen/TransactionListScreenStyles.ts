@@ -61,6 +61,210 @@ export const TransactionListScreenStyles = StyleSheet.create({
         shadowRadius: 10,
     },
 
+    sectionHeader: {
+        backgroundColor: '#F8F9FD',
+        paddingHorizontal: theme.spacing.l,
+        paddingVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    sectionTitle: {
+        fontSize: 13,
+        fontWeight: '800',
+        color: theme.colors.textSecondary,
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+    },
+    sectionLine: {
+        flex: 1,
+        height: 1,
+        backgroundColor: '#EDF0F7',
+        marginLeft: 12,
+    },
+
+    compactCard: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        padding: 14,
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: '#F0F0F0',
+        position: 'relative',
+    },
+
+    compactMain: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+
+    compactBottom: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 8,
+        paddingTop: 8,
+        borderTopWidth: 1,
+        borderTopColor: '#F8F9FD',
+    },
+
+    compactActions: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+
+    compactActionButton: {
+        width: 28,
+        height: 28,
+        borderRadius: 6,
+        backgroundColor: '#F8F9FD',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#EDF0F7',
+    },
+
+    compactActionIcon: {
+        fontSize: 14,
+    },
+
+    compactInfo: {
+        flex: 1,
+    },
+
+    compactName: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: theme.colors.textPrimary,
+    },
+
+    compactSub: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 2,
+    },
+
+    compactMeta: {
+        fontSize: 12,
+        color: theme.colors.textSecondary,
+        fontWeight: '500',
+    },
+
+    compactValue: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    compactAmount: {
+        fontSize: 16,
+        fontWeight: '800',
+        marginRight: 8,
+    },
+
+    compactStatusDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+    },
+
+    compactRemarks: {
+        fontSize: 12,
+        color: theme.colors.placeholder,
+        fontStyle: 'italic',
+        marginTop: 4,
+    },
+
+    rowBack: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        marginBottom: 12,
+        borderRadius: 16,
+        overflow: 'hidden',
+        backgroundColor: '#F8F9FD',
+    },
+
+    backRightBtn: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+    },
+
+    backRightBtnLeft: {
+        backgroundColor: '#E6FFFA', // Light green background
+        alignItems: 'flex-start',
+        borderLeftWidth: 8,
+        borderLeftColor: '#38A169',
+    },
+
+    backRightBtnRight: {
+        backgroundColor: '#FFF5F5', // Light red background
+        alignItems: 'flex-end',
+        borderRightWidth: 8,
+        borderRightColor: '#E53E3E',
+    },
+
+    backActionContent: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    backArrow: {
+        fontSize: 32,
+        color: '#2F855A', // Dark green for text/icon
+        fontWeight: '300',
+    },
+
+    backArrowRight: {
+        color: '#C53030', // Dark red for text/icon
+    },
+
+    backTextWhite: {
+        color: '#2F855A',
+        fontWeight: '800',
+        fontSize: 12,
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+        marginTop: -4,
+    },
+
+    backTextRed: {
+        color: '#C53030',
+    },
+
+    undoCard: {
+        backgroundColor: theme.colors.textPrimary,
+        borderRadius: 16,
+        padding: 14,
+        marginBottom: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+
+    undoText: {
+        color: '#FFF',
+        fontWeight: '600',
+        fontSize: 14,
+    },
+
+    undoButton: {
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 8,
+    },
+
+    undoButtonText: {
+        color: '#FFF',
+        fontWeight: '800',
+        fontSize: 12,
+    },
+
     topRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -313,12 +517,154 @@ export const TransactionListScreenStyles = StyleSheet.create({
     },
 
     filtersRow: {
-        marginTop: 16,
-        // flex: 1,
-        // justifyContent: 'center',
-        marginHorizontal: theme.spacing.l,
-        // alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: theme.spacing.l,
+        paddingVertical: 12,
+        backgroundColor: '#FFFFFF',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+    },
+
+    sortButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+    },
+
+    sortLabel: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: theme.colors.textPrimary,
+    },
+
+    filterButton: {
+        padding: 8,
         backgroundColor: '#F8F9FD',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#EDF0F7',
+    },
+
+    filterIcon: {
+        fontSize: 16,
+    },
+
+    filterModalContent: {
+        backgroundColor: '#FFFFFF',
+        borderTopLeftRadius: 32,
+        borderTopRightRadius: 32,
+        paddingBottom: 40,
+        maxHeight: '85%',
+    },
+
+    filterModalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 24,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+    },
+
+    filterModalTitle: {
+        fontSize: 20,
+        fontWeight: '900',
+        color: theme.colors.textPrimary,
+    },
+
+    filterSection: {
+        paddingHorizontal: 24,
+        paddingTop: 20,
+    },
+
+    filterSectionTitle: {
+        fontSize: 13,
+        fontWeight: '800',
+        color: theme.colors.textSecondary,
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+        marginBottom: 12,
+    },
+
+    dateInput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 14,
+        backgroundColor: '#F8F9FD',
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#EDF0F7',
+        marginTop: 8,
+    },
+
+    dateInputText: {
+        fontSize: 14,
+        color: theme.colors.textPrimary,
+        fontWeight: '600',
+    },
+
+    dateInputPlaceholder: {
+        fontSize: 14,
+        color: theme.colors.placeholder,
+        fontWeight: '500',
+    },
+
+    sortOption: {
+        paddingVertical: 18,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+        paddingRight: 8,
+    },
+
+    sortOptionText: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: theme.colors.textPrimary,
+        flex: 1,
+        marginRight: 12,
+    },
+
+    sortOptionActiveText: {
+        color: theme.colors.primary,
+        fontWeight: '800',
+    },
+
+    sortCheck: {
+        fontSize: 18,
+        color: theme.colors.primary,
+        fontWeight: '900',
+    },
+
+    filterApplyButton: {
+        backgroundColor: theme.colors.primary,
+        marginHorizontal: 24,
+        marginTop: 32,
+        paddingVertical: 16,
+        borderRadius: 16,
+        alignItems: 'center',
+    },
+
+    filterApplyText: {
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: '900',
+    },
+
+    filterResetButton: {
+        alignItems: 'center',
+        marginTop: 16,
+    },
+
+    filterResetText: {
+        color: theme.colors.textSecondary,
+        fontSize: 14,
+        fontWeight: '700',
     },
 
     fab: {

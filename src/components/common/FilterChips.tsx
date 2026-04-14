@@ -45,6 +45,7 @@ function FilterChips<T>({options, value, onChange, style}: FilterChipsProps<T>) 
 const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         gap: theme.spacing.s,
     },
     chip: {

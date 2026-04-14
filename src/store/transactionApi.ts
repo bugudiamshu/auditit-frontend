@@ -34,6 +34,10 @@ interface TransactionMutationResponse {
 type TransactionQueryParams = {
     status?: string;
     orgCode?: string;
+    type?: string;
+    start_date?: string;
+    end_date?: string;
+    sort_by?: string;
 };
 
 export const transactionApi = baseApi.injectEndpoints({
