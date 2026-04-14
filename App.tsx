@@ -13,6 +13,7 @@ import VerifyOrgScreen from "./src/screens/VerifyOrgScreen/VerifyOrgScreen";
 import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
 import PortfolioSelectionScreen from "./src/screens/PortfolioSelectionScreen/PortfolioSelectionScreen";
 import TransactionEntryScreen from "./src/screens/TransactionEntryScreen/TransactionEntryScreen";
+import TransactionDetailScreen from "./src/screens/TransactionDetailScreen/TransactionDetailScreen";
 import BottomTabs from "./src/navigation/BottomTabs/BottomTabs.tsx";
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +32,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="PortfolioSelection" component={PortfolioSelectionScreen}/>
                 <Stack.Screen name="MainApp" component={BottomTabs}/>
                 <Stack.Screen name="TransactionEntry" component={TransactionEntryScreen}/>
+                <Stack.Screen name="TransactionDetail" component={TransactionDetailScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

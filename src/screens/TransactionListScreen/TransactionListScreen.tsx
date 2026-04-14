@@ -1,7 +1,8 @@
-import React, {useState, useRef, useEffect, useMemo} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {ActivityIndicator, Alert, Modal, Text, TouchableOpacity, View, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AppHeader from '../../components/AppHeader.tsx';
 import FeedbackState from '../../components/common/FeedbackState';
 import FilterChips from '../../components/common/FilterChips';
@@ -9,8 +10,6 @@ import {theme} from '../../config/theme';
 import {transactionFilters, useTransactionList} from '../../hooks/useTransactionList';
 import TransactionCard from './components/TransactionCard';
 import {TransactionListScreenStyles} from './TransactionListScreenStyles.ts';
-
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {formatDisplayDate} from '../../utils/formatters';
 
 const TransactionListScreen = ({navigation}: any) => {
@@ -55,11 +54,13 @@ const TransactionListScreen = ({navigation}: any) => {
     const [showEndPicker, setShowEndPicker] = useState(false);
 
     useEffect(() => {
-        setLocalStatus(statusFilter);
-        setLocalType(typeFilter);
-        setLocalStartDate(startDate);
-        setLocalEndDate(endDate);
-    }, [statusFilter, typeFilter, startDate, endDate, isFilterModalVisible]);
+        if (isFilterModalVisible) {
+            setLocalStatus(statusFilter);
+            setLocalType(typeFilter);
+            setLocalStartDate(startDate);
+            setLocalEndDate(endDate);
+        }
+    }, [isFilterModalVisible, statusFilter, typeFilter, startDate, endDate]);
 
     const [swipeValues, setSwipeValues] = useState<Record<string, number>>({});
     const [pendingActions, setPendingActions] = useState<Record<number, {action: 'approved' | 'rejected'; timer: any; seconds: number}>>({});
@@ -86,6 +87,12 @@ const TransactionListScreen = ({navigation}: any) => {
         navigation.navigate('TransactionEntry', {
             editItem: item,
             orgCode: activeOrgCode,
+        });
+    };
+
+    const handlePress = (item: any) => {
+        navigation.navigate('TransactionDetail', {
+            transaction: item,
         });
     };
 
@@ -139,6 +146,7 @@ const TransactionListScreen = ({navigation}: any) => {
     ];
 
     const currentSortLabel = "Sort By";
+    const activeFilterCount = [statusFilter, typeFilter, startDate, endDate].filter(Boolean).length;
 
     const renderItem = (row: any) => {
         const {item} = row;
@@ -168,6 +176,7 @@ const TransactionListScreen = ({navigation}: any) => {
                 isUpdating={isUpdating}
                 onEdit={handleEdit}
                 onDelete={confirmDelete}
+                onPress={handlePress}
             />
         );
     };
@@ -224,69 +233,152 @@ const TransactionListScreen = ({navigation}: any) => {
                         </Text>
                         <Text style={TransactionListScreenStyles.dropdownChevron}>▼</Text>
                     </TouchableOpacity>
-
-                    <Modal
-                        visible={isDropdownVisible}
-                        transparent
-                        animationType="fade"
-                        onRequestClose={() => setIsDropdownVisible(false)}
-                    >
-                        <TouchableOpacity
-                            style={TransactionListScreenStyles.modalOverlay}
-                            activeOpacity={1}
-                            onPress={() => setIsDropdownVisible(false)}
-                        >
-                            <View style={TransactionListScreenStyles.modalContent}>
-                                <View style={TransactionListScreenStyles.modalHeader}>
-                                    <Text style={TransactionListScreenStyles.modalTitle}>Choose Society</Text>
-                                    <TouchableOpacity
-                                        onPress={() => setIsDropdownVisible(false)}
-                                        style={TransactionListScreenStyles.closeButton}
-                                    >
-                                        <Text style={TransactionListScreenStyles.closeText}>Close</Text>
-                                    </TouchableOpacity>
-                                </View>
-
-                                <SwipeListView
-                                    data={societies}
-                                    keyExtractor={item => item.org_code}
-                                    renderItem={({item}) => (
-                                        <TouchableOpacity
-                                            style={[
-                                                TransactionListScreenStyles.societyOption,
-                                                item.org_code === activeOrgCode && TransactionListScreenStyles.societyOptionActive
-                                            ]}
-                                            onPress={() => {
-                                                setSelectedOrgCode(item.org_code);
-                                                setIsDropdownVisible(false);
-                                            }}
-                                        >
-                                            <Text style={TransactionListScreenStyles.societyOptionText}>{item.name}</Text>
-                                            <Text style={TransactionListScreenStyles.societyOptionCode}>{item.org_code}</Text>
-                                        </TouchableOpacity>
-                                    )}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    </Modal>
                 </View>
             ) : null}
 
-            <View style={TransactionListScreenStyles.filtersRow}>
-                <TouchableOpacity
-                    style={TransactionListScreenStyles.sortButton}
-                    onPress={() => setIsSortModalVisible(true)}
-                >
-                    <Text style={TransactionListScreenStyles.sortLabel}>⇅ {currentSortLabel}</Text>
-                </TouchableOpacity>
+            <View style={TransactionListScreenStyles.mainCard}>
+                {/* Integrated Filter Bar */}
+                <View style={TransactionListScreenStyles.filterBarContainer}>
+                    <View style={TransactionListScreenStyles.searchBarWrapper}>
+                        <Text style={TransactionListScreenStyles.iconText}>🔍</Text>
+                        <Text style={TransactionListScreenStyles.searchPlaceholder}>Search transactions...</Text>
+                    </View>
+                    
+                    <View style={TransactionListScreenStyles.filterActions}>
+                        <TouchableOpacity
+                            style={TransactionListScreenStyles.iconButton}
+                            onPress={() => setIsSortModalVisible(true)}
+                        >
+                            <Text style={TransactionListScreenStyles.iconText}>⇅</Text>
+                        </TouchableOpacity>
 
-                <TouchableOpacity
-                    style={TransactionListScreenStyles.filterButton}
-                    onPress={() => setIsFilterModalVisible(true)}
-                >
-                    <Text style={TransactionListScreenStyles.filterIcon}>🔍 Filter</Text>
-                </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[
+                                TransactionListScreenStyles.iconButton,
+                                activeFilterCount > 0 && TransactionListScreenStyles.iconButtonActive
+                            ]}
+                            onPress={() => setIsFilterModalVisible(true)}
+                        >
+                            <Text style={[
+                                TransactionListScreenStyles.iconText,
+                                activeFilterCount > 0 && {color: '#FFF'}
+                            ]}>⚡</Text>
+                            {activeFilterCount > 0 && (
+                                <View style={TransactionListScreenStyles.activeFilterBadge}>
+                                    <Text style={TransactionListScreenStyles.activeFilterText}>{activeFilterCount}</Text>
+                                </View>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                {error ? (
+                    <FeedbackState
+                        title="Could not load transactions"
+                        actionLabel="Try again"
+                        onAction={refetch}
+                    />
+                ) : (
+                    <SwipeListView
+                        useSectionList
+                        sections={groupedTransactions}
+                        renderItem={renderItem}
+                        renderHiddenItem={renderHiddenItem}
+                        renderSectionHeader={({section: {title}}) => (
+                            <View style={TransactionListScreenStyles.sectionHeader}>
+                                <Text style={TransactionListScreenStyles.sectionTitle}>{title}</Text>
+                                <View style={TransactionListScreenStyles.sectionLine} />
+                            </View>
+                        )}
+                        leftOpenValue={150}
+                        rightOpenValue={-150}
+                        swipeToOpenPercent={60}
+                        onSwipeValueChange={(swipeData) => {
+                            const {key, value} = swipeData;
+                            setSwipeValues(prev => ({...prev, [key]: value}));
+                        }}
+                        onRowOpen={(rowKey, rowMap, toValue) => {
+                            const allData = groupedTransactions.flatMap(s => s.data);
+                            const item = allData.find(t => t.id.toString() === rowKey);
+                            if (item && isFounder && item.status === 'pending' && !pendingActions[item.id]) {
+                                const action = toValue > 0 ? 'approved' : 'rejected';
+                                rowMap[rowKey]?.closeRow();
+                                onSwipeAction(item, action);
+                            }
+                        }}
+                        previewRowKey={'0'}
+                        previewOpenValue={-60}
+                        previewOpenDelay={3000}
+                        keyExtractor={item => item.id.toString()}
+                        contentContainerStyle={TransactionListScreenStyles.list}
+                        showsVerticalScrollIndicator={false}
+                        onRefresh={refetch}
+                        refreshing={isFetching}
+                        disableRightSwipe={!isFounder}
+                        disableLeftSwipe={!isFounder}
+                        ListEmptyComponent={
+                            !error && !isFetching ? (
+                                <FeedbackState
+                                    title={isFounder ? 'No transactions for this society' : 'No transactions yet'}
+                                    description={
+                                        isFounder
+                                            ? 'Select another society or wait for new entries to review.'
+                                            : 'Create a new entry to start building the ledger.'
+                                    }
+                                />
+                            ) : null
+                        }
+                    />
+                )}
             </View>
+
+            {/* Society Modal */}
+            <Modal
+                visible={isDropdownVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setIsDropdownVisible(false)}
+            >
+                <TouchableOpacity 
+                    style={TransactionListScreenStyles.modalOverlay}
+                    activeOpacity={1}
+                    onPress={() => setIsDropdownVisible(false)}
+                >
+                    <View style={TransactionListScreenStyles.modalContent}>
+                        <View style={TransactionListScreenStyles.modalHeader}>
+                            <Text style={TransactionListScreenStyles.modalTitle}>Choose Society</Text>
+                            <TouchableOpacity onPress={() => setIsDropdownVisible(false)}>
+                                <Text style={TransactionListScreenStyles.closeText}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+                            {societies.map((item) => (
+                                <TouchableOpacity
+                                    key={item.org_code}
+                                    style={[
+                                        TransactionListScreenStyles.societyOption,
+                                        item.org_code === activeOrgCode && TransactionListScreenStyles.societyOptionActive
+                                    ]}
+                                    onPress={() => {
+                                        setSelectedOrgCode(item.org_code);
+                                        setIsDropdownVisible(false);
+                                    }}
+                                >
+                                    <View style={{flex: 1}}>
+                                        <Text style={TransactionListScreenStyles.societyOptionText}>{item.name}</Text>
+                                        <Text style={TransactionListScreenStyles.societyOptionCode}>{item.org_code}</Text>
+                                    </View>
+                                    {item.org_code === activeOrgCode && (
+                                        <Text style={TransactionListScreenStyles.sortCheck}>✓</Text>
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                            <View style={{height: 40}} />
+                        </ScrollView>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
 
             {/* Sort Modal */}
             <Modal
@@ -300,14 +392,14 @@ const TransactionListScreen = ({navigation}: any) => {
                     activeOpacity={1}
                     onPress={() => setIsSortModalVisible(false)}
                 >
-                    <View style={TransactionListScreenStyles.filterModalContent}>
-                        <View style={TransactionListScreenStyles.filterModalHeader}>
-                            <Text style={TransactionListScreenStyles.filterModalTitle}>Sort By</Text>
+                    <View style={TransactionListScreenStyles.modalContent}>
+                        <View style={TransactionListScreenStyles.modalHeader}>
+                            <Text style={TransactionListScreenStyles.modalTitle}>Sort By</Text>
                             <TouchableOpacity onPress={() => setIsSortModalVisible(false)}>
                                 <Text style={TransactionListScreenStyles.closeText}>Close</Text>
                             </TouchableOpacity>
                         </View>
-                        <ScrollView style={TransactionListScreenStyles.filterSection} showsVerticalScrollIndicator={false}>
+                        <ScrollView showsVerticalScrollIndicator={false}>
                             {sortOptions.map((option) => (
                                 <TouchableOpacity
                                     key={option.value}
@@ -344,9 +436,9 @@ const TransactionListScreen = ({navigation}: any) => {
                     activeOpacity={1}
                     onPress={() => setIsFilterModalVisible(false)}
                 >
-                    <View style={TransactionListScreenStyles.filterModalContent}>
-                        <View style={TransactionListScreenStyles.filterModalHeader}>
-                            <Text style={TransactionListScreenStyles.filterModalTitle}>Filters</Text>
+                    <View style={TransactionListScreenStyles.modalContent}>
+                        <View style={TransactionListScreenStyles.modalHeader}>
+                            <Text style={TransactionListScreenStyles.modalTitle}>Filters</Text>
                             <TouchableOpacity onPress={() => setIsFilterModalVisible(false)}>
                                 <Text style={TransactionListScreenStyles.closeText}>Close</Text>
                             </TouchableOpacity>
@@ -403,27 +495,6 @@ const TransactionListScreen = ({navigation}: any) => {
                                 </View>
                             </View>
 
-                            {showStartPicker && (
-                                <DateTimePicker
-                                    value={localStartDate || new Date()}
-                                    mode="date"
-                                    onChange={(event, date) => {
-                                        setShowStartPicker(false);
-                                        if (date) setLocalStartDate(date);
-                                    }}
-                                />
-                            )}
-                            {showEndPicker && (
-                                <DateTimePicker
-                                    value={localEndDate || new Date()}
-                                    mode="date"
-                                    onChange={(event, date) => {
-                                        setShowEndPicker(false);
-                                        if (date) setLocalEndDate(date);
-                                    }}
-                                />
-                            )}
-
                             <TouchableOpacity
                                 style={TransactionListScreenStyles.filterApplyButton}
                                 onPress={() => {
@@ -458,64 +529,26 @@ const TransactionListScreen = ({navigation}: any) => {
                 </TouchableOpacity>
             </Modal>
 
-            {error ? (
-                <FeedbackState
-                    title="Could not load transactions"
-                    actionLabel="Try again"
-                    onAction={refetch}
+            {showStartPicker && (
+                <DateTimePicker
+                    value={localStartDate || new Date()}
+                    mode="date"
+                    onChange={(event, date) => {
+                        setShowStartPicker(false);
+                        if (date) setLocalStartDate(date);
+                    }}
                 />
-            ) : null}
-
-            <SwipeListView
-                useSectionList
-                sections={groupedTransactions}
-                renderItem={renderItem}
-                renderHiddenItem={renderHiddenItem}
-                renderSectionHeader={({section: {title}}) => (
-                    <View style={TransactionListScreenStyles.sectionHeader}>
-                        <Text style={TransactionListScreenStyles.sectionTitle}>{title}</Text>
-                        <View style={TransactionListScreenStyles.sectionLine} />
-                    </View>
-                )}
-                leftOpenValue={150}
-                rightOpenValue={-150}
-                swipeToOpenPercent={60}
-                onSwipeValueChange={(swipeData) => {
-                    const {key, value} = swipeData;
-                    setSwipeValues(prev => ({...prev, [key]: value}));
-                }}
-                onRowOpen={(rowKey, rowMap, toValue) => {
-                    const allData = groupedTransactions.flatMap(s => s.data);
-                    const item = allData.find(t => t.id.toString() === rowKey);
-                    if (item && isFounder && item.status === 'pending' && !pendingActions[item.id]) {
-                        const action = toValue > 0 ? 'approved' : 'rejected';
-                        rowMap[rowKey]?.closeRow();
-                        onSwipeAction(item, action);
-                    }
-                }}
-                previewRowKey={'0'}
-                previewOpenValue={-60}
-                previewOpenDelay={3000}
-                keyExtractor={item => item.id.toString()}
-                contentContainerStyle={TransactionListScreenStyles.list}
-                showsVerticalScrollIndicator={false}
-                onRefresh={refetch}
-                refreshing={isFetching}
-                disableRightSwipe={!isFounder}
-                disableLeftSwipe={!isFounder}
-                ListEmptyComponent={
-                    !error && !isFetching ? (
-                        <FeedbackState
-                            title={isFounder ? 'No transactions for this society' : 'No transactions yet'}
-                            description={
-                                isFounder
-                                    ? 'Select another society or wait for new entries to review.'
-                                    : 'Create a new entry to start building the ledger.'
-                            }
-                        />
-                    ) : null
-                }
-            />
+            )}
+            {showEndPicker && (
+                <DateTimePicker
+                    value={localEndDate || new Date()}
+                    mode="date"
+                    onChange={(event, date) => {
+                        setShowEndPicker(false);
+                        if (date) setLocalEndDate(date);
+                    }}
+                />
+            )}
 
             {!isFounder ? (
                 <TouchableOpacity

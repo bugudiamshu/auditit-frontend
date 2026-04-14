@@ -4,689 +4,475 @@ import { theme } from '../../config/theme';
 export const TransactionListScreenStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F8F9FD',
-    },
-    scopeCard: {
-        backgroundColor: '#FFFFFF',
-        marginHorizontal: theme.spacing.l,
-        marginTop: theme.spacing.m,
-        padding: 20,
-        borderRadius: 24,
-        borderWidth: 1,
-        borderColor: '#EDF0F7',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05,
-        shadowRadius: 12,
-    },
-    scopeTitle: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: theme.colors.textPrimary,
-        letterSpacing: -0.5,
-    },
-    scopeSubtitle: {
-        fontSize: 13,
-        color: theme.colors.textSecondary,
-        marginTop: 4,
-        marginBottom: 16,
-        fontWeight: '500',
+        backgroundColor: '#F1F5F9', // Slightly deeper slate for better contrast with white cards
     },
 
-    // filtersRow: {
-    //     flexDirection: 'row',
-    //     paddingHorizontal: theme.spacing.l,
-    //     paddingTop: theme.spacing.m,
-    //     paddingBottom: theme.spacing.s,
-    // },
+    // Unified Card Container with margins
+    mainCard: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        marginTop: 8,
+        marginHorizontal: 16, // Added horizontal margins
+        borderRadius: 24, // Full rounding for the "enclosed" look
+        // Subtle shadow for the main container
+        shadowColor: '#64748B',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
+        overflow: 'hidden',
+        marginBottom: 16, // Added bottom margin to clear the screen bottom
+    },
 
     list: {
-        paddingHorizontal: theme.spacing.l,
-        paddingTop: theme.spacing.m,
+        paddingHorizontal: 20,
+        paddingTop: 12,
         paddingBottom: 120,
     },
 
-    card: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 28,
-        padding: 20,
-        marginBottom: 16,
-        borderWidth: 1,
-        borderColor: '#F0F0F0',
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.04,
-        shadowRadius: 10,
-    },
-
     sectionHeader: {
-        backgroundColor: '#F8F9FD',
-        paddingHorizontal: theme.spacing.l,
-        paddingVertical: 12,
+        paddingHorizontal: 4,
+        paddingVertical: 16,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        backgroundColor: '#FFFFFF',
     },
     sectionTitle: {
-        fontSize: 13,
+        fontSize: 11,
         fontWeight: '800',
-        color: theme.colors.textSecondary,
+        color: '#94A3B8',
         textTransform: 'uppercase',
-        letterSpacing: 1,
+        letterSpacing: 1.2,
     },
     sectionLine: {
         flex: 1,
         height: 1,
-        backgroundColor: '#EDF0F7',
+        backgroundColor: '#F1F5F9',
         marginLeft: 12,
     },
 
+    // Modernized Transaction Card
     compactCard: {
         backgroundColor: '#FFFFFF',
-        borderRadius: 16,
-        padding: 14,
+        borderRadius: 20,
+        padding: 16,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: '#F0F0F0',
-        position: 'relative',
+        borderColor: '#F1F5F9',
+        // Very subtle shadow
+        shadowColor: '#0F172A',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.03,
+        shadowRadius: 8,
+        elevation: 2,
     },
 
     compactMain: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+
+    compactInfo: {
+        flex: 1,
+        marginRight: 12,
+    },
+
+    compactName: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#1E293B',
         marginBottom: 4,
+    },
+
+    compactValue: {
+        alignItems: 'flex-end',
+    },
+
+    compactAmount: {
+        fontSize: 17,
+        fontWeight: '800',
+        letterSpacing: -0.5,
+    },
+
+    compactStatusDot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        marginTop: 6,
+    },
+
+    compactRemarks: {
+        fontSize: 13,
+        color: '#64748B',
+        marginTop: 8,
+        lineHeight: 18,
     },
 
     compactBottom: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginTop: 8,
-        paddingTop: 8,
+        marginTop: 12,
+        paddingTop: 12,
         borderTopWidth: 1,
-        borderTopColor: '#F8F9FD',
+        borderTopColor: '#F8FAFC',
+    },
+
+    compactMeta: {
+        fontSize: 12,
+        color: '#94A3B8',
+        fontWeight: '600',
     },
 
     compactActions: {
         flexDirection: 'row',
-        alignItems: 'center',
         gap: 8,
     },
 
     compactActionButton: {
-        width: 28,
-        height: 28,
-        borderRadius: 6,
-        backgroundColor: '#F8F9FD',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: '#EDF0F7',
+        padding: 6,
+        borderRadius: 8,
+        backgroundColor: '#F8FAFC',
     },
 
     compactActionIcon: {
         fontSize: 14,
     },
 
-    compactInfo: {
-        flex: 1,
-    },
-
-    compactName: {
-        fontSize: 15,
-        fontWeight: '700',
-        color: theme.colors.textPrimary,
-    },
-
-    compactSub: {
+    // Redesigned Integrated Filter Bar
+    filterBarContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 2,
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F1F5F9',
+        backgroundColor: '#FFFFFF',
     },
 
-    compactMeta: {
-        fontSize: 12,
-        color: theme.colors.textSecondary,
-        fontWeight: '500',
-    },
-
-    compactValue: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-
-    compactAmount: {
-        fontSize: 16,
-        fontWeight: '800',
-        marginRight: 8,
-    },
-
-    compactStatusDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-    },
-
-    compactRemarks: {
-        fontSize: 12,
-        color: theme.colors.placeholder,
-        fontStyle: 'italic',
-        marginTop: 4,
-    },
-
-    rowBack: {
+    searchBarWrapper: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'stretch',
-        marginBottom: 12,
-        borderRadius: 16,
-        overflow: 'hidden',
-        backgroundColor: '#F8F9FD',
-    },
-
-    backRightBtn: {
-        flex: 1,
-        justifyContent: 'center',
-        paddingHorizontal: 24,
-    },
-
-    backRightBtnLeft: {
-        backgroundColor: '#E6FFFA', // Light green background
-        alignItems: 'flex-start',
-        borderLeftWidth: 8,
-        borderLeftColor: '#38A169',
-    },
-
-    backRightBtnRight: {
-        backgroundColor: '#FFF5F5', // Light red background
-        alignItems: 'flex-end',
-        borderRightWidth: 8,
-        borderRightColor: '#E53E3E',
-    },
-
-    backActionContent: {
         alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    backArrow: {
-        fontSize: 32,
-        color: '#2F855A', // Dark green for text/icon
-        fontWeight: '300',
-    },
-
-    backArrowRight: {
-        color: '#C53030', // Dark red for text/icon
-    },
-
-    backTextWhite: {
-        color: '#2F855A',
-        fontWeight: '800',
-        fontSize: 12,
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
-        marginTop: -4,
-    },
-
-    backTextRed: {
-        color: '#C53030',
-    },
-
-    undoCard: {
-        backgroundColor: theme.colors.textPrimary,
-        borderRadius: 16,
-        padding: 14,
-        marginBottom: 12,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-
-    undoText: {
-        color: '#FFF',
-        fontWeight: '600',
-        fontSize: 14,
-    },
-
-    undoButton: {
-        backgroundColor: 'rgba(255,255,255,0.2)',
+        backgroundColor: '#F8FAFC',
+        borderRadius: 14,
         paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 8,
+        height: 44,
+        borderWidth: 1,
+        borderColor: '#F1F5F9',
     },
 
-    undoButtonText: {
-        color: '#FFF',
-        fontWeight: '800',
-        fontSize: 12,
-    },
-
-    topRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    titleBlock: {
-        flex: 1,
-    },
-
-    name: {
-        fontSize: 17,
-        fontWeight: '900',
-        color: theme.colors.textPrimary,
-        letterSpacing: -0.3,
-    },
-
-    badge: {
-        paddingHorizontal: 10,
-        paddingVertical: 4,
-        borderRadius: 10,
-    },
-
-    badgeText: {
-        fontSize: 10,
-        color: '#fff',
-        fontWeight: '800',
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
-    },
-
-    amountRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'baseline',
-        marginBottom: 12,
-    },
-
-    amount: {
-        fontSize: 24,
-        fontWeight: '900',
-        letterSpacing: -1,
-    },
-
-    paymentMode: {
-        fontSize: 12,
-        fontWeight: '700',
-        color: theme.colors.textSecondary,
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
-    },
-
-    remarksBox: {
-        backgroundColor: '#F8F9FD',
-        padding: 12,
-        borderRadius: 16,
-        marginBottom: 16,
-    },
-
-    remarks: {
-        fontSize: 13,
-        color: theme.colors.textPrimary,
-        lineHeight: 18,
+    searchPlaceholder: {
+        fontSize: 14,
+        color: '#94A3B8',
         fontWeight: '500',
+        marginLeft: 8,
     },
 
-    metaRow: {
+    filterActions: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        paddingBottom: 4,
-    },
-
-    date: {
-        fontSize: 12,
-        color: theme.colors.placeholder,
-        fontWeight: '700',
-    },
-
-    metaText: {
-        fontSize: 11,
-        color: theme.colors.textSecondary,
-        fontWeight: '600',
-    },
-
-    actionDivider: {
-        height: 1,
-        backgroundColor: '#F0F0F0',
-        marginVertical: 16,
-    },
-
-    primaryActions: {
-        flexDirection: 'row',
-        gap: 12,
-    },
-
-    secondaryActions: {
-        flexDirection: 'row',
+        marginLeft: 12,
         gap: 8,
     },
 
     iconButton: {
-        width: 32,
-        height: 32,
-        borderRadius: 10,
-        alignItems: 'center',
+        width: 44,
+        height: 44,
+        borderRadius: 14,
+        backgroundColor: '#F8FAFC',
         justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#F1F5F9',
     },
 
-    editIconButton: {
-        backgroundColor: '#F0F7FF',
+    iconButtonActive: {
+        backgroundColor: '#0F172A',
+        borderColor: '#0F172A',
     },
 
-    deleteIconButton: {
-        backgroundColor: '#FFF5F5',
+    iconText: {
+        fontSize: 18,
     },
 
-    iconLabel: {
-        fontSize: 16,
+    activeFilterBadge: {
+        position: 'absolute',
+        top: -4,
+        right: -4,
+        backgroundColor: '#38BDF8',
+        width: 16,
+        height: 16,
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#FFFFFF',
     },
 
-    // Dropdown Styles
+    activeFilterText: {
+        color: '#FFFFFF',
+        fontSize: 9,
+        fontWeight: '900',
+    },
+
+    // Dropdown Style
     dropdownContainer: {
-        marginHorizontal: theme.spacing.l,
-        marginTop: theme.spacing.m,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
     },
     dropdownLabel: {
         fontSize: 11,
         fontWeight: '800',
-        color: theme.colors.textSecondary,
+        color: '#64748B',
         textTransform: 'uppercase',
-        letterSpacing: 1,
+        letterSpacing: 1.2,
         marginBottom: 8,
-        marginLeft: 4,
     },
     dropdownSelector: {
         backgroundColor: '#FFFFFF',
-        borderRadius: 18,
-        padding: 16,
+        borderRadius: 16,
+        padding: 14,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderWidth: 1.5,
-        borderColor: '#EDF0F7',
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
+        borderWidth: 1,
+        borderColor: '#E2E8F0',
     },
     dropdownValue: {
         fontSize: 15,
-        fontWeight: '800',
-        color: theme.colors.textPrimary,
+        fontWeight: '700',
+        color: '#0F172A',
     },
     dropdownChevron: {
-        fontSize: 14,
-        color: theme.colors.primary,
-        fontWeight: '900',
+        fontSize: 12,
+        color: '#64748B',
     },
+
+    // Modal Styles
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(15, 23, 42, 0.4)',
         justifyContent: 'flex-end',
     },
     modalContent: {
         backgroundColor: '#FFFFFF',
         borderTopLeftRadius: 32,
         borderTopRightRadius: 32,
-        paddingVertical: 24,
-        maxHeight: '70%',
+        maxHeight: '80%',
+        paddingBottom: 40,
     },
     modalHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 24,
+        padding: 24,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F1F5F9',
     },
     modalTitle: {
         fontSize: 20,
-        fontWeight: '900',
-        paddingHorizontal: 16,
-        color: theme.colors.textPrimary,
-    },
-    closeButton: {
-        paddingHorizontal: 16,
+        fontWeight: '800',
+        color: '#0F172A',
     },
     closeText: {
-        fontSize: 16,
-        color: theme.colors.textSecondary,
-        fontWeight: '700',
-    },
-    societyOption: {
-        paddingVertical: 18,
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 24,
-    },
-    societyOptionText: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: theme.colors.textPrimary,
-    },
-    societyOptionCode: {
-        fontSize: 12,
-        fontWeight: '800',
-        color: theme.colors.textSecondary,
-        backgroundColor: '#F8F9FD',
-        // paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 8,
-    },
-    societyOptionActive: {
-        backgroundColor: '#F0F7FF',
-        borderRadius: 12,
-        marginHorizontal: 8,
-        paddingHorizontal: 16,
-        borderColor: theme.colors.primary,
-        borderBottomColor: theme.colors.primary,
-        borderWidth: 1,
-    },
-
-    actionButton: {
-        flex: 1,
-        borderRadius: 16,
-        paddingVertical: 14,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    approveButton: {
-        backgroundColor: theme.colors.success,
-    },
-    rejectButton: {
-        backgroundColor: '#FFF5F5',
-        borderWidth: 1,
-        borderColor: '#FED7D7',
-    },
-    approveButtonText: {
-        color: theme.colors.white,
-        fontWeight: '900',
-        fontSize: 14,
-    },
-    rejectButtonText: {
-        color: theme.colors.danger,
-        fontWeight: '900',
-        fontSize: 14,
-    },
-
-    filtersRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: theme.spacing.l,
-        paddingVertical: 12,
-        backgroundColor: '#FFFFFF',
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-    },
-
-    sortButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
-    },
-
-    sortLabel: {
         fontSize: 14,
         fontWeight: '700',
-        color: theme.colors.textPrimary,
-    },
-
-    filterButton: {
-        padding: 8,
-        backgroundColor: '#F8F9FD',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#EDF0F7',
-    },
-
-    filterIcon: {
-        fontSize: 16,
-    },
-
-    filterModalContent: {
-        backgroundColor: '#FFFFFF',
-        borderTopLeftRadius: 32,
-        borderTopRightRadius: 32,
-        paddingBottom: 40,
-        maxHeight: '85%',
-    },
-
-    filterModalHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 24,
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-    },
-
-    filterModalTitle: {
-        fontSize: 20,
-        fontWeight: '900',
-        color: theme.colors.textPrimary,
+        color: '#64748B',
     },
 
     filterSection: {
-        paddingHorizontal: 24,
-        paddingTop: 20,
+        padding: 24,
     },
-
     filterSectionTitle: {
         fontSize: 13,
         fontWeight: '800',
-        color: theme.colors.textSecondary,
+        color: '#64748B',
         textTransform: 'uppercase',
         letterSpacing: 1,
-        marginBottom: 12,
+        marginBottom: 16,
     },
 
     dateInput: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 14,
-        backgroundColor: '#F8F9FD',
+        backgroundColor: '#F8FAFC',
         borderRadius: 12,
+        padding: 14,
         borderWidth: 1,
-        borderColor: '#EDF0F7',
-        marginTop: 8,
+        borderColor: '#E2E8F0',
+        marginTop: 6,
     },
-
     dateInputText: {
         fontSize: 14,
-        color: theme.colors.textPrimary,
+        color: '#1E293B',
         fontWeight: '600',
     },
-
     dateInputPlaceholder: {
         fontSize: 14,
-        color: theme.colors.placeholder,
-        fontWeight: '500',
-    },
-
-    sortOption: {
-        paddingVertical: 18,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-        paddingRight: 8,
-    },
-
-    sortOptionText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: theme.colors.textPrimary,
-        flex: 1,
-        marginRight: 12,
-    },
-
-    sortOptionActiveText: {
-        color: theme.colors.primary,
-        fontWeight: '800',
-    },
-
-    sortCheck: {
-        fontSize: 18,
-        color: theme.colors.primary,
-        fontWeight: '900',
+        color: '#94A3B8',
     },
 
     filterApplyButton: {
-        backgroundColor: theme.colors.primary,
+        backgroundColor: '#0F172A',
         marginHorizontal: 24,
-        marginTop: 32,
+        marginTop: 12,
         paddingVertical: 16,
         borderRadius: 16,
         alignItems: 'center',
     },
-
     filterApplyText: {
-        color: '#FFF',
+        color: '#FFFFFF',
         fontSize: 16,
-        fontWeight: '900',
+        fontWeight: '700',
     },
-
     filterResetButton: {
         alignItems: 'center',
         marginTop: 16,
     },
-
     filterResetText: {
-        color: theme.colors.textSecondary,
+        color: '#64748B',
         fontSize: 14,
+        fontWeight: '600',
+    },
+
+    // Swipe Visuals
+    rowBack: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        marginBottom: 12,
+        borderRadius: 20,
+        overflow: 'hidden',
+    },
+    backRightBtn: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+    },
+    backRightBtnLeft: {
+        backgroundColor: '#DCFCE7',
+        alignItems: 'flex-start',
+    },
+    backRightBtnRight: {
+        backgroundColor: '#FEE2E2',
+        alignItems: 'flex-end',
+    },
+    backActionContent: {
+        alignItems: 'center',
+    },
+    backArrow: {
+        fontSize: 18,
+        color: '#166534',
+        fontWeight: 'bold',
+    },
+    backTextWhite: {
+        color: '#166534',
+        fontWeight: '800',
+        fontSize: 10,
+        textTransform: 'uppercase',
+        marginTop: 2,
+    },
+
+    societyOption: {
+        padding: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F8FAFC',
+    },
+    societyOptionText: {
+        fontSize: 16,
         fontWeight: '700',
+        color: '#1E293B',
+    },
+    societyOptionCode: {
+        fontSize: 12,
+        color: '#94A3B8',
+        marginTop: 2,
+    },
+    societyOptionActive: {
+        backgroundColor: '#F0F9FF',
+    },
+    sortCheck: {
+        fontSize: 16,
+        color: '#0EA5E9',
+        fontWeight: '900',
+    },
+
+    sortOption: {
+        paddingVertical: 18,
+        paddingHorizontal: 24,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F8FAFC',
+    },
+    sortOptionText: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#475569',
+    },
+    sortOptionActiveText: {
+        color: '#0EA5E9',
+        fontWeight: '700',
+    },
+
+    undoCard: {
+        backgroundColor: '#0F172A',
+        borderRadius: 20,
+        padding: 16,
+        marginBottom: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    undoText: {
+        color: '#FFFFFF',
+        fontWeight: '600',
+        fontSize: 14,
+    },
+    undoButton: {
+        backgroundColor: 'rgba(255,255,255,0.15)',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 8,
+    },
+    undoButtonText: {
+        color: '#FFFFFF',
+        fontWeight: '800',
+        fontSize: 11,
+    },
+
+    loader: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F1F5F9',
     },
 
     fab: {
         position: 'absolute',
         bottom: 30,
         right: 24,
-        backgroundColor: theme.colors.primary,
-        width: 64,
-        height: 64,
-        borderRadius: 22,
+        backgroundColor: '#0F172A',
+        width: 56,
+        height: 56,
+        borderRadius: 28,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 8,
-        shadowColor: theme.colors.primary,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.25,
         shadowRadius: 12,
+        elevation: 10,
     },
-
     fabIcon: {
-        color: '#fff',
-        fontSize: 32,
-        fontWeight: '900',
+        color: '#FFFFFF',
+        fontSize: 24,
+        fontWeight: '300',
     },
 });

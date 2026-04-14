@@ -7,7 +7,7 @@ import {
 import { clearAuth } from '../store/authSlice';
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import clearAuth action
 
-const BASE_URL = 'http://192.168.0.247:8888/nitulabs/auditit/api/public/api';
+const BASE_URL = 'http://192.168.0.210:8888/nitulabs/auditit/api/public/api';
 
 export const baseQuery = fetchBaseQuery({
     baseUrl: BASE_URL,

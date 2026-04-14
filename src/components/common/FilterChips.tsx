@@ -25,14 +25,14 @@ function FilterChips<T>({options, value, onChange, style}: FilterChipsProps<T>) 
                         key={option.label}
                         style={[
                             styles.chip,
-                            {
-                                backgroundColor: isActive ? theme.colors.primary : '#F4F7FF',
-                                borderColor: isActive ? theme.colors.primary : 'transparent',
-                            },
+                            isActive && styles.chipActive
                         ]}
                         onPress={() => onChange(option.value)}
                     >
-                        <Text style={[styles.label, {color: isActive ? theme.colors.white : theme.colors.textSecondary}]}>
+                        <Text style={[
+                            styles.label,
+                            isActive && styles.labelActive
+                        ]}>
                             {option.label}
                         </Text>
                     </TouchableOpacity>
@@ -46,17 +46,27 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: theme.spacing.s,
+        gap: 8,
     },
     chip: {
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 12,
+        backgroundColor: '#F8FAFC',
         borderWidth: 1,
-        paddingHorizontal: 14,
-        paddingVertical: 8,
-        borderRadius: 999,
+        borderColor: '#F1F5F9',
+    },
+    chipActive: {
+        backgroundColor: '#0F172A',
+        borderColor: '#0F172A',
     },
     label: {
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: '700',
+        color: '#64748B',
+    },
+    labelActive: {
+        color: '#FFFFFF',
     },
 });
 
