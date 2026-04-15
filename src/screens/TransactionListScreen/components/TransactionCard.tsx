@@ -6,7 +6,7 @@ import {TransactionListScreenStyles} from '../TransactionListScreenStyles';
 
 type TransactionCardProps = {
     item: TransactionRecord;
-    isFounder: boolean;
+    isAdmin: boolean;
     currentUserId?: number;
     isUpdating: boolean;
     onPress: (item: TransactionRecord) => void;
@@ -25,7 +25,7 @@ const statusColor = (status: string) => {
 
 const TransactionCard = ({
     item,
-    isFounder,
+    isAdmin,
     currentUserId,
     isUpdating,
     onPress,

@@ -33,7 +33,7 @@ const TransactionListScreen = ({navigation}: any) => {
         handleDecision,
         handleDelete,
         isUpdating,
-        isFounder,
+        isAdmin,
         societies,
         activeSociety,
         activeOrgCode,
@@ -171,7 +171,7 @@ const TransactionListScreen = ({navigation}: any) => {
         return (
             <TransactionCard
                 item={item}
-                isFounder={isFounder}
+                isAdmin={isAdmin}
                 currentUserId={user?.id}
                 isUpdating={isUpdating}
                 onPress={handlePress}
@@ -181,7 +181,7 @@ const TransactionListScreen = ({navigation}: any) => {
 
     const renderHiddenItem = (row: any) => {
         const {item} = row;
-        if (pendingActions[item.id] || item.status !== 'pending' || !isFounder) return null;
+        if (pendingActions[item.id] || item.status !== 'pending' || !isAdmin) return null;
 
         const swipeValue = swipeValues[item.id.toString()] || 0;
 
@@ -219,7 +219,7 @@ const TransactionListScreen = ({navigation}: any) => {
         <SafeAreaView style={TransactionListScreenStyles.container} edges={['top']}>
             <AppHeader pageTitle={'Transactions'} />
 
-            {isFounder && societies.length ? (
+            {isAdmin && societies.length ? (
                 <View style={TransactionListScreenStyles.dropdownContainer}>
                     <Text style={TransactionListScreenStyles.dropdownLabel}>Active Society</Text>
                     <TouchableOpacity
@@ -298,7 +298,7 @@ const TransactionListScreen = ({navigation}: any) => {
                         onRowOpen={(rowKey, rowMap, toValue) => {
                             const allData = groupedTransactions.flatMap(s => s.data);
                             const item = allData.find(t => t.id.toString() === rowKey);
-                            if (item && isFounder && item.status === 'pending' && !pendingActions[item.id]) {
+                            if (item && isAdmin && item.status === 'pending' && !pendingActions[item.id]) {
                                 const action = toValue > 0 ? 'approved' : 'rejected';
                                 rowMap[rowKey]?.closeRow();
                                 onSwipeAction(item, action);
@@ -312,14 +312,14 @@ const TransactionListScreen = ({navigation}: any) => {
                         showsVerticalScrollIndicator={false}
                         onRefresh={refetch}
                         refreshing={isFetching}
-                        disableRightSwipe={!isFounder}
-                        disableLeftSwipe={!isFounder}
+                        disableRightSwipe={!isAdmin}
+                        disableLeftSwipe={!isAdmin}
                         ListEmptyComponent={
                             !error && !isFetching ? (
                                 <FeedbackState
-                                    title={isFounder ? 'No transactions for this society' : 'No transactions yet'}
+                                    title={isAdmin ? 'No transactions for this society' : 'No transactions yet'}
                                     description={
-                                        isFounder
+                                        isAdmin
                                             ? 'Select another society or wait for new entries to review.'
                                             : 'Create a new entry to start building the ledger.'
                                     }
@@ -548,7 +548,7 @@ const TransactionListScreen = ({navigation}: any) => {
                 />
             )}
 
-            {!isFounder ? (
+            {!isAdmin ? (
                 <TouchableOpacity
                     style={TransactionListScreenStyles.fab}
                     onPress={() => navigation.navigate('TransactionEntry')}

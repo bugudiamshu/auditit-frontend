@@ -1,32 +1,33 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {LoginScreenStyles} from '../LoginScreenStyles';
-
 type LoginFormHeaderProps = {
     isOtpStep: boolean;
-    isFounder?: boolean;
+    isAdmin?: boolean;
     organizationCode?: string;
-    mobile: string;
+    mobile?: string;
 };
 
 const LoginFormHeader = ({
     isOtpStep,
-    isFounder,
+    isAdmin,
     organizationCode,
     mobile,
-}: LoginFormHeaderProps) => (
-    <View style={LoginScreenStyles.header}>
-        <Text style={LoginScreenStyles.title}>
-            {isOtpStep ? 'Verify Identity' : isFounder ? 'Founder Access' : 'Branch Portal'}
-        </Text>
-        <Text style={LoginScreenStyles.subtitle}>
-            {isOtpStep
-                ? `Please enter the 4-digit security code sent to +91 ${mobile}`
-                : isFounder
-                  ? 'Access your global society portfolio and manage high-level approvals.'
-                  : `Securely access the ${organizationCode || 'Branch'} dashboard and manage daily ledgers.`}
-        </Text>
-    </View>
-);
+}: LoginFormHeaderProps) => {
+    return (
+        <View style={LoginScreenStyles.header}>
+            <Text style={LoginScreenStyles.title}>
+                {isOtpStep ? 'Verify Identity' : isAdmin ? 'Admin Access' : 'Branch Portal'}
+            </Text>
+            <Text style={LoginScreenStyles.subtitle}>
+                {isOtpStep
+                    ? `We've sent a 4-digit code to +91 ${mobile}`
+                    : isAdmin
+                    ? 'Access your global society portfolio and manage high-level approvals.'
+                    : `Logging into ${organizationCode} branch to manage local records.`}
+            </Text>
+        </View>
+    );
+};
 
 export default LoginFormHeader;

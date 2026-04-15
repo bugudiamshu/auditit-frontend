@@ -26,7 +26,7 @@ export interface TenantMetricSummary {
     pending_amount: number;
     approved_amount: number;
     total_users: number;
-    founders: number;
+    admins: number;
     incharges: number;
     can_approve: boolean;
     recent_activity: DashboardActivity[];

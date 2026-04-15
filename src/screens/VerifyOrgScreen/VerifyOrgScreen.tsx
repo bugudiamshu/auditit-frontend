@@ -45,10 +45,10 @@ const VerifyOrgScreen = ({ navigation }: any) => {
         }
     };
 
-    const handleFounderLogin = async () => {
-        // Clear any existing org code when logging in as a founder
+    const handleAdminLogin = async () => {
+        // Clear any existing org code when logging in as an admin
         await AsyncStorage.removeItem('X-Organization-Code');
-        navigation.navigate('Login', { isFounder: true });
+        navigation.navigate('Login', { isAdmin: true });
     };
 
     return (
@@ -90,10 +90,10 @@ const VerifyOrgScreen = ({ navigation }: any) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={VerifyOrgScreenStyles.founderLink}
-                        onPress={handleFounderLogin}
+                        style={VerifyOrgScreenStyles.adminLink}
+                        onPress={handleAdminLogin}
                     >
-                        <Text style={VerifyOrgScreenStyles.founderText}>Login as Founder/Partner Instead →</Text>
+                        <Text style={VerifyOrgScreenStyles.adminText}>Login as Admin/Partner Instead →</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>

@@ -23,13 +23,13 @@ export const useTransactionList = () => {
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
     const {user} = useAppSelector(state => state.auth);
-    const isFounder = user?.role === 'founder';
+    const isAdmin = user?.role === 'admin';
     const {data: portfolioData, isLoading: isPortfolioLoading} = useGetPortfolioQuery(undefined, {
-        skip: !isFounder,
+        skip: !isAdmin,
     });
     const societies = portfolioData?.portfolio ?? [];
     const [selectedOrgCode, setSelectedOrgCode] = useState<string | undefined>(undefined);
-    const activeOrgCode = isFounder ? selectedOrgCode ?? societies[0]?.org_code : undefined;
+    const activeOrgCode = isAdmin ? selectedOrgCode ?? societies[0]?.org_code : undefined;
     const activeSociety =
         societies.find(item => item.org_code === activeOrgCode) ?? societies[0] ?? null;
 
@@ -43,7 +43,7 @@ export const useTransactionList = () => {
             sort_by: sortBy,
         },
         {
-            skip: isFounder && !activeOrgCode,
+            skip: isAdmin && !activeOrgCode,
         },
     );
     const [approveTransaction, approvalState] = useApproveTransactionMutation();
@@ -144,7 +144,7 @@ export const useTransactionList = () => {
         handleDecision,
         handleDelete,
         isUpdating: approvalState.isLoading || deletionState.isLoading,
-        isFounder,
+        isAdmin,
         isPortfolioLoading,
     };
 };

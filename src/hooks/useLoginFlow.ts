@@ -9,9 +9,10 @@ const RESEND_TIMER_SECONDS = 30;
 type UseLoginFlowParams = {
     navigation: any;
     organizationCode?: string;
+    isAdmin?: boolean;
 };
 
-export const useLoginFlow = ({navigation, organizationCode}: UseLoginFlowParams) => {
+export const useLoginFlow = ({navigation, organizationCode, isAdmin}: UseLoginFlowParams) => {
     const [mobile, setMobile] = useState('');
     const [otp, setOtp] = useState('');
     const [isOtpStep, setIsOtpStep] = useState(false);
@@ -51,7 +52,7 @@ export const useLoginFlow = ({navigation, organizationCode}: UseLoginFlowParams)
         }
 
         try {
-            const result = await sendOtp({mobile}).unwrap();
+            const result = await sendOtp({mobile, isAdmin}).unwrap();
             if (result.success) {
                 setIsOtpStep(true);
                 setTimer(RESEND_TIMER_SECONDS);
@@ -71,7 +72,7 @@ export const useLoginFlow = ({navigation, organizationCode}: UseLoginFlowParams)
         }
 
         try {
-            const result = await verifyOtp({mobile, otp}).unwrap();
+            const result = await verifyOtp({mobile, otp, isAdmin}).unwrap();
             if (result.success) {
                 dispatch(
                     setAuth({

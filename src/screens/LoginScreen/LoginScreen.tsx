@@ -8,7 +8,7 @@ import {LoginScreenStyles} from './LoginScreenStyles';
 
 const LoginScreen = ({navigation}: any) => {
     const route = useRoute<any>();
-    const {organizationCode, isFounder} = route.params || {};
+    const {organizationCode, isAdmin} = route.params || {};
     const {
         mobile,
         setMobile,
@@ -22,7 +22,7 @@ const LoginScreen = ({navigation}: any) => {
         handleVerifyOtp,
         handleResendOtp,
         resetOtpStep,
-    } = useLoginFlow({navigation, organizationCode});
+    } = useLoginFlow({navigation, organizationCode, isAdmin});
 
     return (
         <SafeAreaView style={LoginScreenStyles.container}>
@@ -32,7 +32,7 @@ const LoginScreen = ({navigation}: any) => {
             >
                 <LoginFormHeader
                     isOtpStep={isOtpStep}
-                    isFounder={isFounder}
+                    isAdmin={isAdmin}
                     organizationCode={organizationCode}
                     mobile={mobile}
                 />

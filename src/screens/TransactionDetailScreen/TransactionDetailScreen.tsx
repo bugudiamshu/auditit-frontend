@@ -8,11 +8,11 @@ import {theme} from '../../config/theme';
 
 const TransactionDetailScreen = ({route, navigation}: any) => {
     const {transaction} = route.params;
-    const {handleDelete, isUpdating, isFounder, user} = useTransactionList();
+    const {handleDelete, isUpdating, isAdmin, user} = useTransactionList();
 
     const isPending = transaction.status === 'pending';
-    const canEdit = isPending && (isFounder || transaction.creator?.id === user?.id);
-    const canDelete = isPending && (isFounder || transaction.creator?.id === user?.id);
+    const canEdit = isPending && (isAdmin || transaction.creator?.id === user?.id);
+    const canDelete = isPending && (isAdmin || transaction.creator?.id === user?.id);
 
     const getStatusStyle = (status: string) => {
         switch (status) {

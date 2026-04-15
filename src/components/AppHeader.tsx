@@ -29,7 +29,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
                     <Text style={AppHeaderStyles.userName}>{user?.name?.split(' ')[0] ?? 'User'}</Text>
                     <View style={AppHeaderStyles.roleBadge}>
                         <Text style={AppHeaderStyles.roleText}>
-                            {user?.role === 'founder' ? 'Founder' : 'Incharge'}
+                            {user?.role === 'admin' ? 'Admin' : 'Incharge'}
                         </Text>
                     </View>
                 </View>

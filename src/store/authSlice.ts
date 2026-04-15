@@ -5,7 +5,7 @@ interface User {
     id: number;
     name: string;
     mobile: string;
-    role: string; // e.g., 'founder', 'incharge'
+    role: string; // e.g., 'admin', 'incharge'
     // Add other user properties as needed
 }
 

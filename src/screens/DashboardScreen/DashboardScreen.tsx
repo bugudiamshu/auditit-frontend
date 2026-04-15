@@ -45,7 +45,7 @@ const DashboardScreen = ({navigation}: any) => {
 
     return (
         <SafeAreaView style={DashboardStyles.container}>
-            <AppHeader pageTitle={isCentralView ? 'Founder Dashboard' : 'Dashboard'} />
+            <AppHeader pageTitle={isCentralView ? 'Admin Dashboard' : 'Dashboard'} />
 
             <ScrollView
                 contentContainerStyle={DashboardStyles.scrollContent}
@@ -112,7 +112,7 @@ const DashboardScreen = ({navigation}: any) => {
                             <View style={DashboardStyles.emptyCard}>
                                 <FeedbackState
                                     title="No organizations found"
-                                    description="Add an active tenant to start seeing founder-level insights here."
+                                    description="Add an active tenant to start seeing admin-level insights here."
                                 />
                             </View>
                         )}
@@ -171,8 +171,8 @@ const DashboardScreen = ({navigation}: any) => {
                                 <Text style={DashboardStyles.teamLabel}>Users</Text>
                             </View>
                             <View>
-                                <Text style={DashboardStyles.teamMetric}>{tenantMetrics.founders}</Text>
-                                <Text style={DashboardStyles.teamLabel}>Founders</Text>
+                                <Text style={DashboardStyles.teamMetric}>{tenantMetrics.admins}</Text>
+                                <Text style={DashboardStyles.teamLabel}>Admins</Text>
                             </View>
                             <View>
                                 <Text style={DashboardStyles.teamMetric}>{tenantMetrics.incharges}</Text>

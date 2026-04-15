@@ -85,7 +85,7 @@ export const VerifyOrgScreenStyles = StyleSheet.create({
         fontWeight: '800',
         letterSpacing: 0.5,
     },
-    founderLink: {
+    adminLink: {
         marginTop: 32,
         padding: 12,
         alignItems: 'center',
@@ -94,7 +94,7 @@ export const VerifyOrgScreenStyles = StyleSheet.create({
         borderColor: theme.colors.border,
         borderStyle: 'dashed',
     },
-    founderText: {
+    adminText: {
         color: theme.colors.textPrimary,
         fontWeight: '700',
         fontSize: 14,
