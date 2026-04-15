@@ -52,21 +52,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 10,
         borderRadius: 12,
-        backgroundColor: '#F8FAFC',
+        backgroundColor: theme.colors.slate50,
         borderWidth: 1,
-        borderColor: '#F1F5F9',
+        borderColor: theme.colors.slate100,
     },
     chipActive: {
-        backgroundColor: '#0F172A',
-        borderColor: '#0F172A',
+        backgroundColor: theme.colors.primary,
+        borderColor: theme.colors.primary,
     },
     label: {
         fontSize: 13,
         fontWeight: '700',
-        color: '#64748B',
+        color: theme.colors.textSecondary,
     },
     labelActive: {
-        color: '#FFFFFF',
+        color: theme.colors.white,
     },
 });
 

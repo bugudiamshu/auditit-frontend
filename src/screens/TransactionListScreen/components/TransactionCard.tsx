@@ -9,8 +9,6 @@ type TransactionCardProps = {
     isFounder: boolean;
     currentUserId?: number;
     isUpdating: boolean;
-    onEdit: (item: TransactionRecord) => void;
-    onDelete: (id: number) => void;
     onPress: (item: TransactionRecord) => void;
 };
 
@@ -30,14 +28,8 @@ const TransactionCard = ({
     isFounder,
     currentUserId,
     isUpdating,
-    onEdit,
-    onDelete,
     onPress,
 }: TransactionCardProps) => {
-    const isPending = item.status === 'pending';
-    const canEdit = isPending && (isFounder || item.creator?.id === currentUserId);
-    const canDelete = isPending && (isFounder || item.creator?.id === currentUserId);
-
     return (
         <TouchableOpacity 
             style={TransactionListScreenStyles.compactCard}
@@ -57,7 +49,7 @@ const TransactionCard = ({
                     <Text
                         style={[
                             TransactionListScreenStyles.compactAmount,
-                            {color: item.type === 'income' ? '#10B981' : '#EF4444'},
+                            {color: item.type === 'income' ? theme.colors.success : theme.colors.danger},
                         ]}
                     >
                         {item.type === 'income' ? '+' : '-'} ₹{parseFloat(item.amount).toLocaleString('en-IN')}
@@ -70,38 +62,6 @@ const TransactionCard = ({
                     />
                 </View>
             </View>
-
-            {(canEdit || canDelete) && (
-                <View style={TransactionListScreenStyles.compactBottom}>
-                    <View style={{flex: 1}} />
-                    <View style={TransactionListScreenStyles.compactActions}>
-                        {canEdit && (
-                            <TouchableOpacity
-                                style={TransactionListScreenStyles.compactActionButton}
-                                onPress={(e) => {
-                                    e.stopPropagation();
-                                    onEdit(item);
-                                }}
-                                disabled={isUpdating}
-                            >
-                                <Text style={TransactionListScreenStyles.compactActionIcon}>✏️</Text>
-                            </TouchableOpacity>
-                        )}
-                        {canDelete && (
-                            <TouchableOpacity
-                                style={TransactionListScreenStyles.compactActionButton}
-                                onPress={(e) => {
-                                    e.stopPropagation();
-                                    onDelete(item.id);
-                                }}
-                                disabled={isUpdating}
-                            >
-                                <Text style={TransactionListScreenStyles.compactActionIcon}>🗑️</Text>
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                </View>
-            )}
         </TouchableOpacity>
     );
 };

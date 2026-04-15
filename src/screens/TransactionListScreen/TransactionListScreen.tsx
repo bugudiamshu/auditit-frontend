@@ -174,8 +174,6 @@ const TransactionListScreen = ({navigation}: any) => {
                 isFounder={isFounder}
                 currentUserId={user?.id}
                 isUpdating={isUpdating}
-                onEdit={handleEdit}
-                onDelete={confirmDelete}
                 onPress={handlePress}
             />
         );
@@ -261,7 +259,7 @@ const TransactionListScreen = ({navigation}: any) => {
                         >
                             <Text style={[
                                 TransactionListScreenStyles.iconText,
-                                activeFilterCount > 0 && {color: '#FFF'}
+                                activeFilterCount > 0 && {color: theme.colors.white}
                             ]}>⚡</Text>
                             {activeFilterCount > 0 && (
                                 <View style={TransactionListScreenStyles.activeFilterBadge}>

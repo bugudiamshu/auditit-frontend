@@ -1,21 +1,52 @@
 import React from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {TransactionDetailScreenStyles as styles} from './TransactionDetailScreenStyles';
 import {formatDisplayDate} from '../../utils/formatters';
+import {useTransactionList} from '../../hooks/useTransactionList';
+import {theme} from '../../config/theme';
 
 const TransactionDetailScreen = ({route, navigation}: any) => {
     const {transaction} = route.params;
+    const {handleDelete, isUpdating, isFounder, user} = useTransactionList();
+
+    const isPending = transaction.status === 'pending';
+    const canEdit = isPending && (isFounder || transaction.creator?.id === user?.id);
+    const canDelete = isPending && (isFounder || transaction.creator?.id === user?.id);
 
     const getStatusStyle = (status: string) => {
         switch (status) {
             case 'approved':
-                return {bg: '#DCFCE7', text: '#166534', label: 'Approved'};
+                return {bg: theme.colors.green50, text: theme.colors.green800, label: 'Approved'};
             case 'rejected':
-                return {bg: '#FEE2E2', text: '#991B1B', label: 'Rejected'};
+                return {bg: theme.colors.rose50, text: theme.colors.rose800, label: 'Rejected'};
             default:
-                return {bg: '#FEF3C7', text: '#92400E', label: 'Pending'};
+                return {bg: theme.colors.amber50, text: theme.colors.amber800, label: 'Pending'};
         }
+    };
+
+    const confirmDelete = () => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to permanently delete this transaction?',
+            [
+                {text: 'Cancel', style: 'cancel'},
+                {
+                    text: 'Delete', 
+                    style: 'destructive', 
+                    onPress: async () => {
+                        await handleDelete(transaction.id);
+                        navigation.goBack();
+                    }
+                },
+            ],
+        );
+    };
+
+    const handleEdit = () => {
+        navigation.navigate('TransactionEntry', {
+            editItem: transaction,
+        });
     };
 
     const statusStyle = getStatusStyle(transaction.status);
@@ -37,7 +68,7 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                     <Text style={styles.amountLabel}>Total Amount</Text>
                     <Text style={[
                         styles.amountValue,
-                        {color: transaction.type === 'income' ? '#10B981' : '#EF4444'}
+                        {color: transaction.type === 'income' ? theme.colors.success : theme.colors.danger}
                     ]}>
                         {transaction.type === 'income' ? '+' : '-'} ₹{parseFloat(transaction.amount).toLocaleString('en-IN')}
                     </Text>
@@ -85,6 +116,31 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                         <Text style={styles.noRemarksText}>No remarks provided for this transaction.</Text>
                     )}
                 </View>
+
+                {(canEdit || canDelete) && (
+                    <View style={styles.actionsContainer}>
+                        {canEdit && (
+                            <TouchableOpacity 
+                                style={styles.editButton}
+                                onPress={handleEdit}
+                                disabled={isUpdating}
+                            >
+                                <Text style={{fontSize: 14}}>✏️</Text>
+                                <Text style={styles.editButtonText}>Edit Transaction</Text>
+                            </TouchableOpacity>
+                        )}
+                        {canDelete && (
+                            <TouchableOpacity 
+                                style={styles.deleteButton}
+                                onPress={confirmDelete}
+                                disabled={isUpdating}
+                            >
+                                <Text style={{fontSize: 14}}>🗑️</Text>
+                                <Text style={styles.deleteButtonText}>Delete</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                )}
 
                 <View style={{height: 40}} />
             </ScrollView>
