@@ -2,265 +2,274 @@ import React from 'react';
 import {ScrollView, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AppHeader from '../../components/AppHeader.tsx';
 import FieldErrorText from '../../components/common/FieldErrorText';
 import {theme} from '../../config/theme.ts';
 import {useTransactionEntryForm} from '../../hooks/useTransactionEntryForm';
 import {formatDisplayDate} from '../../utils/formatters';
-import {TransactionStyles} from './TransactionStyles';
+import {TransactionStyles as styles} from './TransactionStyles';
 
 const TransactionEntryScreen = ({navigation, route}: any) => {
     const editItem = route.params?.editItem;
     const orgCode = route.params?.orgCode;
     const form = useTransactionEntryForm(navigation, editItem, orgCode);
 
+    const isIncome = form.type === 'income';
+
     return (
-        <SafeAreaView style={TransactionStyles.container}>
-            <View style={TransactionStyles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Text style={TransactionStyles.backText}>← Back</Text>
-                </TouchableOpacity>
-                <Text style={TransactionStyles.title}>
-                    {form.isEdit ? 'Edit Transaction' : 'New Transaction'}
-                </Text>
-            </View>
+        <SafeAreaView style={styles.container}>
+            <AppHeader pageTitle={form.isEdit ? 'Edit Record' : 'New Record'} />
 
             <ScrollView
-                style={TransactionStyles.form}
-                contentContainerStyle={TransactionStyles.formContent}
+                style={styles.form}
+                contentContainerStyle={styles.formContent}
                 showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
             >
-                <View style={TransactionStyles.heroCard}>
-                    <Text style={TransactionStyles.heroEyebrow}>
-                        {form.isEdit ? 'Update Entry' : 'Ledger Entry'}
+                <View style={styles.pageHeader}>
+                    <Text style={styles.pageTitle}>
+                        {form.isEdit ? 'Update Details' : 'Add Transaction'}
                     </Text>
-                    <Text style={TransactionStyles.heroTitle}>
-                        {form.isEdit ? 'Refine this record' : `Record a ${form.type === 'income' ? 'collection' : 'payment'}`} with confidence.
-                    </Text>
-                    <Text style={TransactionStyles.heroSubtitle}>
-                        {form.isEdit
-                            ? 'Update details as needed and resubmit for approval.'
-                            : 'Choose the flow, confirm the amount, and submit it for review in one pass.'}
+                    <Text style={styles.pageSubtitle}>
+                        {form.isEdit 
+                            ? 'Adjust the existing record below.' 
+                            : 'Enter the financial details to keep the ledger accurate.'}
                     </Text>
                 </View>
 
                 {form.errors.general ? (
-                    <View style={TransactionStyles.errorBanner}>
-                        <Text style={TransactionStyles.errorBannerTitle}>Please review this entry</Text>
-                        <Text style={TransactionStyles.errorBannerText}>{form.errors.general}</Text>
+                    <View style={styles.errorBanner}>
+                        <Text style={{fontSize: 20}}>🚨</Text>
+                        <Text style={styles.errorBannerText}>{form.errors.general}</Text>
                     </View>
                 ) : null}
 
-                <View style={TransactionStyles.sectionCard}>
-                    <Text style={TransactionStyles.sectionTitle}>Transaction Type</Text>
-                    <View style={TransactionStyles.segmentRow}>
+                <View style={styles.heroCard}>
+                    <View style={styles.typeToggle}>
                         <TouchableOpacity
+                            activeOpacity={0.7}
                             style={[
-                                TransactionStyles.segmentButton,
-                                form.type === 'income' && TransactionStyles.segmentButtonIncome,
+                                styles.typeButton,
+                                isIncome && styles.typeButtonActiveIncome,
                             ]}
                             onPress={() => form.handleTypeChange('income')}
                         >
                             <Text
                                 style={[
-                                    TransactionStyles.segmentTitle,
-                                    form.type === 'income' && TransactionStyles.segmentTitleActive,
+                                    styles.typeText,
+                                    isIncome && styles.typeTextActiveIncome,
                                 ]}
                             >
-                                Income
+                                📥 Income
                             </Text>
-                            <Text style={TransactionStyles.segmentSubtitle}>Cash in</Text>
                         </TouchableOpacity>
-
                         <TouchableOpacity
+                            activeOpacity={0.7}
                             style={[
-                                TransactionStyles.segmentButton,
-                                form.type === 'expense' && TransactionStyles.segmentButtonExpense,
+                                styles.typeButton,
+                                !isIncome && styles.typeButtonActiveExpense,
                             ]}
                             onPress={() => form.handleTypeChange('expense')}
                         >
                             <Text
                                 style={[
-                                    TransactionStyles.segmentTitle,
-                                    form.type === 'expense' && TransactionStyles.segmentTitleActive,
+                                    styles.typeText,
+                                    !isIncome && styles.typeTextActiveExpense,
                                 ]}
                             >
-                                Expense
+                                📤 Expense
                             </Text>
-                            <Text style={TransactionStyles.segmentSubtitle}>Cash out</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-                <View style={TransactionStyles.sectionCard}>
-                    <View style={TransactionStyles.sectionHeader}>
-                        <Text style={TransactionStyles.sectionTitle}>Core Details</Text>
-                        <View style={TransactionStyles.amountChip}>
-                            <Text style={TransactionStyles.amountChipLabel}>{form.amountHint}</Text>
-                        </View>
-                    </View>
-
-                    <Text style={TransactionStyles.label}>Date</Text>
-                    <TouchableOpacity
-                        onPress={() => form.setShowDatePicker(true)}
-                        style={TransactionStyles.inputShell}
-                    >
-                        <Text style={TransactionStyles.inputValue}>{formatDisplayDate(form.date)}</Text>
-                        <Text style={TransactionStyles.inputMeta}>Pick date</Text>
-                    </TouchableOpacity>
-                    {form.showDatePicker ? (
-                        <DateTimePicker
-                            value={form.date}
-                            mode="date"
-                            display="default"
-                            onChange={form.handleDateChange}
-                        />
-                    ) : null}
-
-                    <Text style={TransactionStyles.label}>Amount</Text>
-                    <View
-                        style={[
-                            TransactionStyles.inputShell,
-                            form.errors.amount && TransactionStyles.inputShellError,
-                        ]}
-                    >
-                        <Text style={TransactionStyles.currencyPrefix}>₹</Text>
-                        <TextInput
-                            style={TransactionStyles.amountInput}
-                            placeholder="0.00"
-                            placeholderTextColor={theme.colors.placeholder}
-                            keyboardType="numeric"
-                            value={form.amount}
-                            onChangeText={value => {
-                                form.setAmount(value);
-                                form.updateFieldError('amount', value);
-                            }}
-                        />
-                    </View>
-                    <FieldErrorText message={form.errors.amount} />
-
-                    <Text style={TransactionStyles.label}>{form.personLabel}</Text>
-                    <TextInput
-                        style={[
-                            TransactionStyles.textInput,
-                            form.errors.personName && TransactionStyles.inputShellError,
-                        ]}
-                        placeholder={form.personPlaceholder}
-                        placeholderTextColor={theme.colors.placeholder}
-                        value={form.personName}
-                        onChangeText={value => {
-                            form.setPersonName(value);
-                            form.updateFieldError('personName', value);
-                        }}
-                    />
-                    <FieldErrorText message={form.errors.personName} />
-                </View>
-
-                <View style={TransactionStyles.sectionCard}>
-                    <Text style={TransactionStyles.sectionTitle}>Payment Trail</Text>
-                    <View style={TransactionStyles.segmentRow}>
-                        <TouchableOpacity
-                            style={[
-                                TransactionStyles.segmentButtonSmall,
-                                form.paymentMode === 'cash' &&
-                                    TransactionStyles.segmentButtonNeutralActive,
-                            ]}
-                            onPress={() => form.handlePaymentModeChange('cash')}
-                        >
-                            <Text style={TransactionStyles.segmentTitle}>Cash</Text>
-                            <Text style={TransactionStyles.segmentSubtitle}>No transfer ID</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[
-                                TransactionStyles.segmentButtonSmall,
-                                form.paymentMode === 'online' &&
-                                    TransactionStyles.segmentButtonNeutralActive,
-                            ]}
-                            onPress={() => form.handlePaymentModeChange('online')}
-                        >
-                            <Text style={TransactionStyles.segmentTitle}>Online</Text>
-                            <Text style={TransactionStyles.segmentSubtitle}>Keep transfer proof</Text>
                         </TouchableOpacity>
                     </View>
 
-                    {form.paymentMode === 'online' ? (
-                        <>
-                            <Text style={TransactionStyles.label}>Transaction ID</Text>
+                    <View style={styles.amountContainer}>
+                        <Text style={styles.amountLabel}>Total Amount</Text>
+                        <View style={styles.amountWrapper}>
+                            <Text style={[
+                                styles.currencySymbol,
+                                {color: isIncome ? theme.colors.success : theme.colors.danger}
+                            ]}>₹</Text>
                             <TextInput
                                 style={[
-                                    TransactionStyles.textInput,
-                                    form.errors.transactionId && TransactionStyles.inputShellError,
+                                    styles.amountInput,
+                                    {color: isIncome ? theme.colors.success : theme.colors.danger}
                                 ]}
-                                placeholder="e.g. txn_123abc456"
-                                placeholderTextColor={theme.colors.placeholder}
-                                value={form.transactionId}
+                                placeholder="0"
+                                placeholderTextColor={theme.colors.slate300}
+                                keyboardType="numeric"
+                                value={form.amount}
+                                autoFocus={!form.isEdit}
                                 onChangeText={value => {
-                                    form.setTransactionId(value);
-                                    form.updateFieldError('transactionId', value);
+                                    form.setAmount(value);
+                                    form.updateFieldError('amount', value);
                                 }}
-                                autoCapitalize="none"
                             />
-                            <FieldErrorText message={form.errors.transactionId} />
-                        </>
-                    ) : (
-                        <View style={TransactionStyles.infoStrip}>
-                            <Text style={TransactionStyles.infoStripText}>
-                                Cash selected. No transaction ID is needed for this entry.
-                            </Text>
                         </View>
-                    )}
-
-                    <Text style={TransactionStyles.label}>Receipt / Bill No.</Text>
-                    <TextInput
-                        style={TransactionStyles.textInput}
-                        placeholder="Optional reference"
-                        placeholderTextColor={theme.colors.placeholder}
-                        value={form.referenceNo}
-                        onChangeText={form.setReferenceNo}
-                    />
+                        <FieldErrorText message={form.errors.amount} />
+                    </View>
                 </View>
 
-                <View style={TransactionStyles.sectionCard}>
-                    <Text style={TransactionStyles.sectionTitle}>Notes</Text>
-                    <TextInput
-                        style={[TransactionStyles.textInput, TransactionStyles.multilineInput]}
-                        placeholder="Add context that will help the reviewer."
-                        placeholderTextColor={theme.colors.placeholder}
-                        multiline
-                        value={form.remarks}
-                        onChangeText={form.setRemarks}
-                    />
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Primary Information</Text>
+                    <View style={styles.card}>
+                        <View style={styles.inputGroup}>
+                            <View style={styles.labelRow}>
+                                <Text style={styles.labelIcon}>🗓️</Text>
+                                <Text style={styles.label}>Transaction Date</Text>
+                            </View>
+                            <TouchableOpacity
+                                activeOpacity={0.6}
+                                onPress={() => form.setShowDatePicker(true)}
+                                style={styles.inputPressable}
+                            >
+                                <Text style={styles.inputPressableText}>
+                                    {formatDisplayDate(form.date)}
+                                </Text>
+                                <Text style={styles.dateIcon}>📅</Text>
+                            </TouchableOpacity>
+                        </View>
+                        {form.showDatePicker ? (
+                            <DateTimePicker
+                                value={form.date}
+                                mode="date"
+                                display="default"
+                                onChange={form.handleDateChange}
+                            />
+                        ) : null}
+
+                        <View style={styles.inputGroup}>
+                            <View style={styles.labelRow}>
+                                <Text style={styles.labelIcon}>👤</Text>
+                                <Text style={styles.label}>{form.personLabel}</Text>
+                            </View>
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder={form.personPlaceholder}
+                                placeholderTextColor={theme.colors.slate400}
+                                value={form.personName}
+                                onChangeText={value => {
+                                    form.setPersonName(value);
+                                    form.updateFieldError('personName', value);
+                                }}
+                            />
+                            <FieldErrorText message={form.errors.personName} />
+                        </View>
+
+                        <View style={styles.inputGroup}>
+                            <View style={styles.labelRow}>
+                                <Text style={styles.labelIcon}>💳</Text>
+                                <Text style={styles.label}>Payment Mode</Text>
+                            </View>
+                            <View style={styles.modeToggle}>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    style={[
+                                        styles.modeButton,
+                                        form.paymentMode === 'cash' && styles.modeButtonActive,
+                                    ]}
+                                    onPress={() => form.handlePaymentModeChange('cash')}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.modeText,
+                                            form.paymentMode === 'cash' && styles.modeTextActive,
+                                        ]}
+                                    >
+                                        💵 Cash
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    style={[
+                                        styles.modeButton,
+                                        form.paymentMode === 'online' && styles.modeButtonActive,
+                                    ]}
+                                    onPress={() => form.handlePaymentModeChange('online')}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.modeText,
+                                            form.paymentMode === 'online' && styles.modeTextActive,
+                                        ]}
+                                    >
+                                        🏦 Online
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        {form.paymentMode === 'online' && (
+                            <View style={styles.inputGroup}>
+                                <View style={styles.labelRow}>
+                                    <Text style={styles.labelIcon}>🆔</Text>
+                                    <Text style={styles.label}>Transaction ID</Text>
+                                </View>
+                                <TextInput
+                                    style={styles.textInput}
+                                    placeholder="Ref # / Transaction ID"
+                                    placeholderTextColor={theme.colors.slate400}
+                                    value={form.transactionId}
+                                    onChangeText={value => {
+                                        form.setTransactionId(value);
+                                        form.updateFieldError('transactionId', value);
+                                    }}
+                                    autoCapitalize="none"
+                                />
+                                <FieldErrorText message={form.errors.transactionId} />
+                            </View>
+                        )}
+
+                        <View style={[styles.inputGroup, {marginBottom: 0}]}>
+                            <View style={styles.labelRow}>
+                                <Text style={styles.labelIcon}>📝</Text>
+                                <Text style={styles.label}>Receipt / Voucher No.</Text>
+                            </View>
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder="Optional Reference"
+                                placeholderTextColor={theme.colors.slate400}
+                                value={form.referenceNo}
+                                onChangeText={form.setReferenceNo}
+                            />
+                        </View>
+                    </View>
                 </View>
 
-                <View style={TransactionStyles.summaryCard}>
-                    <Text style={TransactionStyles.summaryLabel}>Ready to submit</Text>
-                    <Text style={TransactionStyles.summaryAmount}>
-                        {form.amountValue > 0 ? `₹${form.amountValue.toLocaleString('en-IN')}` : '₹0'}
-                    </Text>
-                    <Text style={TransactionStyles.summaryMeta}>
-                        {form.type === 'income' ? 'Income' : 'Expense'} •{' '}
-                        {form.paymentMode === 'online' ? 'Online' : 'Cash'}
-                    </Text>
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Remarks & Notes</Text>
+                    <View style={styles.card}>
+                        <TextInput
+                            style={[styles.textInput, styles.multilineInput]}
+                            placeholder="Add internal notes or context for the auditor..."
+                            placeholderTextColor={theme.colors.slate400}
+                            multiline
+                            value={form.remarks}
+                            onChangeText={form.setRemarks}
+                        />
+                    </View>
                 </View>
 
-                <TouchableOpacity
-                    style={[
-                        TransactionStyles.submitButton,
-                        form.isLoading && TransactionStyles.submitButtonDisabled,
-                    ]}
-                    onPress={form.onSubmit}
-                    disabled={form.isLoading}
-                >
-                    <Text style={TransactionStyles.submitText}>
-                        {form.isLoading
-                            ? form.isEdit
-                                ? 'Updating...'
-                                : 'Submitting...'
-                            : form.isEdit
-                            ? 'Update Transaction'
-                            : 'Submit Transaction'}
-                    </Text>
-                </TouchableOpacity>
+                <View style={styles.submitButtonContainer}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={[
+                            styles.submitButton,
+                            form.isLoading && styles.submitButtonDisabled,
+                            {backgroundColor: isIncome ? theme.colors.success : theme.colors.primary}
+                        ]}
+                        onPress={form.onSubmit}
+                        disabled={form.isLoading}
+                    >
+                        <Text style={styles.submitText}>
+                            {form.isLoading
+                                ? '⏳ Processing...'
+                                : form.isEdit
+                                ? '✅ Update Transaction'
+                                : `🚀 Record ${isIncome ? 'Income' : 'Expense'}`}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.bottomSpacer} />
             </ScrollView>
         </SafeAreaView>
     );
