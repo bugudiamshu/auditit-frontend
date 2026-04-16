@@ -18,7 +18,9 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <AppHeader pageTitle={form.isEdit ? 'Edit Record' : 'New Record'} />
+            <AppHeader 
+                pageTitle={form.isEdit ? 'Edit Record' : 'New Record'} 
+            />
 
             <ScrollView
                 style={styles.form}
@@ -27,9 +29,17 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                 keyboardShouldPersistTaps="handled"
             >
                 <View style={styles.pageHeader}>
-                    <Text style={styles.pageTitle}>
-                        {form.isEdit ? 'Update Details' : 'Add Transaction'}
-                    </Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 6}}>
+                        <TouchableOpacity 
+                            onPress={() => navigation.goBack()}
+                            style={styles.inlineBackButton}
+                        >
+                            <Text style={styles.inlineBackIcon}>←</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.pageTitle}>
+                            {form.isEdit ? 'Update Details' : 'Add Transaction'}
+                        </Text>
+                    </View>
                     <Text style={styles.pageSubtitle}>
                         {form.isEdit 
                             ? 'Adjust the existing record below.' 
@@ -96,6 +106,8 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                                 ]}
                                 placeholder="0"
                                 placeholderTextColor={theme.colors.slate300}
+                                selectionColor={isIncome ? theme.colors.success : theme.colors.danger}
+                                caretHidden={true}
                                 keyboardType="numeric"
                                 value={form.amount}
                                 autoFocus={!form.isEdit}
@@ -146,6 +158,7 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                                 style={styles.textInput}
                                 placeholder={form.personPlaceholder}
                                 placeholderTextColor={theme.colors.slate400}
+                                selectionColor={theme.colors.primary}
                                 value={form.personName}
                                 onChangeText={value => {
                                     form.setPersonName(value);
@@ -208,6 +221,7 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                                     style={styles.textInput}
                                     placeholder="Ref # / Transaction ID"
                                     placeholderTextColor={theme.colors.slate400}
+                                    selectionColor={theme.colors.primary}
                                     value={form.transactionId}
                                     onChangeText={value => {
                                         form.setTransactionId(value);
@@ -228,6 +242,7 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                                 style={styles.textInput}
                                 placeholder="Optional Reference"
                                 placeholderTextColor={theme.colors.slate400}
+                                selectionColor={theme.colors.primary}
                                 value={form.referenceNo}
                                 onChangeText={form.setReferenceNo}
                             />
@@ -242,6 +257,7 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                             style={[styles.textInput, styles.multilineInput]}
                             placeholder="Add internal notes or context for the auditor..."
                             placeholderTextColor={theme.colors.slate400}
+                            selectionColor={theme.colors.primary}
                             multiline
                             value={form.remarks}
                             onChangeText={form.setRemarks}
@@ -268,6 +284,22 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                                 : `🚀 Record ${isIncome ? 'Income' : 'Expense'}`}
                         </Text>
                     </TouchableOpacity>
+
+                    <View style={styles.quickNav}>
+                        <TouchableOpacity 
+                            style={styles.quickNavLink}
+                            onPress={() => navigation.navigate('MainApp', { screen: 'Dashboard' })}
+                        >
+                            <Text style={styles.quickNavLinkText}>Dashboard</Text>
+                        </TouchableOpacity>
+                        <View style={styles.quickNavDivider} />
+                        <TouchableOpacity 
+                            style={styles.quickNavLink}
+                            onPress={() => navigation.navigate('MainApp', { screen: 'Transactions' })}
+                        >
+                            <Text style={styles.quickNavLinkText}>Transactions List</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={styles.bottomSpacer} />
             </ScrollView>

@@ -65,7 +65,6 @@ export const VerifyOrgScreenStyles = StyleSheet.create({
         color: theme.colors.textPrimary,
         textAlign: 'center',
         fontWeight: '800',
-        letterSpacing: 6,
         marginBottom: 24,
     },
     button: {

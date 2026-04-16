@@ -1,15 +1,18 @@
 import React from 'react';
 import {TouchableOpacity, View, Text } from 'react-native';
 import { AppHeaderStyles } from "./AppHeaderStyles.ts";
+import { theme } from "../config/theme.ts";
 import {useLogout} from "../hooks/useLogout.ts";
 import {useAppSelector} from "../store/store.ts"; // Import styles for the header
 
 interface AppHeaderProps {
-    pageTitle: string; // New prop for the page title
+    pageTitle: string;
+    onBack?: () => void;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({
     pageTitle,
+    onBack,
 }) => {
     const {tenant, user} = useAppSelector(state => state.auth);
     const {confirmLogout, isLoggingOut} = useLogout();
@@ -18,10 +21,19 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     return (
         <View style={AppHeaderStyles.header}>
             <View style={AppHeaderStyles.leftContent}>
-                <Text style={AppHeaderStyles.pageTitle}>{pageTitle}</Text>
-                <Text style={AppHeaderStyles.tenantName} numberOfLines={1}>
-                    {tenant ? tenant.name : 'AuditIt Central'}
-                </Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    {onBack && (
+                        <TouchableOpacity onPress={onBack} style={{marginRight: 12, padding: 4}}>
+                            <Text style={{fontSize: 24, color: theme.colors.textPrimary}}>←</Text>
+                        </TouchableOpacity>
+                    )}
+                    <View>
+                        <Text style={AppHeaderStyles.pageTitle}>{pageTitle}</Text>
+                        <Text style={AppHeaderStyles.tenantName} numberOfLines={1}>
+                            {tenant ? (tenant.nickname || tenant.name) : 'AuditIt Central'}
+                        </Text>
+                    </View>
+                </View>
             </View>
 
             <View style={AppHeaderStyles.rightContent}>

@@ -23,12 +23,25 @@ export const TransactionStyles = StyleSheet.create({
         color: theme.colors.textPrimary,
         letterSpacing: -1,
     },
+    inlineBackButton: {
+        width: 32,
+        height: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 8,
+    },
+    inlineBackIcon: {
+        fontSize: 24,
+        color: theme.colors.textPrimary,
+        fontWeight: '700',
+    },
     pageSubtitle: {
         fontSize: 15,
         color: theme.colors.textSecondary,
         marginTop: 4,
         fontWeight: '500',
         lineHeight: 20,
+        marginLeft: 40, // Match width + margin of back button
     },
     errorBanner: {
         backgroundColor: theme.colors.rose50,
@@ -116,22 +129,27 @@ export const TransactionStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        height: 80,
     },
     currencySymbol: {
-        fontSize: 36,
+        fontSize: 56,
         fontWeight: '800',
         color: theme.colors.textPrimary,
         marginRight: 8,
-        marginTop: 4,
+        includeFontPadding: false,
+        textAlignVertical: 'center',
+        marginTop: 6, // Offset to match baseline of numbers
     },
     amountInput: {
         fontSize: 56,
         fontWeight: '900',
         color: theme.colors.textPrimary,
-        minWidth: 140,
         textAlign: 'center',
-        paddingVertical: 8,
-        letterSpacing: -2,
+        paddingVertical: 0,
+        margin: 0,
+        height: 80,
+        textAlignVertical: 'center',
+        includeFontPadding: false,
     },
     section: {
         marginBottom: 24,
@@ -261,5 +279,27 @@ export const TransactionStyles = StyleSheet.create({
     },
     bottomSpacer: {
         height: 60,
+    },
+    quickNav: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 20,
+        marginTop: 20,
+        paddingVertical: 10,
+    },
+    quickNavLink: {
+        padding: 8,
+    },
+    quickNavLinkText: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: theme.colors.secondary,
+        textDecorationLine: 'underline',
+    },
+    quickNavDivider: {
+        width: 1,
+        height: 14,
+        backgroundColor: theme.colors.slate300,
     }
 });

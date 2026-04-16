@@ -12,6 +12,7 @@ interface User {
 interface Tenant {
     id: number;
     name: string;
+    nickname: string;
     org_code: string;
 }
 
