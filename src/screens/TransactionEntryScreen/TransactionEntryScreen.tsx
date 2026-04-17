@@ -265,6 +265,41 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                     </View>
                 </View>
 
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Supporting Document</Text>
+                    <View style={styles.card}>
+                        {form.document ? (
+                            <View style={styles.documentBadge}>
+                                <Text style={styles.documentIcon}>
+                                    {form.document.mimeType?.includes('pdf') ? '📄' : '🖼️'}
+                                </Text>
+                                <View style={styles.documentInfo}>
+                                    <Text style={styles.documentName} numberOfLines={1}>
+                                        {form.document.name}
+                                    </Text>
+                                    <Text style={styles.documentSize}>
+                                        {form.document.size ? `${(form.document.size / 1024).toFixed(1)} KB` : 'Ready to upload'}
+                                    </Text>
+                                </View>
+                                <TouchableOpacity 
+                                    style={styles.removeDocument}
+                                    onPress={form.clearDocument}
+                                >
+                                    <Text style={styles.removeDocumentText}>✕</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ) : (
+                            <TouchableOpacity 
+                                style={styles.uploadButton}
+                                onPress={form.pickDocument}
+                            >
+                                <Text style={styles.uploadIcon}>📎</Text>
+                                <Text style={styles.uploadText}>Upload Bill or Receipt</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
+
                 <View style={styles.submitButtonContainer}>
                     <TouchableOpacity
                         activeOpacity={0.8}

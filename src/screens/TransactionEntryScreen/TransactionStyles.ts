@@ -253,6 +253,59 @@ export const TransactionStyles = StyleSheet.create({
         lineHeight: 24,
         paddingTop: 18,
     },
+    uploadButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: theme.colors.slate50,
+        borderRadius: 18,
+        paddingVertical: 16,
+        borderWidth: 1.5,
+        borderColor: theme.colors.slate100,
+        borderStyle: 'dashed',
+    },
+    uploadIcon: {
+        fontSize: 20,
+        marginRight: 8,
+    },
+    uploadText: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: theme.colors.secondary,
+    },
+    documentBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: theme.colors.sky50,
+        borderRadius: 14,
+        padding: 12,
+        borderWidth: 1,
+        borderColor: theme.colors.sky200,
+    },
+    documentIcon: {
+        fontSize: 24,
+        marginRight: 10,
+    },
+    documentInfo: {
+        flex: 1,
+    },
+    documentName: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: theme.colors.textPrimary,
+    },
+    documentSize: {
+        fontSize: 12,
+        color: theme.colors.textSecondary,
+        marginTop: 2,
+    },
+    removeDocument: {
+        padding: 4,
+    },
+    removeDocumentText: {
+        fontSize: 18,
+        color: theme.colors.danger,
+    },
     submitButtonContainer: {
         marginTop: 12,
         marginBottom: 20,

@@ -12,6 +12,8 @@ export interface TransactionRecord {
     remarks: string | null;
     status: 'pending' | 'approved' | 'rejected';
     created_at: string;
+    document_url?: string | null;
+    document_type?: string | null;
     creator?: { id: number; name: string } | null;
     approver?: { id: number; name: string } | null;
 }
@@ -50,7 +52,7 @@ export const transactionApi = baseApi.injectEndpoints({
             }),
             providesTags: ['Transactions'],
         }),
-        createTransaction: builder.mutation<TransactionMutationResponse, Record<string, unknown>>({
+        createTransaction: builder.mutation<TransactionMutationResponse, FormData>({
             query: (data) => ({
                 url: '/transactions',
                 method: 'POST',
@@ -60,11 +62,11 @@ export const transactionApi = baseApi.injectEndpoints({
         }),
         updateTransaction: builder.mutation<
             TransactionMutationResponse,
-            { id: number; data: Record<string, unknown>; orgCode?: string }
+            { id: number; data: FormData; orgCode?: string }
         >({
             query: ({ id, data, orgCode }) => ({
                 url: `/transactions/${id}`,
-                method: 'PATCH',
+                method: 'POST', // Use POST with _method=PATCH for FormData compatibility
                 body: data,
                 headers: orgCode ? {'X-Organization-Code': orgCode} : undefined,
             }),

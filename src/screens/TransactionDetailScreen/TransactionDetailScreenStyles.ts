@@ -1,174 +1,151 @@
-import { StyleSheet } from 'react-native';
-import { theme } from '../../config/theme';
+import {StyleSheet} from 'react-native';
+import {theme} from '../../config/theme';
 
 export const TransactionDetailScreenStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: theme.colors.background,
     },
+
     header: {
-        backgroundColor: theme.colors.surface,
-        paddingVertical: 20,
-        paddingHorizontal: 24,
-        borderBottomLeftRadius: 32,
-        borderBottomRightRadius: 32,
-        shadowColor: theme.colors.slate500,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 12,
-        elevation: 5,
+        padding: 20,
         alignItems: 'center',
+        backgroundColor: theme.colors.surface,
     },
+
     backButton: {
         position: 'absolute',
-        left: 24,
+        left: 20,
         top: 20,
-        padding: 8,
-        borderRadius: 12,
-        backgroundColor: theme.colors.slate50,
-        borderWidth: 1,
-        borderColor: theme.colors.slate100,
     },
+
     headerTitle: {
         fontSize: 18,
-        fontWeight: '800',
-        color: theme.colors.textPrimary,
-        marginTop: 8,
+        fontWeight: 'bold',
     },
-    
+
     amountContainer: {
         alignItems: 'center',
-        paddingVertical: 32,
+        padding: 20,
     },
+
     amountLabel: {
-        fontSize: 13,
-        fontWeight: '700',
+        fontSize: 12,
         color: theme.colors.textSecondary,
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-        marginBottom: 8,
     },
+
     amountValue: {
-        fontSize: 42,
-        fontWeight: '900',
-        letterSpacing: -1,
+        fontSize: 32,
+        fontWeight: 'bold',
     },
+
     statusBadge: {
-        paddingHorizontal: 16,
-        paddingVertical: 6,
-        borderRadius: 99,
-        marginTop: 16,
+        marginTop: 10,
+        padding: 6,
+        borderRadius: 10,
     },
+
     statusText: {
         fontSize: 12,
-        fontWeight: '800',
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
+        fontWeight: 'bold',
     },
 
     detailsCard: {
-        backgroundColor: theme.colors.surface,
-        marginHorizontal: 20,
-        borderRadius: 24,
-        padding: 24,
-        shadowColor: theme.colors.slate900,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        elevation: 3,
+        margin: 20,
+        padding: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
     },
+
     detailRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.slate50,
+        marginBottom: 10,
     },
+
     detailLabel: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: theme.colors.textMuted,
+        color: '#666',
     },
+
     detailValue: {
-        fontSize: 15,
-        fontWeight: '700',
-        color: theme.colors.slate800,
-        textAlign: 'right',
-        flex: 1,
-        marginLeft: 20,
+        fontWeight: 'bold',
     },
 
     remarksSection: {
-        marginTop: 24,
-        marginHorizontal: 20,
-        backgroundColor: theme.colors.surface,
-        borderRadius: 24,
-        padding: 24,
-        shadowColor: theme.colors.slate900,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        elevation: 3,
-    },
-    remarksTitle: {
-        fontSize: 13,
-        fontWeight: '800',
-        color: theme.colors.textSecondary,
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-        marginBottom: 12,
-    },
-    remarksText: {
-        fontSize: 15,
-        color: theme.colors.slate600,
-        lineHeight: 24,
-        fontStyle: 'italic',
-    },
-    noRemarksText: {
-        fontSize: 14,
-        color: theme.colors.textMuted,
-        fontStyle: 'italic',
+        margin: 20,
+        padding: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
     },
 
-    actionsContainer: {
-        flexDirection: 'row',
-        paddingHorizontal: 20,
-        gap: 12,
-        marginTop: 32,
-        paddingBottom: 40,
+    remarksTitle: {
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
-    editButton: {
-        flex: 2,
-        backgroundColor: theme.colors.sky50,
+
+    remarksText: {
+        color: '#555',
+    },
+
+    documentSection: {
+        margin: 20,
+        padding: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+    },
+
+    documentRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 14,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: theme.colors.sky200,
-        gap: 8,
     },
-    editButtonText: {
-        color: theme.colors.sky600,
-        fontSize: 15,
-        fontWeight: '700',
+
+    documentIcon: {
+        fontSize: 24,
+        marginRight: 10,
     },
-    deleteButton: {
+
+    documentTitle: {
+        fontWeight: 'bold',
+    },
+
+    documentType: {
+        fontSize: 12,
+        color: '#666',
+    },
+
+    viewButton: {
+        backgroundColor: theme.colors.primary,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+    },
+
+    viewButtonText: {
+        color: '#fff',
+    },
+
+    /* 🔥 MODAL STYLES */
+    modalContainer: {
         flex: 1,
-        backgroundColor: theme.colors.rose50,
-        flexDirection: 'row',
-        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.95)',
         justifyContent: 'center',
-        paddingVertical: 14,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: theme.colors.rose200,
-        gap: 8,
+        alignItems: 'center',
     },
-    deleteButtonText: {
-        color: theme.colors.danger,
-        fontSize: 15,
-        fontWeight: '700',
+
+    closeButton: {
+        position: 'absolute',
+        top: 60,
+        right: 20,
+    },
+
+    closeText: {
+        color: '#fff',
+        fontSize: 22,
+    },
+
+    previewImage: {
+        width: '95%',
+        height: '80%',
+        resizeMode: 'contain',
     },
 });

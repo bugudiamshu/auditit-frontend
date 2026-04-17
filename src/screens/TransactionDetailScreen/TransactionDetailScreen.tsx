@@ -1,14 +1,27 @@
-import React from 'react';
-import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+    Alert,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+    Modal,
+    Image,
+    Pressable
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {TransactionDetailScreenStyles as styles} from './TransactionDetailScreenStyles';
 import {formatDisplayDate} from '../../utils/formatters';
 import {useTransactionList} from '../../hooks/useTransactionList';
 import {theme} from '../../config/theme';
+import {BACKEND_URL} from "../../store/baseQuery.ts";
 
 const TransactionDetailScreen = ({route, navigation}: any) => {
     const {transaction} = route.params;
     const {handleDelete, isUpdating, isAdmin, user} = useTransactionList();
+
+    const [previewVisible, setPreviewVisible] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const isPending = transaction.status === 'pending';
     const canEdit = isPending && (isAdmin || transaction.creator?.id === user?.id);
@@ -32,8 +45,8 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
             [
                 {text: 'Cancel', style: 'cancel'},
                 {
-                    text: 'Delete', 
-                    style: 'destructive', 
+                    text: 'Delete',
+                    style: 'destructive',
                     onPress: async () => {
                         await handleDelete(transaction.id);
                         navigation.goBack();
@@ -49,21 +62,34 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
         });
     };
 
+    const handleViewDocument = () => {
+        if (!transaction.document_url) return;
+
+        let url = transaction.document_url;
+
+        if (!url.startsWith('http')) {
+            url = `${BACKEND_URL}/${url}`;
+        }
+
+        setPreviewUrl(url);
+        setPreviewVisible(true);
+    };
+
     const statusStyle = getStatusStyle(transaction.status);
 
     return (
         <SafeAreaView style={styles.container} edges={['top']}>
+
+            {/* HEADER */}
             <View style={styles.header}>
-                <TouchableOpacity 
-                    style={styles.backButton}
-                    onPress={() => navigation.goBack()}
-                >
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Text style={{fontSize: 20}}>←</Text>
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Transaction Details</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
+                {/* AMOUNT */}
                 <View style={styles.amountContainer}>
                     <Text style={styles.amountLabel}>Total Amount</Text>
                     <Text style={[
@@ -79,6 +105,7 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                     </View>
                 </View>
 
+                {/* DETAILS */}
                 <View style={styles.detailsCard}>
                     <View style={styles.detailRow}>
                         <Text style={styles.detailLabel}>Recipient / Person</Text>
@@ -86,15 +113,11 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                     </View>
                     <View style={styles.detailRow}>
                         <Text style={styles.detailLabel}>Type</Text>
-                        <Text style={[styles.detailValue, {textTransform: 'capitalize'}]}>
-                            {transaction.type}
-                        </Text>
+                        <Text style={styles.detailValue}>{transaction.type}</Text>
                     </View>
                     <View style={styles.detailRow}>
                         <Text style={styles.detailLabel}>Payment Mode</Text>
-                        <Text style={[styles.detailValue, {textTransform: 'capitalize'}]}>
-                            {transaction.payment_mode}
-                        </Text>
+                        <Text style={styles.detailValue}>{transaction.payment_mode}</Text>
                     </View>
                     <View style={styles.detailRow}>
                         <Text style={styles.detailLabel}>Date</Text>
@@ -102,48 +125,56 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                             {formatDisplayDate(new Date(transaction.created_at))}
                         </Text>
                     </View>
-                    <View style={[styles.detailRow, {borderBottomWidth: 0}]}>
-                        <Text style={styles.detailLabel}>Created By</Text>
-                        <Text style={styles.detailValue}>{transaction.creator?.name || 'System'}</Text>
-                    </View>
                 </View>
 
+                {/* REMARKS */}
                 <View style={styles.remarksSection}>
-                    <Text style={styles.remarksTitle}>Remarks / Notes</Text>
-                    {transaction.remarks ? (
-                        <Text style={styles.remarksText}>{transaction.remarks}</Text>
-                    ) : (
-                        <Text style={styles.noRemarksText}>No remarks provided for this transaction.</Text>
-                    )}
+                    <Text style={styles.remarksTitle}>Remarks</Text>
+                    <Text style={styles.remarksText}>
+                        {transaction.remarks || 'No remarks'}
+                    </Text>
                 </View>
 
-                {(canEdit || canDelete) && (
-                    <View style={styles.actionsContainer}>
-                        {canEdit && (
-                            <TouchableOpacity 
-                                style={styles.editButton}
-                                onPress={handleEdit}
-                                disabled={isUpdating}
-                            >
-                                <Text style={{fontSize: 14}}>✏️</Text>
-                                <Text style={styles.editButtonText}>Edit Transaction</Text>
+                {/* DOCUMENT */}
+                {transaction.document_url && (
+                    <View style={styles.documentSection}>
+                        <Text style={styles.remarksTitle}>Supporting Document</Text>
+
+                        <View style={styles.documentRow}>
+                            <Text style={styles.documentIcon}>
+                                {transaction.document_type === 'pdf' ? '📄' : '🖼️'}
+                            </Text>
+
+                            <View style={{flex: 1}}>
+                                <Text style={styles.documentTitle}>Attachment</Text>
+                                <Text style={styles.documentType}>
+                                    {transaction.document_type?.toUpperCase()}
+                                </Text>
+                            </View>
+
+                            <TouchableOpacity style={styles.viewButton} onPress={handleViewDocument}>
+                                <Text style={styles.viewButtonText}>View</Text>
                             </TouchableOpacity>
-                        )}
-                        {canDelete && (
-                            <TouchableOpacity 
-                                style={styles.deleteButton}
-                                onPress={confirmDelete}
-                                disabled={isUpdating}
-                            >
-                                <Text style={{fontSize: 14}}>🗑️</Text>
-                                <Text style={styles.deleteButtonText}>Delete</Text>
-                            </TouchableOpacity>
-                        )}
+                        </View>
                     </View>
                 )}
 
                 <View style={{height: 40}} />
             </ScrollView>
+
+            {/* MODAL */}
+            <Modal visible={previewVisible} transparent>
+                <View style={styles.modalContainer}>
+                    <Pressable style={styles.closeButton} onPress={() => setPreviewVisible(false)}>
+                        <Text style={styles.closeText}>✕</Text>
+                    </Pressable>
+
+                    {previewUrl && (
+                        <Image source={{uri: previewUrl}} style={styles.previewImage} />
+                    )}
+                </View>
+            </Modal>
+
         </SafeAreaView>
     );
 };

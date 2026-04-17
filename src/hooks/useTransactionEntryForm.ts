@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {Platform} from 'react-native';
+import {pick, types, DocumentPickerResponse, errorCodes, isErrorWithCode} from '@react-native-documents/picker';
 import {useCreateTransactionMutation, useUpdateTransactionMutation} from '../store/transactionApi';
 import {useSnackbar} from '../context/SnackbarContext';
 
@@ -23,6 +24,7 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
     const [personName, setPersonName] = useState(editItem?.person_name || '');
     const [amount, setAmount] = useState(editItem?.amount ? editItem.amount.toString() : '');
     const [remarks, setRemarks] = useState(editItem?.remarks || '');
+    const [document, setDocument] = useState<DocumentPickerResponse | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -131,6 +133,27 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         }
     };
 
+    const pickDocument = async () => {
+        try {
+            const result = await pick({
+                type: [types.images, types.pdf],
+            });
+            
+            if (result && result.length > 0) {
+                setDocument(result[0]);
+            }
+        } catch (err) {
+            if (isErrorWithCode(err) && err.code === errorCodes.OPERATION_CANCELED) {
+                // Ignore
+            } else {
+                console.error(err);
+                showSnackbar('Failed to pick document', 'error');
+            }
+        }
+    };
+
+    const clearDocument = () => setDocument(null);
+
     const onSubmit = async () => {
         setHasSubmitted(true);
         const nextErrors = validateForm();
@@ -142,20 +165,32 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         }
 
         try {
-            const data = {
-                type,
-                transaction_date: date.toISOString().split('T')[0],
-                amount: amountValue,
-                payment_mode: paymentMode,
-                reference_no: referenceNo.trim() || null,
-                transaction_id: paymentMode === 'online' ? transactionId.trim() : null,
-                person_name: personName.trim(),
-                remarks: remarks.trim() || null,
-            };
+            const formData = new FormData();
+            formData.append('type', type);
+            formData.append('transaction_date', date.toISOString().split('T')[0]);
+            formData.append('amount', amountValue);
+            formData.append('payment_mode', paymentMode);
+            formData.append('person_name', personName.trim());
+            
+            if (referenceNo.trim()) formData.append('reference_no', referenceNo.trim());
+            if (paymentMode === 'online' && transactionId.trim()) formData.append('transaction_id', transactionId.trim());
+            if (remarks.trim()) formData.append('remarks', remarks.trim());
+            
+            if (document) {
+                formData.append('document', {
+                    uri: document.uri,
+                    type: document.type || 'application/octet-stream',
+                    name: document.name,
+                } as any);
+            }
+
+            if (isEdit) {
+                formData.append('_method', 'PATCH');
+            }
 
             const response = isEdit
-                ? await updateTransaction({id: editItem.id, data, orgCode}).unwrap()
-                : await createTransaction(data).unwrap();
+                ? await updateTransaction({id: editItem.id, data: formData, orgCode}).unwrap()
+                : await createTransaction(formData).unwrap();
 
             showSnackbar(response.message || `Transaction ${isEdit ? 'updated' : 'submitted'} successfully.`, 'success');
             navigation.goBack();
@@ -178,6 +213,7 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         personName,
         amount,
         remarks,
+        document,
         errors,
         isLoading,
         personLabel,
@@ -190,6 +226,8 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         setPersonName,
         setAmount,
         setRemarks,
+        pickDocument,
+        clearDocument,
         updateFieldError,
         handleDateChange,
         handleTypeChange,
