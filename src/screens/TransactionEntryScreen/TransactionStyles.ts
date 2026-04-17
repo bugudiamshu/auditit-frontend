@@ -332,27 +332,5 @@ export const TransactionStyles = StyleSheet.create({
     },
     bottomSpacer: {
         height: 60,
-    },
-    quickNav: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 20,
-        marginTop: 20,
-        paddingVertical: 10,
-    },
-    quickNavLink: {
-        padding: 8,
-    },
-    quickNavLinkText: {
-        fontSize: 14,
-        fontWeight: '700',
-        color: theme.colors.secondary,
-        textDecorationLine: 'underline',
-    },
-    quickNavDivider: {
-        width: 1,
-        height: 14,
-        backgroundColor: theme.colors.slate300,
     }
 });

@@ -217,7 +217,12 @@ const TransactionListScreen = ({navigation}: any) => {
 
     return (
         <SafeAreaView style={TransactionListScreenStyles.container} edges={['top']}>
-            <AppHeader pageTitle={'Transactions'} />
+            <AppHeader />
+
+            <View style={TransactionListScreenStyles.pageHeader}>
+                <Text style={TransactionListScreenStyles.pageTitle}>Transaction Ledger</Text>
+                <Text style={TransactionListScreenStyles.pageSubtitle}>Review and manage financial records</Text>
+            </View>
 
             {isAdmin && societies.length ? (
                 <View style={TransactionListScreenStyles.dropdownContainer}>
@@ -239,7 +244,7 @@ const TransactionListScreen = ({navigation}: any) => {
                 <View style={TransactionListScreenStyles.filterBarContainer}>
                     <View style={TransactionListScreenStyles.searchBarWrapper}>
                         <Text style={TransactionListScreenStyles.iconText}>🔍</Text>
-                        <Text style={TransactionListScreenStyles.searchPlaceholder}>Search transactions...</Text>
+                        <Text style={TransactionListScreenStyles.searchPlaceholder}>Search by name or amount...</Text>
                     </View>
                     
                     <View style={TransactionListScreenStyles.filterActions}>
@@ -443,14 +448,16 @@ const TransactionListScreen = ({navigation}: any) => {
                         </View>
 
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            <View style={TransactionListScreenStyles.filterSection}>
-                                <Text style={TransactionListScreenStyles.filterSectionTitle}>Status</Text>
-                                <FilterChips
-                                    options={transactionFilters}
-                                    value={localStatus}
-                                    onChange={setLocalStatus}
-                                />
-                            </View>
+                            {isAdmin && (
+                                <View style={TransactionListScreenStyles.filterSection}>
+                                    <Text style={TransactionListScreenStyles.filterSectionTitle}>Status</Text>
+                                    <FilterChips
+                                        options={transactionFilters}
+                                        value={localStatus}
+                                        onChange={setLocalStatus}
+                                    />
+                                </View>
+                            )}
 
                             <View style={TransactionListScreenStyles.filterSection}>
                                 <Text style={TransactionListScreenStyles.filterSectionTitle}>Transaction Type</Text>
@@ -509,11 +516,11 @@ const TransactionListScreen = ({navigation}: any) => {
                             <TouchableOpacity
                                 style={TransactionListScreenStyles.filterResetButton}
                                 onPress={() => {
-                                    setStatusFilter(undefined);
+                                    setStatusFilter(isAdmin ? undefined : 'pending');
                                     setTypeFilter(undefined);
                                     setStartDate(undefined);
                                     setEndDate(undefined);
-                                    setLocalStatus(undefined);
+                                    setLocalStatus(isAdmin ? undefined : 'pending');
                                     setLocalType(undefined);
                                     setLocalStartDate(undefined);
                                     setLocalEndDate(undefined);

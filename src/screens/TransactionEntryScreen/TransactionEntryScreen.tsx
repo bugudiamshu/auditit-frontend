@@ -9,6 +9,8 @@ import {useTransactionEntryForm} from '../../hooks/useTransactionEntryForm';
 import {formatDisplayDate} from '../../utils/formatters';
 import {TransactionStyles as styles} from './TransactionStyles';
 
+import AppFooter from '../../components/AppFooter';
+
 const TransactionEntryScreen = ({navigation, route}: any) => {
     const editItem = route.params?.editItem;
     const orgCode = route.params?.orgCode;
@@ -18,9 +20,7 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <AppHeader 
-                pageTitle={form.isEdit ? 'Edit Record' : 'New Record'} 
-            />
+            <AppHeader />
 
             <ScrollView
                 style={styles.form}
@@ -93,7 +93,7 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                     </View>
 
                     <View style={styles.amountContainer}>
-                        <Text style={styles.amountLabel}>Total Amount</Text>
+                        <Text style={styles.amountLabel}>{isIncome ? 'Income Amount' : 'Expense Amount'}</Text>
                         <View style={styles.amountWrapper}>
                             <Text style={[
                                 styles.currencySymbol,
@@ -107,7 +107,6 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                                 placeholder="0"
                                 placeholderTextColor={theme.colors.slate300}
                                 selectionColor={isIncome ? theme.colors.success : theme.colors.danger}
-                                caretHidden={true}
                                 keyboardType="numeric"
                                 value={form.amount}
                                 autoFocus={!form.isEdit}
@@ -320,24 +319,11 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                         </Text>
                     </TouchableOpacity>
 
-                    <View style={styles.quickNav}>
-                        <TouchableOpacity 
-                            style={styles.quickNavLink}
-                            onPress={() => navigation.navigate('MainApp', { screen: 'Dashboard' })}
-                        >
-                            <Text style={styles.quickNavLinkText}>Dashboard</Text>
-                        </TouchableOpacity>
-                        <View style={styles.quickNavDivider} />
-                        <TouchableOpacity 
-                            style={styles.quickNavLink}
-                            onPress={() => navigation.navigate('MainApp', { screen: 'Transactions' })}
-                        >
-                            <Text style={styles.quickNavLinkText}>Transactions List</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
-                <View style={styles.bottomSpacer} />
+                <View style={{ height: 100 }} />
             </ScrollView>
+
+            <AppFooter navigation={navigation} activeTab="none" />
         </SafeAreaView>
     );
 };

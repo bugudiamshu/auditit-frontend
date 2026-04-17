@@ -1,15 +1,20 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {DashboardActivity} from '../../../store/dashboardApi';
 import {formatCurrency, formatRelativeTime} from '../../../utils/formatters';
 import {DashboardStyles} from '../DashboardStyles';
 
 type DashboardActivityRowProps = {
     item: DashboardActivity;
+    onPress: (item: DashboardActivity) => void;
 };
 
-const DashboardActivityRow = ({item}: DashboardActivityRowProps) => (
-    <View style={DashboardStyles.activityItem}>
+const DashboardActivityRow = ({item, onPress}: DashboardActivityRowProps) => (
+    <TouchableOpacity 
+        style={DashboardStyles.activityItem}
+        onPress={() => onPress(item)}
+        activeOpacity={0.7}
+    >
         <View
             style={[
                 DashboardStyles.activityIcon,
@@ -39,7 +44,7 @@ const DashboardActivityRow = ({item}: DashboardActivityRowProps) => (
         >
             {item.type === 'income' ? '+' : '-'} {formatCurrency(item.amount)}
         </Text>
-    </View>
+    </TouchableOpacity>
 );
 
 export default DashboardActivityRow;

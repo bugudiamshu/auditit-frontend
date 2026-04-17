@@ -3,17 +3,9 @@ import {TouchableOpacity, View, Text } from 'react-native';
 import { AppHeaderStyles } from "./AppHeaderStyles.ts";
 import { theme } from "../config/theme.ts";
 import {useLogout} from "../hooks/useLogout.ts";
-import {useAppSelector} from "../store/store.ts"; // Import styles for the header
+import {useAppSelector} from "../store/store.ts";
 
-interface AppHeaderProps {
-    pageTitle: string;
-    onBack?: () => void;
-}
-
-const AppHeader: React.FC<AppHeaderProps> = ({
-    pageTitle,
-    onBack,
-}) => {
+const AppHeader: React.FC = () => {
     const {tenant, user} = useAppSelector(state => state.auth);
     const {confirmLogout, isLoggingOut} = useLogout();
     const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
@@ -21,19 +13,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
     return (
         <View style={AppHeaderStyles.header}>
             <View style={AppHeaderStyles.leftContent}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    {onBack && (
-                        <TouchableOpacity onPress={onBack} style={{marginRight: 12, padding: 4}}>
-                            <Text style={{fontSize: 24, color: theme.colors.textPrimary}}>←</Text>
-                        </TouchableOpacity>
-                    )}
-                    <View>
-                        <Text style={AppHeaderStyles.pageTitle}>{pageTitle}</Text>
-                        <Text style={AppHeaderStyles.tenantName} numberOfLines={1}>
-                            {tenant ? (tenant.nickname || tenant.name) : 'AuditIt Central'}
-                        </Text>
-                    </View>
-                </View>
+                <Text style={AppHeaderStyles.tenantNameLabel}>ORGANIZATION</Text>
+                <Text style={AppHeaderStyles.tenantName} numberOfLines={1}>
+                    {tenant ? (tenant.nickname || tenant.name) : 'AuditIt Central'}
+                </Text>
             </View>
 
             <View style={AppHeaderStyles.rightContent}>

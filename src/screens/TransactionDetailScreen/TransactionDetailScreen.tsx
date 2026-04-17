@@ -15,6 +15,8 @@ import {formatDisplayDate} from '../../utils/formatters';
 import {useTransactionList} from '../../hooks/useTransactionList';
 import {theme} from '../../config/theme';
 import {BACKEND_URL} from "../../store/baseQuery.ts";
+import AppFooter from '../../components/AppFooter';
+import AppHeader from '../../components/AppHeader';
 
 const TransactionDetailScreen = ({route, navigation}: any) => {
     const {transaction} = route.params;
@@ -79,102 +81,110 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
 
     return (
         <SafeAreaView style={styles.container} edges={['top']}>
+            <AppHeader />
 
-            {/* HEADER */}
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                    <Text style={{fontSize: 20}}>←</Text>
+            <View style={styles.inlineHeader}>
+                <TouchableOpacity 
+                    style={styles.inlineBackButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Text style={styles.inlineBackIcon}>←</Text>
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Transaction Details</Text>
+                <Text style={styles.inlineTitle}>Transaction Details</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* AMOUNT */}
-                <View style={styles.amountContainer}>
-                    <Text style={styles.amountLabel}>Total Amount</Text>
-                    <Text style={[
-                        styles.amountValue,
-                        {color: transaction.type === 'income' ? theme.colors.success : theme.colors.danger}
-                    ]}>
-                        {transaction.type === 'income' ? '+' : '-'} ₹{parseFloat(transaction.amount).toLocaleString('en-IN')}
-                    </Text>
-                    <View style={[styles.statusBadge, {backgroundColor: statusStyle.bg}]}>
+                <View style={{ paddingBottom: 120 }}>
+                    {/* AMOUNT */}
+                    <View style={styles.amountContainer}>
+                        <Text style={styles.amountLabel}>Total Amount</Text>
+                        <Text style={[
+                            styles.amountValue,
+                            {color: transaction.type === 'income' ? theme.colors.success : theme.colors.danger}
+                        ]}>
+                            {transaction.type === 'income' ? '+' : '-'} ₹{parseFloat(transaction.amount).toLocaleString('en-IN')}
+                        </Text>
+                    </View>
+                    
+                    <View style={[styles.statusBadge, {backgroundColor: statusStyle.bg, borderColor: statusStyle.bg}]}>
                         <Text style={[styles.statusText, {color: statusStyle.text}]}>
                             {statusStyle.label}
                         </Text>
                     </View>
-                </View>
 
-                {/* DETAILS */}
-                <View style={styles.detailsCard}>
-                    <View style={styles.detailRow}>
-                        <Text style={styles.detailLabel}>Recipient / Person</Text>
-                        <Text style={styles.detailValue}>{transaction.person_name}</Text>
-                    </View>
-                    <View style={styles.detailRow}>
-                        <Text style={styles.detailLabel}>Type</Text>
-                        <Text style={styles.detailValue}>{transaction.type}</Text>
-                    </View>
-                    <View style={styles.detailRow}>
-                        <Text style={styles.detailLabel}>Payment Mode</Text>
-                        <Text style={styles.detailValue}>{transaction.payment_mode}</Text>
-                    </View>
-                    <View style={styles.detailRow}>
-                        <Text style={styles.detailLabel}>Date</Text>
-                        <Text style={styles.detailValue}>
-                            {formatDisplayDate(new Date(transaction.created_at))}
-                        </Text>
-                    </View>
-                </View>
-
-                {/* REMARKS */}
-                <View style={styles.remarksSection}>
-                    <Text style={styles.remarksTitle}>Remarks</Text>
-                    <Text style={styles.remarksText}>
-                        {transaction.remarks || 'No remarks'}
-                    </Text>
-                </View>
-
-                {/* DOCUMENT */}
-                {transaction.document_url && (
-                    <View style={styles.documentSection}>
-                        <Text style={styles.remarksTitle}>Supporting Document</Text>
-
-                        <View style={styles.documentRow}>
-                            <Text style={styles.documentIcon}>
-                                {transaction.document_type === 'pdf' ? '📄' : '🖼️'}
+                    {/* DETAILS */}
+                    <View style={styles.detailsCard}>
+                        <View style={styles.detailRow}>
+                            <Text style={styles.detailLabel}>Recipient / Person</Text>
+                            <Text style={styles.detailValue}>{transaction.person_name}</Text>
+                        </View>
+                        <View style={styles.detailRow}>
+                            <Text style={styles.detailLabel}>Transaction Type</Text>
+                            <Text style={[styles.detailValue, {textTransform: 'capitalize'}]}>{transaction.type}</Text>
+                        </View>
+                        <View style={styles.detailRow}>
+                            <Text style={styles.detailLabel}>Payment Mode</Text>
+                            <Text style={[styles.detailValue, {textTransform: 'capitalize'}]}>{transaction.payment_mode}</Text>
+                        </View>
+                        <View style={styles.detailRow}>
+                            <Text style={styles.detailLabel}>Transaction Date</Text>
+                            <Text style={styles.detailValue}>
+                                {formatDisplayDate(new Date(transaction.transaction_date))}
                             </Text>
-
-                            <View style={{flex: 1}}>
-                                <Text style={styles.documentTitle}>Attachment</Text>
-                                <Text style={styles.documentType}>
-                                    {transaction.document_type?.toUpperCase()}
-                                </Text>
-                            </View>
-
-                            <TouchableOpacity style={styles.viewButton} onPress={handleViewDocument}>
-                                <Text style={styles.viewButtonText}>View</Text>
-                            </TouchableOpacity>
                         </View>
                     </View>
-                )}
 
-                <View style={{height: 40}} />
+                    {/* REMARKS */}
+                    <Text style={styles.sectionTitle}>Remarks & Notes</Text>
+                    <View style={styles.remarksSection}>
+                        <Text style={styles.remarksText}>
+                            {transaction.remarks || 'No internal remarks provided for this transaction.'}
+                        </Text>
+                    </View>
+
+                    {/* DOCUMENT */}
+                    {transaction.document_url && (
+                        <>
+                            <Text style={styles.sectionTitle}>Supporting Document</Text>
+                            <View style={styles.documentSection}>
+                                <View style={styles.documentRow}>
+                                    <View style={styles.documentIconContainer}>
+                                        <Text style={styles.documentIcon}>
+                                            {transaction.document_type === 'pdf' ? '📄' : '🖼️'}
+                                        </Text>
+                                    </View>
+
+                                    <View style={styles.documentInfo}>
+                                        <Text style={styles.documentTitle}>Receipt / Attachment</Text>
+                                        <Text style={styles.documentType}>
+                                            {transaction.document_type?.toUpperCase()} FILE
+                                        </Text>
+                                    </View>
+
+                                    <TouchableOpacity style={styles.viewButton} onPress={handleViewDocument}>
+                                        <Text style={styles.viewButtonText}>View</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </>
+                    )}
+                </View>
             </ScrollView>
 
+            <AppFooter navigation={navigation} activeTab="none" />
+
             {/* MODAL */}
-            <Modal visible={previewVisible} transparent>
+            <Modal visible={previewVisible} transparent animationType="fade">
                 <View style={styles.modalContainer}>
                     <Pressable style={styles.closeButton} onPress={() => setPreviewVisible(false)}>
                         <Text style={styles.closeText}>✕</Text>
                     </Pressable>
 
                     {previewUrl && (
-                        <Image source={{uri: previewUrl}} style={styles.previewImage} />
+                        <Image source={{uri: previewUrl}} style={styles.previewImage} resizeMode="contain" />
                     )}
                 </View>
             </Modal>
-
         </SafeAreaView>
     );
 };

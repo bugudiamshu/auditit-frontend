@@ -13,6 +13,8 @@ export interface DashboardActivity {
     created_at: string | null;
     created_by: string | null;
     approved_by: string | null;
+    document_url: string | null;
+    document_type: string | null;
 }
 
 export interface TenantMetricSummary {
@@ -25,6 +27,8 @@ export interface TenantMetricSummary {
     rejected_transactions: number;
     pending_amount: number;
     approved_amount: number;
+    pending_income: number;
+    pending_expense: number;
     total_users: number;
     admins: number;
     incharges: number;

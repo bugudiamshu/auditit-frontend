@@ -4,33 +4,47 @@ import { AppFooterStyles } from "./AppFooterStyles";
 
 interface AppFooterProps {
     navigation: any;
-    activeTab?: 'dashboard' | 'transactions';
+    activeTab?: 'dashboard' | 'transactions' | 'none';
 }
 
-const AppFooter: React.FC<AppFooterProps> = ({ navigation, activeTab = 'dashboard' }) => {
+const AppFooter: React.FC<AppFooterProps> = ({ navigation, activeTab = 'none' }) => {
     return (
         <View style={AppFooterStyles.container}>
             <TouchableOpacity
+                activeOpacity={0.7}
                 style={AppFooterStyles.tab}
-                onPress={() => navigation.navigate('Dashboard')}
+                onPress={() => navigation.navigate('MainApp', { screen: 'DashboardTab' })}
             >
                 <Text style={[
+                    AppFooterStyles.icon,
+                    activeTab !== 'dashboard' && AppFooterStyles.inactiveOpacity
+                ]}>
+                    📊
+                </Text>
+                <Text style={[
                     AppFooterStyles.label,
-                    activeTab === 'dashboard' && AppFooterStyles.active
+                    activeTab === 'dashboard' && AppFooterStyles.activeLabel
                 ]}>
                     Dashboard
                 </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
+                activeOpacity={0.7}
                 style={AppFooterStyles.tab}
-                onPress={() => navigation.navigate('TransactionList')}
+                onPress={() => navigation.navigate('MainApp', { screen: 'TransactionsTab' })}
             >
                 <Text style={[
-                    AppFooterStyles.label,
-                    activeTab === 'transactions' && AppFooterStyles.active
+                    AppFooterStyles.icon,
+                    activeTab !== 'transactions' && AppFooterStyles.inactiveOpacity
                 ]}>
-                    Transactions
+                    📜
+                </Text>
+                <Text style={[
+                    AppFooterStyles.label,
+                    activeTab === 'transactions' && AppFooterStyles.activeLabel
+                ]}>
+                    Ledger
                 </Text>
             </TouchableOpacity>
         </View>

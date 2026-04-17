@@ -16,14 +16,13 @@ export const transactionFilters = [
 ];
 
 export const useTransactionList = () => {
-    const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+    const {user} = useAppSelector(state => state.auth);
+    const isAdmin = user?.role === 'admin';
+    const [statusFilter, setStatusFilter] = useState<string | undefined>(isAdmin ? undefined : 'pending');
     const [typeFilter, setTypeFilter] = useState<string | undefined>(undefined);
     const [sortBy, setSortBy] = useState<'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc'>('date_desc');
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-
-    const {user} = useAppSelector(state => state.auth);
-    const isAdmin = user?.role === 'admin';
     const {data: portfolioData, isLoading: isPortfolioLoading} = useGetPortfolioQuery(undefined, {
         skip: !isAdmin,
     });

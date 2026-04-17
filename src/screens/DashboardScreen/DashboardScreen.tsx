@@ -12,13 +12,13 @@ import DashboardSocietyRow from './components/DashboardSocietyRow';
 import {DashboardStyles} from './DashboardStyles';
 
 const DashboardScreen = ({navigation}: any) => {
-    const {data, isLoading, isFetching, error, refetch, user, isCentralView, tenantMetrics, centralSummary} =
+    const {data, isLoading, isFetching, error, refetch, user, isAdmin, isCentralView, tenantMetrics, centralSummary} =
         useDashboardData();
 
     if (isLoading) {
         return (
             <SafeAreaView style={DashboardStyles.container}>
-                <AppHeader pageTitle="Dashboard" />
+                <AppHeader />
                 <FeedbackState
                     centered
                     title="Loading dashboard..."
@@ -31,7 +31,7 @@ const DashboardScreen = ({navigation}: any) => {
     if (error || !data?.success) {
         return (
             <SafeAreaView style={DashboardStyles.container}>
-                <AppHeader pageTitle="Dashboard" />
+                <AppHeader />
                 <FeedbackState
                     centered
                     title="Dashboard unavailable"
@@ -43,9 +43,23 @@ const DashboardScreen = ({navigation}: any) => {
         );
     }
 
+    const handleActivityPress = (activity: any) => {
+        const transaction = {
+            ...activity,
+            person_name: activity.title,
+            amount: activity.amount.toString(),
+            transaction_date: activity.transaction_date,
+            document_url: activity.document_url,
+            document_type: activity.document_type,
+            creator: activity.created_by ? { name: activity.created_by } : null,
+        };
+        
+        navigation.navigate('TransactionDetail', { transaction });
+    };
+
     return (
         <SafeAreaView style={DashboardStyles.container}>
-            <AppHeader pageTitle={isCentralView ? 'Admin Dashboard' : 'Dashboard'} />
+            <AppHeader />
 
             <ScrollView
                 contentContainerStyle={DashboardStyles.scrollContent}
@@ -56,16 +70,18 @@ const DashboardScreen = ({navigation}: any) => {
                         tintColor={theme.colors.primary}
                     />
                 }
-                showsVerticalScrollIndicator={false}
             >
                 <View style={DashboardStyles.heroCard}>
-                    <Text style={DashboardStyles.heroEyebrow}>
-                        {isCentralView ? 'Consolidated portfolio' : data.organization?.org_code ?? 'Live ledger'}
-                    </Text>
+                    <Text style={DashboardStyles.heroAccent}>🏛️</Text>
+                    <View style={DashboardStyles.heroBadge}>
+                        <Text style={DashboardStyles.heroEyebrow}>
+                            {isCentralView ? 'Consolidated portfolio' : data.organization?.org_code ?? 'Live ledger'}
+                        </Text>
+                    </View>
                     <Text style={DashboardStyles.heroTitle}>
                         {isCentralView
-                            ? 'Track every society from one place.'
-                            : `Welcome back, ${user?.name?.split(' ')[0] ?? 'team'}.`}
+                            ? 'Unified\nLedger Visibility'
+                            : `Welcome back,\n${user?.name?.split(' ')[0] ?? 'Partner'}.`}
                     </Text>
                     <Text style={DashboardStyles.heroSubtitle}>
                         {isCentralView
@@ -76,18 +92,23 @@ const DashboardScreen = ({navigation}: any) => {
 
                 {isCentralView && centralSummary ? (
                     <>
+                        <View style={DashboardStyles.sectionHeader}>
+                            <Text style={DashboardStyles.sectionTitle}>Portfolio Insights</Text>
+                        </View>
                         <View style={DashboardStyles.metricGrid}>
                             <DashboardMetricCard
                                 label="Portfolio Net"
                                 value={formatCurrency(centralSummary.net_total)}
-                                tone="success"
-                                caption={`${formatCompact(centralSummary.total_transactions)} transactions`}
+                                tone="info"
+                                isWide={true}
+                                trendIcon="🏦"
+                                caption={`${formatCompact(centralSummary.total_transactions)} total transactions`}
                             />
                             <DashboardMetricCard
-                                label="Pending Amount"
+                                label="Pending"
                                 value={formatCurrency(centralSummary.pending_amount)}
                                 tone="warning"
-                                caption={`${centralSummary.pending_approvals} approvals open`}
+                                caption={`${centralSummary.pending_approvals} approvals`}
                             />
                             <DashboardMetricCard
                                 label="Income"
@@ -95,15 +116,12 @@ const DashboardScreen = ({navigation}: any) => {
                                 tone="success"
                                 caption={`${centralSummary.active_users} active users`}
                             />
-                            <DashboardMetricCard
-                                label="Expense"
-                                value={formatCurrency(centralSummary.expense_total)}
-                                tone="danger"
-                                caption={`${centralSummary.total_societies} societies`}
-                            />
                         </View>
 
-                        <Text style={DashboardStyles.sectionTitle}>Organizations</Text>
+                        <View style={DashboardStyles.sectionHeader}>
+                            <Text style={DashboardStyles.sectionTitle}>Organizations</Text>
+                            <Text style={DashboardStyles.sectionAction}>View All</Text>
+                        </View>
                         {centralSummary.societies.length ? (
                             centralSummary.societies.map(item => (
                                 <DashboardSocietyRow key={item.id} item={item} />
@@ -121,50 +139,99 @@ const DashboardScreen = ({navigation}: any) => {
 
                 {!isCentralView && tenantMetrics ? (
                     <>
+                        <View style={DashboardStyles.sectionHeader}>
+                            <Text style={DashboardStyles.sectionTitle}>Overview</Text>
+                        </View>
                         <View style={DashboardStyles.metricGrid}>
-                            <DashboardMetricCard
-                                label="Net Balance"
-                                value={formatCurrency(tenantMetrics.net_total)}
-                                tone={tenantMetrics.net_total >= 0 ? 'success' : 'danger'}
-                                caption={`${tenantMetrics.total_transactions} total transactions`}
-                            />
-                            <DashboardMetricCard
-                                label="Pending Queue"
-                                value={tenantMetrics.pending_transactions.toString()}
-                                tone="warning"
-                                caption={formatCurrency(tenantMetrics.pending_amount)}
-                            />
-                            <DashboardMetricCard
-                                label="Income"
-                                value={formatCurrency(tenantMetrics.income_total)}
-                                tone="success"
-                                caption={`${tenantMetrics.approved_transactions} approved`}
-                            />
-                            <DashboardMetricCard
-                                label="Expense"
-                                value={formatCurrency(tenantMetrics.expense_total)}
-                                tone="danger"
-                                caption={`${tenantMetrics.rejected_transactions} rejected`}
-                            />
+                            {isAdmin ? (
+                                <>
+                                    <DashboardMetricCard
+                                        label="Net Balance"
+                                        value={formatCurrency(tenantMetrics.net_total)}
+                                        tone="info"
+                                        isWide={true}
+                                        trendIcon={tenantMetrics.net_total >= 0 ? '📈' : '📉'}
+                                        caption={`${tenantMetrics.total_transactions} transactions tracked`}
+                                    />
+                                    <DashboardMetricCard
+                                        label="Pending"
+                                        value={tenantMetrics.pending_transactions.toString()}
+                                        tone="warning"
+                                        caption={formatCurrency(tenantMetrics.pending_amount)}
+                                    />
+                                    <DashboardMetricCard
+                                        label="Income"
+                                        value={formatCurrency(tenantMetrics.income_total)}
+                                        tone="success"
+                                        caption={`${tenantMetrics.approved_transactions} approved`}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <DashboardMetricCard
+                                        label="Pending Total"
+                                        value={formatCurrency(tenantMetrics.pending_amount)}
+                                        tone="warning"
+                                        isWide={true}
+                                        trendIcon="⏳"
+                                        caption={`${tenantMetrics.pending_transactions} transactions waiting`}
+                                    />
+                                    <DashboardMetricCard
+                                        label="Pending Income"
+                                        value={formatCurrency(tenantMetrics.pending_income)}
+                                        tone="success"
+                                        caption="To be approved"
+                                    />
+                                    <DashboardMetricCard
+                                        label="Pending Expense"
+                                        value={formatCurrency(tenantMetrics.pending_expense)}
+                                        tone="danger"
+                                        caption="To be approved"
+                                    />
+                                </>
+                            )}
                         </View>
 
-                        <Text style={DashboardStyles.sectionTitle}>Quick Actions</Text>
-                        <View style={DashboardStyles.actionRow}>
+                        <View style={DashboardStyles.sectionHeader}>
+                            <Text style={DashboardStyles.sectionTitle}>Quick Actions</Text>
+                        </View>
+                        
+                        <View style={DashboardStyles.actionGrid}>
                             <TouchableOpacity
-                                style={DashboardStyles.primaryButton}
+                                style={DashboardStyles.actionItem}
                                 onPress={() => navigation.navigate('TransactionEntry')}
                             >
-                                <Text style={DashboardStyles.primaryButtonText}>Add Transaction</Text>
+                                <View style={[DashboardStyles.actionIconContainer, DashboardStyles.primaryActionContainer]}>
+                                    <Text style={DashboardStyles.actionIcon}>➕</Text>
+                                </View>
+                                <Text style={DashboardStyles.actionLabel}>Add Entry</Text>
                             </TouchableOpacity>
+
                             <TouchableOpacity
-                                style={DashboardStyles.secondaryButton}
+                                style={DashboardStyles.actionItem}
                                 onPress={() => navigation.navigate('TransactionsTab')}
                             >
-                                <Text style={DashboardStyles.secondaryButtonText}>View Ledger</Text>
+                                <View style={DashboardStyles.actionIconContainer}>
+                                    <Text style={DashboardStyles.actionIcon}>📋</Text>
+                                </View>
+                                <Text style={DashboardStyles.actionLabel}>View Ledger</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={DashboardStyles.actionItem}
+                                onPress={() => {}} 
+                            >
+                                <View style={DashboardStyles.actionIconContainer}>
+                                    <Text style={DashboardStyles.actionIcon}>📊</Text>
+                                </View>
+                                <Text style={DashboardStyles.actionLabel}>Reports</Text>
                             </TouchableOpacity>
                         </View>
 
-                        <Text style={DashboardStyles.sectionTitle}>Team Snapshot</Text>
+                        <View style={DashboardStyles.sectionHeader}>
+                            <Text style={DashboardStyles.sectionTitle}>Team Snapshot</Text>
+                        </View>
+                        
                         <View style={DashboardStyles.teamCard}>
                             <View>
                                 <Text style={DashboardStyles.teamMetric}>{tenantMetrics.total_users}</Text>
@@ -183,13 +250,17 @@ const DashboardScreen = ({navigation}: any) => {
                         <Text style={DashboardStyles.sectionTitle}>Recent Activity</Text>
                         {tenantMetrics.recent_activity.length ? (
                             tenantMetrics.recent_activity.map(item => (
-                                <DashboardActivityRow key={item.id} item={item} />
+                                <DashboardActivityRow 
+                                    key={item.id} 
+                                    item={item} 
+                                    onPress={handleActivityPress}
+                                />
                             ))
                         ) : (
                             <View style={DashboardStyles.emptyCard}>
                                 <FeedbackState
                                     title="No recent activity yet"
-                                    description="Transactions created here will appear in this feed."
+                                    description="Approve or create transactions to see them listed here."
                                 />
                             </View>
                         )}

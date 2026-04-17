@@ -6,6 +6,23 @@ export const TransactionListScreenStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: theme.colors.background,
     },
+    pageHeader: {
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 8,
+    },
+    pageTitle: {
+        fontSize: 28,
+        fontWeight: '900',
+        color: theme.colors.slate900,
+        letterSpacing: -1,
+    },
+    pageSubtitle: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: theme.colors.slate500,
+        marginTop: 2,
+    },
 
     // Unified Card Container with margins
     mainCard: {
@@ -67,20 +84,31 @@ export const TransactionListScreenStyles = StyleSheet.create({
 
     compactMain: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
+    },
+
+    compactIconContainer: {
+        width: 48,
+        height: 48,
+        borderRadius: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 14,
+    },
+
+    compactIcon: {
+        fontSize: 20,
     },
 
     compactInfo: {
         flex: 1,
-        marginRight: 12,
     },
 
     compactName: {
-        fontSize: 15,
-        fontWeight: '700',
+        fontSize: 16,
+        fontWeight: '800',
         color: theme.colors.textPrimary,
-        marginBottom: 4,
+        marginBottom: 2,
     },
 
     compactValue: {
@@ -88,16 +116,32 @@ export const TransactionListScreenStyles = StyleSheet.create({
     },
 
     compactAmount: {
-        fontSize: 17,
-        fontWeight: '800',
-        letterSpacing: -0.5,
+        fontSize: 18,
+        fontWeight: '900',
+        letterSpacing: -0.8,
+    },
+
+    statusBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 4,
+        backgroundColor: theme.colors.slate50,
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 6,
     },
 
     compactStatusDot: {
         width: 6,
         height: 6,
         borderRadius: 3,
-        marginTop: 6,
+        marginRight: 6,
+    },
+
+    statusText: {
+        fontSize: 10,
+        fontWeight: '800',
+        textTransform: 'uppercase',
     },
 
     compactRemarks: {
