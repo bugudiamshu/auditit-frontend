@@ -48,11 +48,7 @@ export const apiBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 ) => {
     const result = await baseQuery(args, api, extraOptions);
     if (result.error && result.error.status === 401) {
-        // Handle unauthorized access - e.g., clear auth state and redirect to login
         api.dispatch(clearAuth());
-        // You might want to navigate to the login screen here, but it requires access to navigation context
-        // For now, just log it.
-        console.error('Unauthorized access - 401 received. Token might be invalid or expired.');
     }
     return result;
 };

@@ -26,12 +26,12 @@ const DashboardSocietyRow = ({item}: DashboardSocietyRowProps) => (
                 <Text style={DashboardStyles.societyStatValue}>{formatCurrency(item.net_total)}</Text>
             </View>
             <View>
-                <Text style={DashboardStyles.societyStatLabel}>Pending</Text>
-                <Text style={DashboardStyles.societyStatValue}>{item.pending_transactions}</Text>
+                <Text style={DashboardStyles.societyStatLabel}>Income ({item.pending_income_count})</Text>
+                <Text style={DashboardStyles.societyStatValue}>{formatCurrency(item.pending_income)}</Text>
             </View>
             <View>
-                <Text style={DashboardStyles.societyStatLabel}>Transactions</Text>
-                <Text style={DashboardStyles.societyStatValue}>{item.total_transactions}</Text>
+                <Text style={DashboardStyles.societyStatLabel}>Expense ({item.pending_expense_count})</Text>
+                <Text style={DashboardStyles.societyStatValue}>{formatCurrency(item.pending_expense)}</Text>
             </View>
         </View>
 

@@ -52,6 +52,10 @@ export interface SocietySnapshot {
     net_total: number;
     pending_amount: number;
     approved_amount: number;
+    pending_income: number;
+    pending_expense: number;
+    pending_income_count: number;
+    pending_expense_count: number;
     last_transaction_at: string | null;
 }
 

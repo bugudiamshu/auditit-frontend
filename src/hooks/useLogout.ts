@@ -30,9 +30,10 @@ export const useLogout = () => {
 
     const performLogout = async () => {
         try {
-            const response = await logout().unwrap();
+            const logoutPromise = logout().unwrap();
             await resetClientState();
-            showSnackbar(response.message || 'Logged out successfully.', 'success');
+            await logoutPromise;
+            showSnackbar('Logged out successfully.', 'success');
         } catch (error: any) {
             await resetClientState();
             showSnackbar(error?.data?.message || 'Signed out on this device.', 'info');

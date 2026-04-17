@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PortfolioStyles } from "./PortfolioStyles";
 import { useGetPortfolioQuery } from "../../store/portfolioApi";
+import { formatCurrency } from '../../utils/formatters';
 
 const PortfolioSelectionScreen = ({ navigation }: any) => {
     const { data, isLoading, isFetching, refetch } = useGetPortfolioQuery();
@@ -37,7 +38,7 @@ const PortfolioSelectionScreen = ({ navigation }: any) => {
                         <View>
                             <Text style={PortfolioStyles.cardTitle}>{item.name}</Text>
                             <Text style={PortfolioStyles.cardSub}>
-                                {item.total_transactions} transactions • {item.pending_transactions} pending
+                                Net {formatCurrency(item.net_total)} • Income {item.pending_income_count} ({formatCurrency(item.pending_income)}) • Exp {item.pending_expense_count} ({formatCurrency(item.pending_expense)})
                             </Text>
                         </View>
                         <Text style={PortfolioStyles.arrow}>→</Text>
