@@ -12,7 +12,7 @@ import DashboardSocietyRow from './components/DashboardSocietyRow';
 import {DashboardStyles} from './DashboardStyles';
 
 const DashboardScreen = ({navigation}: any) => {
-    const {data, isLoading, isFetching, error, refetch, user, isAdmin, isCentralView, tenantMetrics, centralSummary} =
+    const {data, isLoading, isFetching, error, refetch, user, isAdmin, isIncharge, isCentralView, tenantMetrics, centralSummary} =
         useDashboardData();
 
     if (isLoading) {
@@ -81,7 +81,7 @@ const DashboardScreen = ({navigation}: any) => {
                     />
                 }
             >
-                {!isCentralView && (
+                {!isCentralView && !isIncharge && (
                     <View style={DashboardStyles.heroCard}>
                         <Text style={DashboardStyles.heroAccent}>🏛️</Text>
                         <View style={DashboardStyles.heroBadge}>
@@ -258,24 +258,28 @@ const DashboardScreen = ({navigation}: any) => {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={DashboardStyles.sectionHeader}>
-                            <Text style={DashboardStyles.sectionTitle}>Team Snapshot</Text>
-                        </View>
-                        
-                        <View style={DashboardStyles.teamCard}>
-                            <View>
-                                <Text style={DashboardStyles.teamMetric}>{tenantMetrics.total_users}</Text>
-                                <Text style={DashboardStyles.teamLabel}>Users</Text>
-                            </View>
-                            <View>
-                                <Text style={DashboardStyles.teamMetric}>{tenantMetrics.admins}</Text>
-                                <Text style={DashboardStyles.teamLabel}>Admins</Text>
-                            </View>
-                            <View>
-                                <Text style={DashboardStyles.teamMetric}>{tenantMetrics.incharges}</Text>
-                                <Text style={DashboardStyles.teamLabel}>Incharges</Text>
-                            </View>
-                        </View>
+                        {!isIncharge && (
+                            <>
+                                <View style={DashboardStyles.sectionHeader}>
+                                    <Text style={DashboardStyles.sectionTitle}>Team Snapshot</Text>
+                                </View>
+                                
+                                <View style={DashboardStyles.teamCard}>
+                                    <View>
+                                        <Text style={DashboardStyles.teamMetric}>{tenantMetrics.total_users}</Text>
+                                        <Text style={DashboardStyles.teamLabel}>Users</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={DashboardStyles.teamMetric}>{tenantMetrics.admins}</Text>
+                                        <Text style={DashboardStyles.teamLabel}>Admins</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={DashboardStyles.teamMetric}>{tenantMetrics.incharges}</Text>
+                                        <Text style={DashboardStyles.teamLabel}>Incharges</Text>
+                                    </View>
+                                </View>
+                            </>
+                        )}
 
                         <Text style={DashboardStyles.sectionTitle}>Recent Activity</Text>
                         {tenantMetrics.recent_activity.length ? (

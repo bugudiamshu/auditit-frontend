@@ -332,5 +332,65 @@ export const TransactionStyles = StyleSheet.create({
     },
     bottomSpacer: {
         height: 60,
+    },
+    // Choice Modal Styles
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        justifyContent: 'flex-end',
+    },
+    modalContent: {
+        backgroundColor: theme.colors.white,
+        borderTopLeftRadius: 32,
+        borderTopRightRadius: 32,
+        padding: 24,
+        paddingBottom: 40,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: '900',
+        color: theme.colors.textPrimary,
+        marginBottom: 8,
+        textAlign: 'center',
+    },
+    modalSubtitle: {
+        fontSize: 14,
+        color: theme.colors.textSecondary,
+        marginBottom: 24,
+        textAlign: 'center',
+        fontWeight: '500',
+    },
+    choiceGrid: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 12,
+    },
+    choiceButton: {
+        flex: 1,
+        backgroundColor: theme.colors.slate50,
+        borderRadius: 24,
+        paddingVertical: 24,
+        alignItems: 'center',
+        borderWidth: 1.5,
+        borderColor: theme.colors.slate100,
+    },
+    choiceIcon: {
+        fontSize: 32,
+        marginBottom: 12,
+    },
+    choiceText: {
+        fontSize: 14,
+        fontWeight: '800',
+        color: theme.colors.textPrimary,
+    },
+    cancelButton: {
+        marginTop: 20,
+        paddingVertical: 16,
+        alignItems: 'center',
+    },
+    cancelButtonText: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: theme.colors.textMuted,
     }
 });

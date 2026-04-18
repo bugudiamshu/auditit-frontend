@@ -6,6 +6,7 @@ export const useDashboardData = () => {
     const {user} = useAppSelector(state => state.auth);
 
     const isAdmin = user?.role === 'admin';
+    const isIncharge = user?.role === 'incharge';
     const metrics = query.data?.metrics;
     
     // Filter recent activity if not admin
@@ -20,6 +21,7 @@ export const useDashboardData = () => {
         ...query,
         user,
         isAdmin,
+        isIncharge,
         isCentralView: query.data?.view === 'central',
         tenantMetrics: filteredMetrics,
         centralSummary: query.data?.summary,

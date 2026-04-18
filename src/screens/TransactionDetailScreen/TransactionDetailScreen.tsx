@@ -112,7 +112,7 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{ paddingBottom: 150 }}>
+                <View style={{ paddingBottom: 100 }}>
                     {/* AMOUNT */}
                     <View style={styles.amountContainer}>
                         <Text style={styles.amountLabel}>Total Amount</Text>
@@ -186,31 +186,31 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                             </View>
                         </>
                     )}
+
+                    {(canEdit || canDelete) && (
+                        <View style={styles.actionButtonsContainer}>
+                            {canDelete && (
+                                <TouchableOpacity 
+                                    style={styles.deleteButton} 
+                                    onPress={confirmDelete}
+                                    disabled={isUpdating}
+                                >
+                                    <Text style={styles.deleteButtonText}>Delete Record</Text>
+                                </TouchableOpacity>
+                            )}
+                            {canEdit && (
+                                <TouchableOpacity 
+                                    style={styles.editButton} 
+                                    onPress={handleEdit}
+                                    disabled={isUpdating}
+                                >
+                                    <Text style={styles.editButtonText}>Edit Details</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    )}
                 </View>
             </ScrollView>
-
-            {(canEdit || canDelete) && (
-                <View style={styles.actionButtonsContainer}>
-                    {canDelete && (
-                        <TouchableOpacity 
-                            style={styles.deleteButton} 
-                            onPress={confirmDelete}
-                            disabled={isUpdating}
-                        >
-                            <Text style={styles.deleteButtonText}>Delete Record</Text>
-                        </TouchableOpacity>
-                    )}
-                    {canEdit && (
-                        <TouchableOpacity 
-                            style={styles.editButton} 
-                            onPress={handleEdit}
-                            disabled={isUpdating}
-                        >
-                            <Text style={styles.editButtonText}>Edit Details</Text>
-                        </TouchableOpacity>
-                    )}
-                </View>
-            )}
 
             <AppFooter navigation={navigation} activeTab="none" />
 

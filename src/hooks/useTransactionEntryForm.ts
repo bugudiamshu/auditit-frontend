@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Platform} from 'react-native';
-import {pick, types, DocumentPickerResponse, errorCodes, isErrorWithCode} from '@react-native-documents/picker';
+import {pick, types, errorCodes, isErrorWithCode} from '@react-native-documents/picker';
+import {launchCamera, launchImageLibrary, ImagePickerResponse} from 'react-native-image-picker';
 import {useCreateTransactionMutation, useUpdateTransactionMutation} from '../store/transactionApi';
 import {useSnackbar} from '../context/SnackbarContext';
 
@@ -14,6 +15,13 @@ export type FormErrors = {
     general?: string;
 };
 
+// Normalized attachment type to handle both picker and camera
+interface Attachment {
+    uri: string;
+    type?: string;
+    name?: string;
+}
+
 export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode?: string) => {
     const [type, setType] = useState<TransactionType>(editItem?.type || 'income');
     const [date, setDate] = useState(editItem?.transaction_date ? new Date(editItem.transaction_date) : new Date());
@@ -24,9 +32,10 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
     const [personName, setPersonName] = useState(editItem?.person_name || '');
     const [amount, setAmount] = useState(editItem?.amount ? editItem.amount.toString() : '');
     const [remarks, setRemarks] = useState(editItem?.remarks || '');
-    const [document, setDocument] = useState<DocumentPickerResponse | null>(null);
+    const [document, setDocument] = useState<Attachment | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const [showUploadChoice, setShowUploadChoice] = useState(false);
 
     const [createTransaction, {isLoading: isCreating}] = useCreateTransactionMutation();
     const [updateTransaction, {isLoading: isUpdating}] = useUpdateTransactionMutation();
@@ -135,12 +144,17 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
 
     const pickDocument = async () => {
         try {
+            setShowUploadChoice(false);
             const result = await pick({
                 type: [types.images, types.pdf],
             });
             
             if (result && result.length > 0) {
-                setDocument(result[0]);
+                setDocument({
+                    uri: result[0].uri,
+                    type: result[0].type || undefined,
+                    name: result[0].name || undefined,
+                });
             }
         } catch (err) {
             if (isErrorWithCode(err) && err.code === errorCodes.OPERATION_CANCELED) {
@@ -149,6 +163,63 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
                 console.error(err);
                 showSnackbar('Failed to pick document', 'error');
             }
+        }
+    };
+
+    const capturePhoto = async () => {
+        try {
+            setShowUploadChoice(false);
+            const result: ImagePickerResponse = await launchCamera({
+                mediaType: 'photo',
+                quality: 0.8,
+                saveToPhotos: false,
+            });
+
+            if (result.didCancel) return;
+            if (result.errorCode) {
+                showSnackbar(result.errorMessage || 'Camera error', 'error');
+                return;
+            }
+
+            const asset = result.assets?.[0];
+            if (asset && asset.uri) {
+                setDocument({
+                    uri: asset.uri,
+                    type: asset.type,
+                    name: asset.fileName || `photo_${Date.now()}.jpg`,
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to capture photo', 'error');
+        }
+    };
+
+    const pickImage = async () => {
+        try {
+            setShowUploadChoice(false);
+            const result: ImagePickerResponse = await launchImageLibrary({
+                mediaType: 'photo',
+                quality: 0.8,
+            });
+
+            if (result.didCancel) return;
+            if (result.errorCode) {
+                showSnackbar(result.errorMessage || 'Gallery error', 'error');
+                return;
+            }
+
+            const asset = result.assets?.[0];
+            if (asset && asset.uri) {
+                setDocument({
+                    uri: asset.uri,
+                    type: asset.type,
+                    name: asset.fileName || `image_${Date.now()}.jpg`,
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            showSnackbar('Failed to pick image', 'error');
         }
     };
 
@@ -220,6 +291,8 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         personPlaceholder,
         amountHint,
         amountValue,
+        showUploadChoice,
+        setShowUploadChoice,
         setShowDatePicker,
         setReferenceNo,
         setTransactionId,
@@ -227,6 +300,8 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         setAmount,
         setRemarks,
         pickDocument,
+        capturePhoto,
+        pickImage,
         clearDocument,
         updateFieldError,
         handleDateChange,

@@ -233,13 +233,9 @@ export const TransactionDetailScreenStyles = StyleSheet.create({
     actionButtonsContainer: {
         flexDirection: 'row',
         paddingHorizontal: 20,
-        paddingBottom: 40,
+        marginTop: 32,
+        marginBottom: 20,
         gap: 12,
-        backgroundColor: 'transparent',
-        position: 'absolute',
-        bottom: 80,
-        left: 0,
-        right: 0,
     },
     editButton: {
         flex: 1,
