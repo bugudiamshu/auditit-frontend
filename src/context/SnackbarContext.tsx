@@ -44,8 +44,7 @@ export const SnackbarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     return (
         <SnackbarContext.Provider value={{ show }}>
-            {children}
-            {visible && (
+            {children}{visible && (
                 <Animated.View
                     style={[
                         styles.snackbar,

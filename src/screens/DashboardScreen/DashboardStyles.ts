@@ -150,7 +150,7 @@ export const DashboardStyles = StyleSheet.create({
         marginTop: 8,
     },
     sectionTitle: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: '900',
         color: theme.colors.slate900,
         letterSpacing: -0.5,
@@ -158,7 +158,7 @@ export const DashboardStyles = StyleSheet.create({
     sectionAction: {
         fontSize: 13,
         fontWeight: '700',
-        color: theme.colors.secondary,
+        color: theme.colors.primary,
     },
     actionGrid: {
         flexDirection: 'row',

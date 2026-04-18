@@ -7,7 +7,8 @@ import {
     View,
     Modal,
     Image,
-    Pressable
+    Pressable,
+    ActivityIndicator
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {TransactionDetailScreenStyles as styles} from './TransactionDetailScreenStyles';
@@ -15,19 +16,32 @@ import {formatDisplayDate} from '../../utils/formatters';
 import {useTransactionList} from '../../hooks/useTransactionList';
 import {theme} from '../../config/theme';
 import {BACKEND_URL} from "../../store/baseQuery.ts";
+import {useGetTransactionQuery} from "../../store/transactionApi";
 import AppFooter from '../../components/AppFooter';
 import AppHeader from '../../components/AppHeader';
 
 const TransactionDetailScreen = ({route, navigation}: any) => {
-    const {transaction} = route.params;
-    const {handleDelete, isUpdating, isAdmin, user} = useTransactionList();
+    const {transaction: initialTransaction, orgCode} = route.params;
+    
+    // Fetch latest data for this specific transaction
+    const {data, isLoading: isQueryLoading, isFetching} = useGetTransactionQuery(
+        { id: initialTransaction.id, orgCode },
+        { 
+            // Ensures we refetch if the tag is invalidated (e.g. after edit)
+            refetchOnMountOrArgChange: true 
+        }
+    );
+    
+    const transaction = data?.transaction ?? initialTransaction;
+    const {handleDelete, isUpdating: isActionUpdating, isAdmin, user} = useTransactionList(orgCode);
+    const isUpdating = isActionUpdating || isQueryLoading;
 
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-    const isPending = transaction.status === 'pending';
-    const canEdit = isPending && (isAdmin || transaction.creator?.id === user?.id);
-    const canDelete = isPending && (isAdmin || transaction.creator?.id === user?.id);
+    const isNotApproved = transaction.status === 'pending' || transaction.status === 'rejected';
+    const canEdit = isNotApproved && (isAdmin || transaction.created_by === user?.id);
+    const canDelete = isNotApproved && (isAdmin || transaction.created_by === user?.id);
 
     const getStatusStyle = (status: string) => {
         switch (status) {
@@ -61,6 +75,7 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
     const handleEdit = () => {
         navigation.navigate('TransactionEntry', {
             editItem: transaction,
+            orgCode: orgCode,
         });
     };
 
@@ -91,10 +106,13 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                     <Text style={styles.inlineBackIcon}>←</Text>
                 </TouchableOpacity>
                 <Text style={styles.inlineTitle}>Transaction Details</Text>
+                {isFetching && (
+                    <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginLeft: 10 }} />
+                )}
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{ paddingBottom: 120 }}>
+                <View style={{ paddingBottom: 150 }}>
                     {/* AMOUNT */}
                     <View style={styles.amountContainer}>
                         <Text style={styles.amountLabel}>Total Amount</Text>
@@ -102,7 +120,7 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                             styles.amountValue,
                             {color: transaction.type === 'income' ? theme.colors.success : theme.colors.danger}
                         ]}>
-                            {transaction.type === 'income' ? '+' : '-'} ₹{parseFloat(transaction.amount).toLocaleString('en-IN')}
+                            {transaction.type === 'income' ? '+' : '-'} ₹{parseFloat(transaction.amount || '0').toLocaleString('en-IN')}
                         </Text>
                     </View>
                     
@@ -170,6 +188,29 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                     )}
                 </View>
             </ScrollView>
+
+            {(canEdit || canDelete) && (
+                <View style={styles.actionButtonsContainer}>
+                    {canDelete && (
+                        <TouchableOpacity 
+                            style={styles.deleteButton} 
+                            onPress={confirmDelete}
+                            disabled={isUpdating}
+                        >
+                            <Text style={styles.deleteButtonText}>Delete Record</Text>
+                        </TouchableOpacity>
+                    )}
+                    {canEdit && (
+                        <TouchableOpacity 
+                            style={styles.editButton} 
+                            onPress={handleEdit}
+                            disabled={isUpdating}
+                        >
+                            <Text style={styles.editButtonText}>Edit Details</Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
+            )}
 
             <AppFooter navigation={navigation} activeTab="none" />
 

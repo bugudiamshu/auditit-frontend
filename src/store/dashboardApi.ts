@@ -68,6 +68,8 @@ export interface CentralSummary {
     expense_total: number;
     net_total: number;
     pending_amount: number;
+    pending_income: number;
+    pending_expense: number;
     societies: SocietySnapshot[];
 }
 
@@ -84,13 +86,28 @@ export interface DashboardResponse {
     metrics?: TenantMetricSummary;
 }
 
+export interface SocietyDetailsResponse {
+    success: boolean;
+    snapshot: SocietySnapshot;
+    transactions: {
+        data: DashboardActivity[];
+        current_page: number;
+        last_page: number;
+        total: number;
+    };
+}
+
 export const dashboardApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getDashboardSummary: builder.query<DashboardResponse, void>({
             query: () => '/dashboard/summary',
             providesTags: ['Dashboard'],
         }),
+        getSocietyDetails: builder.query<SocietyDetailsResponse, number>({
+            query: (id) => `/societies/${id}`,
+            providesTags: (result, error, id) => [{ type: 'Dashboard', id }],
+        }),
     }),
 });
 
-export const { useGetDashboardSummaryQuery } = dashboardApi;
+export const { useGetDashboardSummaryQuery, useGetSocietyDetailsQuery } = dashboardApi;

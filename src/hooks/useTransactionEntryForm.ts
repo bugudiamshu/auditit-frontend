@@ -190,7 +190,7 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
 
             const response = isEdit
                 ? await updateTransaction({id: editItem.id, data: formData, orgCode}).unwrap()
-                : await createTransaction(formData).unwrap();
+                : await createTransaction({data: formData, orgCode}).unwrap();
 
             showSnackbar(response.message || `Transaction ${isEdit ? 'updated' : 'submitted'} successfully.`, 'success');
             navigation.goBack();

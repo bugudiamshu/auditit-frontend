@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AppHeader from '../../components/AppHeader';
+import AppFooter from '../../components/AppFooter';
 import { PortfolioStyles } from "./PortfolioStyles";
 import { useGetPortfolioQuery } from "../../store/portfolioApi";
 import { formatCurrency } from '../../utils/formatters';
+import { theme } from '../../config/theme';
 
 const PortfolioSelectionScreen = ({ navigation }: any) => {
     const { data, isLoading, isFetching, refetch } = useGetPortfolioQuery();
@@ -11,15 +14,20 @@ const PortfolioSelectionScreen = ({ navigation }: any) => {
 
     if (isLoading) {
         return (
-            <SafeAreaView style={[PortfolioStyles.container, PortfolioStyles.loadingContainer]}>
-                <ActivityIndicator size="large" color="#0052CC" />
+            <SafeAreaView style={PortfolioStyles.loader} edges={['top']}>
+                <AppHeader />
+                <View style={PortfolioStyles.loadingContainer}>
+                    <ActivityIndicator size="large" color={theme.colors.primary} />
+                </View>
             </SafeAreaView>
         );
     }
 
     return (
-        <SafeAreaView style={PortfolioStyles.container}>
-            <View style={PortfolioStyles.header}>
+        <SafeAreaView style={PortfolioStyles.container} edges={['top']}>
+            <AppHeader />
+            
+            <View style={PortfolioStyles.subHeader}>
                 <Text style={PortfolioStyles.title}>Select Organization</Text>
                 <Text style={PortfolioStyles.subtitle}>Portfolio overview is now available from your dashboard.</Text>
             </View>
@@ -33,9 +41,13 @@ const PortfolioSelectionScreen = ({ navigation }: any) => {
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={PortfolioStyles.card}
-                        onPress={() => navigation.replace('MainApp')}
+                        onPress={() => navigation.navigate('OrganizationDetail', {
+                            id: item.id,
+                            name: item.name,
+                        })}
+                        activeOpacity={0.7}
                     >
-                        <View>
+                        <View style={PortfolioStyles.cardContent}>
                             <Text style={PortfolioStyles.cardTitle}>{item.name}</Text>
                             <Text style={PortfolioStyles.cardSub}>
                                 Net {formatCurrency(item.net_total)} • Income {item.pending_income_count} ({formatCurrency(item.pending_income)}) • Exp {item.pending_expense_count} ({formatCurrency(item.pending_expense)})
@@ -46,12 +58,7 @@ const PortfolioSelectionScreen = ({ navigation }: any) => {
                 )}
             />
 
-            <TouchableOpacity
-                style={PortfolioStyles.globalButton}
-                onPress={() => navigation.replace('MainApp')}
-            >
-                <Text style={PortfolioStyles.globalButtonText}>Open Consolidated Dashboard</Text>
-            </TouchableOpacity>
+            <AppFooter navigation={navigation} />
         </SafeAreaView>
     );
 };

@@ -12,7 +12,8 @@ import TransactionCard from './components/TransactionCard';
 import {TransactionListScreenStyles} from './TransactionListScreenStyles.ts';
 import {formatDisplayDate} from '../../utils/formatters';
 
-const TransactionListScreen = ({navigation}: any) => {
+const TransactionListScreen = ({navigation, route}: any) => {
+    const initialOrgCode = route?.params?.orgCode;
     const {
         isLoading,
         isFetching,
@@ -39,7 +40,7 @@ const TransactionListScreen = ({navigation}: any) => {
         activeOrgCode,
         setSelectedOrgCode,
         isPortfolioLoading,
-    } = useTransactionList();
+    } = useTransactionList(initialOrgCode);
 
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
@@ -93,6 +94,7 @@ const TransactionListScreen = ({navigation}: any) => {
     const handlePress = (item: any) => {
         navigation.navigate('TransactionDetail', {
             transaction: item,
+            orgCode: activeOrgCode,
         });
     };
 

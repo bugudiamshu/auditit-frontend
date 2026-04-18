@@ -1,4 +1,4 @@
-import {useMemo, useState} from 'react';
+import {useMemo, useState, useEffect} from 'react';
 import {useSnackbar} from '../context/SnackbarContext';
 import {useGetPortfolioQuery} from '../store/portfolioApi';
 import {
@@ -15,7 +15,7 @@ export const transactionFilters = [
     {label: 'Rejected', value: 'rejected'},
 ];
 
-export const useTransactionList = () => {
+export const useTransactionList = (initialOrgCode?: string) => {
     const {user} = useAppSelector(state => state.auth);
     const isAdmin = user?.role === 'admin';
     const [statusFilter, setStatusFilter] = useState<string | undefined>(isAdmin ? undefined : 'pending');
@@ -24,10 +24,17 @@ export const useTransactionList = () => {
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
     const {data: portfolioData, isLoading: isPortfolioLoading} = useGetPortfolioQuery(undefined, {
-        skip: !isAdmin,
+        skip: !isAdmin || !!initialOrgCode,
     });
     const societies = portfolioData?.portfolio ?? [];
-    const [selectedOrgCode, setSelectedOrgCode] = useState<string | undefined>(undefined);
+    const [selectedOrgCode, setSelectedOrgCode] = useState<string | undefined>(initialOrgCode);
+    
+    useEffect(() => {
+        if (initialOrgCode) {
+            setSelectedOrgCode(initialOrgCode);
+        }
+    }, [initialOrgCode]);
+
     const activeOrgCode = isAdmin ? selectedOrgCode ?? societies[0]?.org_code : undefined;
     const activeSociety =
         societies.find(item => item.org_code === activeOrgCode) ?? societies[0] ?? null;

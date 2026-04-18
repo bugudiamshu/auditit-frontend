@@ -54,7 +54,17 @@ const DashboardScreen = ({navigation}: any) => {
             creator: activity.created_by ? { name: activity.created_by } : null,
         };
         
-        navigation.navigate('TransactionDetail', { transaction });
+        navigation.navigate('TransactionDetail', { 
+            transaction,
+            orgCode: activity.org_code || data.organization?.org_code 
+        });
+    };
+
+    const handleSocietyPress = (society: any) => {
+        navigation.navigate('OrganizationDetail', {
+            id: society.id,
+            name: society.name,
+        });
     };
 
     return (
@@ -71,24 +81,22 @@ const DashboardScreen = ({navigation}: any) => {
                     />
                 }
             >
-                <View style={DashboardStyles.heroCard}>
-                    <Text style={DashboardStyles.heroAccent}>🏛️</Text>
-                    <View style={DashboardStyles.heroBadge}>
-                        <Text style={DashboardStyles.heroEyebrow}>
-                            {isCentralView ? 'Consolidated portfolio' : data.organization?.org_code ?? 'Live ledger'}
+                {!isCentralView && (
+                    <View style={DashboardStyles.heroCard}>
+                        <Text style={DashboardStyles.heroAccent}>🏛️</Text>
+                        <View style={DashboardStyles.heroBadge}>
+                            <Text style={DashboardStyles.heroEyebrow}>
+                                {data.organization?.org_code ?? 'Live ledger'}
+                            </Text>
+                        </View>
+                        <Text style={DashboardStyles.heroTitle}>
+                            {`Welcome back,\n${user?.name?.split(' ')[0] ?? 'Partner'}.`}
+                        </Text>
+                        <Text style={DashboardStyles.heroSubtitle}>
+                            {`${tenantMetrics?.pending_transactions ?? 0} transactions are waiting for action today.`}
                         </Text>
                     </View>
-                    <Text style={DashboardStyles.heroTitle}>
-                        {isCentralView
-                            ? 'Unified\nLedger Visibility'
-                            : `Welcome back,\n${user?.name?.split(' ')[0] ?? 'Partner'}.`}
-                    </Text>
-                    <Text style={DashboardStyles.heroSubtitle}>
-                        {isCentralView
-                            ? `${centralSummary?.total_societies ?? 0} active organizations with live approval visibility.`
-                            : `${tenantMetrics?.pending_transactions ?? 0} transactions are waiting for action today.`}
-                    </Text>
-                </View>
+                )}
 
                 {isCentralView && centralSummary ? (
                     <>
@@ -105,26 +113,40 @@ const DashboardScreen = ({navigation}: any) => {
                                 caption={`${formatCompact(centralSummary.total_transactions)} total transactions`}
                             />
                             <DashboardMetricCard
-                                label="Pending"
+                                label="Pending Total"
                                 value={formatCurrency(centralSummary.pending_amount)}
                                 tone="warning"
+                                isWide={true}
+                                trendIcon="⏳"
                                 caption={`${centralSummary.pending_approvals} approvals`}
                             />
                             <DashboardMetricCard
-                                label="Income"
-                                value={formatCurrency(centralSummary.income_total)}
+                                label="Pending Income"
+                                value={formatCurrency(centralSummary.pending_income)}
                                 tone="success"
-                                caption={`${centralSummary.active_users} active users`}
+                                caption="To be approved"
+                            />
+                            <DashboardMetricCard
+                                label="Pending Expense"
+                                value={formatCurrency(centralSummary.pending_expense)}
+                                tone="danger"
+                                caption="To be approved"
                             />
                         </View>
 
                         <View style={DashboardStyles.sectionHeader}>
                             <Text style={DashboardStyles.sectionTitle}>Organizations</Text>
-                            <Text style={DashboardStyles.sectionAction}>View All</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('PortfolioSelection')}>
+                                <Text style={DashboardStyles.sectionAction}>View All</Text>
+                            </TouchableOpacity>
                         </View>
                         {centralSummary.societies.length ? (
                             centralSummary.societies.map(item => (
-                                <DashboardSocietyRow key={item.id} item={item} />
+                                <DashboardSocietyRow 
+                                    key={item.id} 
+                                    item={item} 
+                                    onPress={() => handleSocietyPress(item)}
+                                />
                             ))
                         ) : (
                             <View style={DashboardStyles.emptyCard}>
@@ -154,16 +176,24 @@ const DashboardScreen = ({navigation}: any) => {
                                         caption={`${tenantMetrics.total_transactions} transactions tracked`}
                                     />
                                     <DashboardMetricCard
-                                        label="Pending"
-                                        value={tenantMetrics.pending_transactions.toString()}
+                                        label="Pending Total"
+                                        value={formatCurrency(tenantMetrics.pending_amount)}
                                         tone="warning"
-                                        caption={formatCurrency(tenantMetrics.pending_amount)}
+                                        isWide={true}
+                                        trendIcon="⏳"
+                                        caption={`${tenantMetrics.pending_transactions} transactions waiting`}
                                     />
                                     <DashboardMetricCard
-                                        label="Income"
-                                        value={formatCurrency(tenantMetrics.income_total)}
+                                        label="Pending Income"
+                                        value={formatCurrency(tenantMetrics.pending_income)}
                                         tone="success"
-                                        caption={`${tenantMetrics.approved_transactions} approved`}
+                                        caption="To be approved"
+                                    />
+                                    <DashboardMetricCard
+                                        label="Pending Expense"
+                                        value={formatCurrency(tenantMetrics.pending_expense)}
+                                        tone="danger"
+                                        caption="To be approved"
                                     />
                                 </>
                             ) : (

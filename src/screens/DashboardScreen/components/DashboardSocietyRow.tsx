@@ -1,15 +1,20 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {SocietySnapshot} from '../../../store/dashboardApi';
 import {formatCurrency, formatRelativeTime} from '../../../utils/formatters';
 import {DashboardStyles} from '../DashboardStyles';
 
 type DashboardSocietyRowProps = {
     item: SocietySnapshot;
+    onPress?: () => void;
 };
 
-const DashboardSocietyRow = ({item}: DashboardSocietyRowProps) => (
-    <View style={DashboardStyles.societyCard}>
+const DashboardSocietyRow = ({item, onPress}: DashboardSocietyRowProps) => (
+    <TouchableOpacity 
+        style={DashboardStyles.societyCard} 
+        onPress={onPress}
+        activeOpacity={0.7}
+    >
         <View style={DashboardStyles.societyHeader}>
             <View style={[DashboardStyles.colorSwatch, {backgroundColor: item.primary_color}]} />
             <View style={DashboardStyles.societyInfo}>
@@ -38,7 +43,7 @@ const DashboardSocietyRow = ({item}: DashboardSocietyRowProps) => (
         <Text style={DashboardStyles.societyFootnote}>
             Last activity: {formatRelativeTime(item.last_transaction_at)}
         </Text>
-    </View>
+    </TouchableOpacity>
 );
 
 export default DashboardSocietyRow;

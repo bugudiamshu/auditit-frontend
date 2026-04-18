@@ -14,6 +14,7 @@ import LoginScreen from "./src/screens/LoginScreen/LoginScreen";
 import PortfolioSelectionScreen from "./src/screens/PortfolioSelectionScreen/PortfolioSelectionScreen";
 import TransactionEntryScreen from "./src/screens/TransactionEntryScreen/TransactionEntryScreen";
 import TransactionDetailScreen from "./src/screens/TransactionDetailScreen/TransactionDetailScreen";
+import OrganizationDetailScreen from "./src/screens/OrganizationDetailScreen/OrganizationDetailScreen";
 import BottomTabs from "./src/navigation/BottomTabs/BottomTabs.tsx";
 
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="MainApp" component={BottomTabs}/>
                 <Stack.Screen name="TransactionEntry" component={TransactionEntryScreen}/>
                 <Stack.Screen name="TransactionDetail" component={TransactionDetailScreen}/>
+                <Stack.Screen name="OrganizationDetail" component={OrganizationDetailScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
@@ -45,10 +47,10 @@ function App(): React.JSX.Element {
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <SafeAreaProvider>
-                    <SnackbarProvider> {/* Wrap with SnackbarProvider */}
+                    <SnackbarProvider>
                         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
                         <AppNavigator />
-                    </SnackbarProvider> {/* Close SnackbarProvider */}
+                    </SnackbarProvider>
                 </SafeAreaProvider>
             </PersistGate>
         </Provider>

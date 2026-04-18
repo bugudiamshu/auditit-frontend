@@ -52,11 +52,25 @@ export const transactionApi = baseApi.injectEndpoints({
             }),
             providesTags: ['Transactions'],
         }),
-        createTransaction: builder.mutation<TransactionMutationResponse, FormData>({
-            query: (data) => ({
+        getTransaction: builder.query<
+            { success: boolean; transaction: TransactionRecord },
+            { id: number; orgCode?: string }
+        >({
+            query: ({ id, orgCode }) => ({
+                url: `/transactions/${id}`,
+                headers: orgCode ? {'X-Organization-Code': orgCode} : undefined,
+            }),
+            providesTags: (result, error, { id }) => [{ type: 'Transactions', id }],
+        }),
+        createTransaction: builder.mutation<
+            TransactionMutationResponse,
+            { data: FormData; orgCode?: string }
+        >({
+            query: ({data, orgCode}) => ({
                 url: '/transactions',
                 method: 'POST',
                 body: data,
+                headers: orgCode ? {'X-Organization-Code': orgCode} : undefined,
             }),
             invalidatesTags: ['Transactions', 'Dashboard'],
         }),
@@ -100,6 +114,7 @@ export const transactionApi = baseApi.injectEndpoints({
 
 export const { 
     useGetTransactionsQuery, 
+    useGetTransactionQuery,
     useCreateTransactionMutation, 
     useUpdateTransactionMutation,
     useDeleteTransactionMutation,
