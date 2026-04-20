@@ -133,8 +133,16 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                     {/* DETAILS */}
                     <View style={styles.detailsCard}>
                         <View style={styles.detailRow}>
-                            <Text style={styles.detailLabel}>Recipient / Person</Text>
+                            <Text style={styles.detailLabel}>
+                                {transaction.type === 'income' ? 'Received From' : 'Paid To'}
+                            </Text>
                             <Text style={styles.detailValue}>{transaction.person_name}</Text>
+                        </View>
+                        <View style={styles.detailRow}>
+                            <Text style={styles.detailLabel}>
+                                {transaction.type === 'income' ? 'Received By' : 'Paid By'}
+                            </Text>
+                            <Text style={styles.detailValue}>{transaction.staff_name || 'Not recorded'}</Text>
                         </View>
                         <View style={styles.detailRow}>
                             <Text style={styles.detailLabel}>Transaction Type</Text>

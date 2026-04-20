@@ -12,6 +12,7 @@ export type FormErrors = {
     amount?: string;
     transactionId?: string;
     personName?: string;
+    staffName?: string;
     general?: string;
 };
 
@@ -30,6 +31,7 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
     const [paymentMode, setPaymentMode] = useState<PaymentMode>(editItem?.payment_mode || 'cash');
     const [transactionId, setTransactionId] = useState(editItem?.transaction_id || '');
     const [personName, setPersonName] = useState(editItem?.person_name || '');
+    const [staffName, setStaffName] = useState(editItem?.staff_name || '');
     const [amount, setAmount] = useState(editItem?.amount ? editItem.amount.toString() : '');
     const [remarks, setRemarks] = useState(editItem?.remarks || '');
     const [document, setDocument] = useState<Attachment | null>(null);
@@ -44,8 +46,12 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
     const isEdit = !!editItem;
     const isLoading = isCreating || isUpdating;
 
-    const personLabel = type === 'income' ? 'Collected From' : 'Paid To';
-    const personPlaceholder = type === 'income' ? 'Enter payer name' : 'Enter recipient name';
+    const externalLabel = type === 'income' ? 'Received From' : 'Paid To';
+    const externalPlaceholder = type === 'income' ? 'Who gave the money?' : 'Who received the money?';
+    
+    const internalLabel = type === 'income' ? 'Received By' : 'Paid By';
+    const internalPlaceholder = type === 'income' ? 'Who collected the cash?' : 'Who made the payment?';
+
     const amountHint = type === 'income' ? 'Amount received' : 'Amount paid out';
     const amountValue = (() => {
         const parsed = Number.parseFloat(amount);
@@ -62,7 +68,11 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         }
 
         if (!personName.trim()) {
-            nextErrors.personName = `${personLabel} is required.`;
+            nextErrors.personName = `${externalLabel} is required.`;
+        }
+
+        if (!staffName.trim()) {
+            nextErrors.staffName = `${internalLabel} is required.`;
         }
 
         if (paymentMode === 'online' && !transactionId.trim()) {
@@ -96,9 +106,17 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
 
             if (field === 'personName') {
                 if (!value.trim()) {
-                    next.personName = `${personLabel} is required.`;
+                    next.personName = `${externalLabel} is required.`;
                 } else {
                     delete next.personName;
+                }
+            }
+
+            if (field === 'staffName') {
+                if (!value.trim()) {
+                    next.staffName = `${internalLabel} is required.`;
+                } else {
+                    delete next.staffName;
                 }
             }
 
@@ -111,7 +129,7 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
             }
 
             next.general =
-                next.amount || next.personName || next.transactionId
+                next.amount || next.personName || next.staffName || next.transactionId
                     ? 'Please fix the highlighted fields before submitting.'
                     : undefined;
 
@@ -242,6 +260,7 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
             formData.append('amount', amountValue);
             formData.append('payment_mode', paymentMode);
             formData.append('person_name', personName.trim());
+            formData.append('staff_name', staffName.trim());
             
             if (referenceNo.trim()) formData.append('reference_no', referenceNo.trim());
             if (paymentMode === 'online' && transactionId.trim()) formData.append('transaction_id', transactionId.trim());
@@ -282,13 +301,16 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         paymentMode,
         transactionId,
         personName,
+        staffName,
         amount,
         remarks,
         document,
         errors,
         isLoading,
-        personLabel,
-        personPlaceholder,
+        externalLabel,
+        externalPlaceholder,
+        internalLabel,
+        internalPlaceholder,
         amountHint,
         amountValue,
         showUploadChoice,
@@ -297,6 +319,7 @@ export const useTransactionEntryForm = (navigation: any, editItem?: any, orgCode
         setReferenceNo,
         setTransactionId,
         setPersonName,
+        setStaffName,
         setAmount,
         setRemarks,
         pickDocument,

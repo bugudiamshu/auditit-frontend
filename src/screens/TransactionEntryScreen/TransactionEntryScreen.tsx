@@ -117,11 +117,11 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                             <View style={styles.inputGroup}>
                                 <View style={styles.labelRow}>
                                     <Text style={styles.labelIcon}>👤</Text>
-                                    <Text style={styles.label}>{form.personLabel}</Text>
+                                    <Text style={styles.label}>{form.externalLabel}</Text>
                                 </View>
                                 <TextInput
                                     style={styles.textInput}
-                                    placeholder={form.personPlaceholder}
+                                    placeholder={form.externalPlaceholder}
                                     placeholderTextColor={theme.colors.textMuted}
                                     value={form.personName}
                                     onChangeText={val => {
@@ -130,6 +130,24 @@ const TransactionEntryScreen = ({navigation, route}: any) => {
                                     }}
                                 />
                                 <FieldErrorText error={form.errors.personName} />
+                            </View>
+
+                            <View style={styles.inputGroup}>
+                                <View style={styles.labelRow}>
+                                    <Text style={styles.labelIcon}>👔</Text>
+                                    <Text style={styles.label}>{form.internalLabel}</Text>
+                                </View>
+                                <TextInput
+                                    style={styles.textInput}
+                                    placeholder={form.internalPlaceholder}
+                                    placeholderTextColor={theme.colors.textMuted}
+                                    value={form.staffName}
+                                    onChangeText={val => {
+                                        form.setStaffName(val);
+                                        form.updateFieldError('staffName', val);
+                                    }}
+                                />
+                                <FieldErrorText error={form.errors.staffName} />
                             </View>
 
                             <View style={[styles.inputGroup, {marginBottom: 0}]}>
