@@ -139,6 +139,10 @@ const TransactionDetailScreen = ({route, navigation}: any) => {
                             <Text style={styles.detailValue}>{transaction.person_name}</Text>
                         </View>
                         <View style={styles.detailRow}>
+                            <Text style={styles.detailLabel}>Receipt / Voucher No.</Text>
+                            <Text style={styles.detailValue}>{transaction.reference_no || 'None'}</Text>
+                        </View>
+                        <View style={styles.detailRow}>
                             <Text style={styles.detailLabel}>
                                 {transaction.type === 'income' ? 'Received By' : 'Paid By'}
                             </Text>

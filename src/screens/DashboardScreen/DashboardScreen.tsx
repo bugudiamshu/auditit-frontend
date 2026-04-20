@@ -46,7 +46,7 @@ const DashboardScreen = ({navigation}: any) => {
     const handleActivityPress = (activity: any) => {
         const transaction = {
             ...activity,
-            person_name: activity.title,
+            person_name: activity.person_name,
             amount: activity.amount.toString(),
             transaction_date: activity.transaction_date,
             document_url: activity.document_url,

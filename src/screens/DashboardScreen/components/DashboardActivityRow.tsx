@@ -28,7 +28,9 @@ const DashboardActivityRow = ({item, onPress}: DashboardActivityRowProps) => (
             </Text>
         </View>
         <View style={DashboardStyles.activityContent}>
-            <Text style={DashboardStyles.activityTitle}>{item.title}</Text>
+            <Text style={DashboardStyles.activityTitle}>
+                {item.type === 'income' ? (item.reference_no || 'No Receipt') : item.person_name}
+            </Text>
             <Text style={DashboardStyles.activitySubtitle}>
                 {item.created_by ? `By ${item.created_by}` : 'Created'} • {item.status}
             </Text>

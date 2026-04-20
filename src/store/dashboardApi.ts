@@ -5,6 +5,8 @@ export interface DashboardActivity {
     type: 'income' | 'expense';
     status: 'pending' | 'approved' | 'rejected';
     title: string;
+    person_name: string;
+    staff_name: string;
     amount: number;
     payment_mode: 'cash' | 'online';
     reference_no: string | null;

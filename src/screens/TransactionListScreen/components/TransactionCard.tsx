@@ -58,7 +58,7 @@ const TransactionCard = ({
 
                 <View style={TransactionListScreenStyles.compactInfo}>
                     <Text style={TransactionListScreenStyles.compactName} numberOfLines={1}>
-                        {item.person_name}
+                        {isIncome ? (item.reference_no || 'No Receipt') : item.person_name}
                     </Text>
                     <Text style={TransactionListScreenStyles.compactMeta}>
                         {item.payment_mode === 'online' ? '🏦 Online' : '💵 Cash'} • {item.creator?.name?.split(' ')[0] || 'User'}
